@@ -230,7 +230,7 @@ int run_manager(int argc, char* argv[]) {
         }
     } else if (config.duration > 0) {
         // PROMPT 13: Okres duration skończył się - wysłij SIGTERM do normalnego zamknięcia
-        log_event("[Manager] Czas symulacji skończył się — zarządzam normalnym zamknięciem SOR");
+        log_event("[Manager] Czas symulacji skończył się — zarządzam normalne zamknięciem SOR");
         printf("Manager: Duration skończył się — wysyłam SIGTERM do normalnego zamknięcia...\n");
         
         // Wysyłaj SIGTERM do bezpośrednich dzieci (pacjenci spawniowani przez generator zakończą się gdy generator umrze)

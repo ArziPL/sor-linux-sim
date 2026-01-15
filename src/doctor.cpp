@@ -73,7 +73,7 @@ int run_doctor(const char* specialization, const Config& config) {
     while (true) {
         // PROMPT 13: Sprawdzenie SIGUSR2 (graceful shutdown) na początek pętli
         if (sigusr2_received) {
-            log_event("Lekarz %s otrzymał ewakuację i opuszcza SOR", specialization);
+            log_event("Lekarz %s kończy pracę", specialization);
             break;
         }
         
@@ -167,7 +167,7 @@ int run_doctor(const char* specialization, const Config& config) {
         
         // PROMPT 13: Sprawdzenie SIGUSR2 (graceful shutdown)
         if (sigusr2_received) {
-            log_event("Lekarz %s otrzymał ewakuację i opuszcza SOR", specialization);
+            log_event("Lekarz %s kończy pracę", specialization);
             break;
         }
 

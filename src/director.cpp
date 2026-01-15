@@ -73,6 +73,6 @@ int run_director(const Config& config) {
         }
     }
     
-    log_event("[Director] Dyrektor otrzymał ewakuację i opuszcza SOR");
+    log_event("[Director] Dyrektor opuszcza SOR");
     exit(0);
 }
