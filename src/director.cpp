@@ -20,6 +20,11 @@ static void signal_handler_usr2(int sig) {
     sigusr2_received = 1;
 }
 
+static void signal_handler_term(int sig) {
+    (void)sig;
+    sigusr2_received = 1;  // SIGTERM działa tak samo
+}
+
 // PIDs lekarzy (zapisane w SHM)
 extern SORState* g_sor_state;
 
@@ -32,6 +37,12 @@ int run_director(const Config& config) {
     sigemptyset(&sa_usr2.sa_mask);
     sa_usr2.sa_flags = 0;
     sigaction(SIGUSR2, &sa_usr2, nullptr);
+    
+    struct sigaction sa_term{};
+    sa_term.sa_handler = signal_handler_term;
+    sigemptyset(&sa_term.sa_mask);
+    sa_term.sa_flags = 0;
+    sigaction(SIGTERM, &sa_term, nullptr);
     
     if (ipc_attach() == -1) {
         perror("ipc_attach (director)");

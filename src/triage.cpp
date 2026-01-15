@@ -16,13 +16,27 @@
 // 5% wysyła do domu, resztę kieruje do specjalisty z priorytetem (mtype = kolor)
 // PROMPT 13: Handle SIGUSR2 for graceful shutdown
 
+static volatile sig_atomic_t should_exit = 0;
+
 static void signal_handler_usr2(int sig) {
     (void)sig;
-    exit(0);
+    should_exit = 1;
+}
+
+static void signal_handler_term(int sig) {
+    (void)sig;
+    should_exit = 1;
 }
 
 int run_triage(const Config& config) {
-    signal(SIGUSR2, signal_handler_usr2);
+    struct sigaction sa{};
+    sa.sa_handler = signal_handler_usr2;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGUSR2, &sa, nullptr);
+    
+    sa.sa_handler = signal_handler_term;
+    sigaction(SIGTERM, &sa, nullptr);
     
     // Podłącz do istniejących zasobów IPC
     if (ipc_attach() == -1) {
@@ -34,7 +48,7 @@ int run_triage(const Config& config) {
 
     log_event("Lekarz POZ (triaż) rozpoczyna pracę");
 
-    while (true) {
+    while (!should_exit) {
         PatientMessage msg{};
 
         // Odbierz pacjenta z kolejki triażu (msgrcv, typ 1, blokujący)

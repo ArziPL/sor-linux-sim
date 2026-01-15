@@ -23,6 +23,11 @@ static void signal_handler_usr2(int sig) {
     sigusr2_received = 1;
 }
 
+static void signal_handler_term(int sig) {
+    (void)sig;
+    sigusr2_received = 1;  // SIGTERM działa tak samo jak SIGUSR2
+}
+
 int run_patient(int patient_id, const Config& config) {
     (void)config;  // Parametr `config` może być użyty w przyszłości
     
@@ -32,6 +37,10 @@ int run_patient(int patient_id, const Config& config) {
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sigaction(SIGUSR2, &sa, nullptr);
+    
+    // Setup handler dla SIGTERM (normalny koniec symulacji)
+    sa.sa_handler = signal_handler_term;
+    sigaction(SIGTERM, &sa, nullptr);
     
     // Attach do istniejących zasobów IPC
     if (ipc_attach() == -1) {
@@ -128,9 +137,11 @@ int run_patient(int patient_id, const Config& config) {
     sem_V(g_sem_id, SEM_REG_ITEMS);   // sygnalizuj nowy element w kolejce
 
     // Na tym etapie pacjent czeka na dalsze etapy (prompty 8+).
-    // Pacjent czeka w pętli aż zostanie obsłużony i wyjdzie, lub dostanie SIGUSR2
-    while (!sigusr2_received) {
-        usleep(500000);  // czekaj 500ms
+    // Pacjent czeka w pętli aż zostanie obsłużony i wyjdzie, lub dostanie SIGUSR2/SIGTERM
+    // Albo gdy generator się wyłączy (PPID == 1)
+    pid_t parent_pid = getppid();
+    while (!sigusr2_received && getppid() == parent_pid) {
+        usleep(500000);  // czekaj 500ms i sprawdzaj czy parent żyje
     }
     
     // Graceful shutdown - zwolnij zasoby
@@ -140,7 +151,15 @@ int run_patient(int patient_id, const Config& config) {
 
 // Generator pacjentów - PROMPT 14: generowanie procesów pacjentów w pętli
 int run_patient_generator(const Config& config) {
-    signal(SIGUSR2, signal_handler_usr2);
+    struct sigaction sa{};
+    sa.sa_handler = signal_handler_usr2;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGUSR2, &sa, nullptr);
+    
+    // Obsługuj SIGTERM (normalny koniec)
+    sa.sa_handler = signal_handler_term;
+    sigaction(SIGTERM, &sa, nullptr);
     
     if (ipc_attach() == -1) {
         perror("ipc_attach (generator)");
@@ -153,7 +172,7 @@ int run_patient_generator(const Config& config) {
     
     int patient_id = 1;
     
-    while (true) {
+    while (!sigusr2_received) {
         // Fork nowy proces pacjenta
         pid_t pid = fork();
         
@@ -183,5 +202,6 @@ int run_patient_generator(const Config& config) {
         waitpid(-1, nullptr, WNOHANG);
     }
     
+    log_event("[Generator] Generator pacjentów opuszcza SOR");
     return 0;
 }

@@ -206,25 +206,56 @@ int run_manager(int argc, char* argv[]) {
         log_event("[Manager] Ctrl+C — zarządzam ewakuację SOR");
         printf("Manager: Ctrl+C — wysyłam SIGUSR2 do ewakuacji...\n");
         
-        // Wysyłaj SIGUSR2 do wszystkich procesów (graceful shutdown)
-        for (pid_t pid : children) {
-            if (pid > 0) {
-                kill(pid, SIGUSR2);
-            }
-        }
-    } else if (config.duration > 0) {
-        // PROMPT 13: Okres duration skończył się - wysłij SIGUSR2 do ewakuacji
-        log_event("[Manager] Czas symulacji skończył się — zarządzam ewakuację SOR");
-        printf("Manager: Duration skończył się — wysyłam SIGUSR2 do ewakuacji...\n");
-        
-        for (pid_t pid : children) {
-            if (pid > 0) {
-                kill(pid, SIGUSR2);
+        // Wysyłaj SIGUSR2 do bezpośrednich dzieci (pacjenci spawniowani przez generator zakończą się gdy generator umrze)
+        if (children.size() > 1) {
+            for (size_t i = 1; i < children.size(); i++) {  // Pomijaj logger (index 0)
+                if (children[i] > 0) {
+                    kill(children[i], SIGUSR2);
+                }
             }
         }
         
         // Czekaj aby procesy zdążyły się wyłączyć
-        usleep(500000);  // 500ms
+        for (int i = 0; i < 30; i++) {
+            usleep(100000);  // 100ms x 30 = 3 sekundy
+            int status = 0;
+            while (waitpid(-1, &status, WNOHANG) > 0) {
+                // Zbieraj zombie
+            }
+        }
+        
+        // Wyślij SIGTERM do loggera aby się zamknął (ignoruje SIGUSR2)
+        if (children.size() > 0 && children[0] > 0) {
+            kill(children[0], SIGTERM);
+        }
+    } else if (config.duration > 0) {
+        // PROMPT 13: Okres duration skończył się - wysłij SIGTERM do normalnego zamknięcia
+        log_event("[Manager] Czas symulacji skończył się — zarządzam normalnym zamknięciem SOR");
+        printf("Manager: Duration skończył się — wysyłam SIGTERM do normalnego zamknięcia...\n");
+        
+        // Wysyłaj SIGTERM do bezpośrednich dzieci (pacjenci spawniowani przez generator zakończą się gdy generator umrze)
+        if (children.size() > 1) {
+            for (size_t i = 1; i < children.size(); i++) {  // Pomijaj logger (index 0)
+                if (children[i] > 0) {
+                    kill(children[i], SIGTERM);
+                }
+            }
+        }
+        
+        // Czekaj aby procesy zdążyły się wyłączyć (do 3 sekund)
+        for (int i = 0; i < 30; i++) {
+            usleep(100000);  // 100ms x 30 = 3 sekundy
+            // Sprawdzaj czy jeszcze są procesy
+            int status = 0;
+            while (waitpid(-1, &status, WNOHANG) > 0) {
+                // Zbieraj zombie
+            }
+        }
+        
+        // Wyślij SIGTERM do loggera aby się zamknął
+        if (children.size() > 0 && children[0] > 0) {
+            kill(children[0], SIGTERM);
+        }
     }
 
     printf("Manager: symulacja zakończona\n");

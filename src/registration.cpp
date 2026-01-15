@@ -13,15 +13,29 @@
 // Registration - okienko rejestracji
 // PROMPT 13: Handle SIGUSR2 for graceful shutdown
 
+static volatile sig_atomic_t should_exit = 0;
+
 static void signal_handler_usr2(int sig) {
     (void)sig;
-    exit(0);
+    should_exit = 1;
+}
+
+static void signal_handler_term(int sig) {
+    (void)sig;
+    should_exit = 1;
 }
 
 int run_registration(int window_id, const Config& config) {
     (void)config;
     
-    signal(SIGUSR2, signal_handler_usr2);
+    struct sigaction sa{};
+    sa.sa_handler = signal_handler_usr2;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sigaction(SIGUSR2, &sa, nullptr);
+    
+    sa.sa_handler = signal_handler_term;
+    sigaction(SIGTERM, &sa, nullptr);
 
     // Podłącz do istniejących zasobów IPC
     if (ipc_attach() == -1) {
@@ -31,11 +45,12 @@ int run_registration(int window_id, const Config& config) {
 
     log_event("Okienko rejestracji %d rozpoczyna pracę", window_id);
 
-    while (true) {
+    while (!should_exit) {
         // Producer-consumer: czekaj na pacjenta w kolejce
         if (sem_P(g_sem_id, SEM_REG_ITEMS) == -1) {
             continue;
         }
+        if (should_exit) break;
         if (sem_P(g_sem_id, SEM_REG_MUTEX) == -1) {
             sem_V(g_sem_id, SEM_REG_ITEMS);
             continue;

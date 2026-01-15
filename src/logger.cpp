@@ -22,10 +22,10 @@
 // Flaga do graceful shutdown
 volatile sig_atomic_t logger_shutdown = 0;
 
-// Handler dla SIGUSR2 (ewakuacja)
+// Handler dla SIGUSR2 (IGNORUJ - pacjenty go dostaną, a logger czeka na SIGTERM)
 void logger_sigusr2_handler(int sig) {
     (void)sig;
-    logger_shutdown = 1;
+    // Logger ignoruje SIGUSR2 - czeka na SIGTERM zamiast tego
 }
 
 // Handler dla SIGTERM (zamknięcie)
@@ -89,12 +89,12 @@ int run_logger(const Config& config) {
     while (!logger_shutdown) {
         LogMessage msg;
         
-        // Odbierz wiadomość z kolejki (bez blokowania)
+        // Odbierz wiadomość z kolejki (BLOKUJĄCY, czeka aż pojawi się wiadomość)
         // msgrcv - trzeci argument to rozmiar BEZ pola mtype!
-        int ret = msgrcv(g_msgq_id, &msg, LOG_PAYLOAD_SIZE, 1, IPC_NOWAIT);
+        int ret = msgrcv(g_msgq_id, &msg, LOG_PAYLOAD_SIZE, 1, 0);
 
         if (ret == -1) {
-            if (errno == ENOMSG) {
+            if (errno == EAGAIN || errno == ENOMSG) {
                 // Brak wiadomości - normalne, poczekaj
                 usleep(100000);  // 100ms
                 continue;

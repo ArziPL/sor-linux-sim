@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <cerrno>
 #include <sys/msg.h>
 #include <unistd.h>
 #include <signal.h>
@@ -32,6 +33,12 @@ static void signal_handler_usr2(int sig) {
     sigusr2_received = 1;
 }
 
+// Signal handler dla SIGTERM (normalny koniec)
+static void signal_handler_term(int sig) {
+    (void)sig;
+    sigusr2_received = 1;  // SIGTERM działa tak samo jak SIGUSR2
+}
+
 int run_doctor(const char* specialization, const Config& config) {
     // Podłącz do istniejących zasobów IPC
     if (ipc_attach() == -1) {
@@ -53,6 +60,13 @@ int run_doctor(const char* specialization, const Config& config) {
     sigemptyset(&sa_usr2.sa_mask);
     sa_usr2.sa_flags = 0;
     sigaction(SIGUSR2, &sa_usr2, nullptr);
+
+    // Setup handler dla SIGTERM (normalny koniec symulacji)
+    struct sigaction sa_term{};
+    sa_term.sa_handler = signal_handler_term;
+    sigemptyset(&sa_term.sa_mask);
+    sa_term.sa_flags = 0;
+    sigaction(SIGTERM, &sa_term, nullptr);
 
     log_event("Lekarz %s rozpoczyna pracę", specialization);
 
@@ -83,15 +97,15 @@ int run_doctor(const char* specialization, const Config& config) {
         // Staramy się najpierw mtype=1 (czerwony), potem 2 (żółty), potem 3 (zielony)
         int ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 1, IPC_NOWAIT);
         
-        if (ret == -1 && errno == EAGAIN) {
+        if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
             // Brak pacjenta mtype=1, spróbuj mtype=2
             ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 2, IPC_NOWAIT);
             
-            if (ret == -1 && errno == EAGAIN) {
+            if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
                 // Brak pacjenta mtype=2, spróbuj mtype=3
                 ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 3, IPC_NOWAIT);
                 
-                if (ret == -1 && errno == EAGAIN) {
+                if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
                     // Brak żadnego pacjenta - czekaj z blokowaniem (może być przerwany sygnałem)
                     ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 0, 0);
                 }
