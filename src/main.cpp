@@ -47,6 +47,10 @@ int main(int argc, char* argv[]) {
         Config config = {};
         return run_patient(patient_id, config);
     }
+    else if (strcmp(role, "patient_gen") == 0) {
+        Config config = {};
+        return run_patient_generator(config);
+    }
     else if (strcmp(role, "logger") == 0) {
         Config config = {};
         return run_logger(config);

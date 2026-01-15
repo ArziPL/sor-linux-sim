@@ -3,9 +3,15 @@
 #include <cmath>
 #include <string>
 #include <cstdlib>
+#include <ctime>
+#include <cstdarg>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "../include/common.h"
 #include "../include/util.h"
 #include "../include/config.h"
+#include "../include/protocol.h"
+#include "../include/ipc.h"
 
 // Util - funkcje pomocnicze (parser argumentów, walidacja)
 
@@ -154,4 +160,66 @@ Config parse_arguments(int argc, char* argv[]) {
     }
     
     return config;
+}
+
+// ============================================================================
+// FUNKCJE DO LOGOWANIA
+// ============================================================================
+
+// Wysłanie komunikatu do loggera (przez MSGQ)
+// Format: [ XX.XXs ] opis zdarzenia
+int log_event(const char* format, ...) {
+    // Zawsze wypisz na stderr dla debugowania
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fprintf(stderr, "\n");
+    
+    // Jeśli MSGQ nie istnieje, koniec
+    if (g_msgq_id == -1) {
+        return 0;
+    }
+    
+    // Sformatuj wiadomość
+    char msg_text[MAX_MSG_SIZE];
+    va_start(args, format);
+    vsnprintf(msg_text, sizeof(msg_text), format, args);
+    va_end(args);
+    
+    // Przygotuj komunikat do wysłania
+    LogMessage msg;
+    msg.mtype = 1;  // Typ wiadomości = 1 dla logów
+    strncpy(msg.text, msg_text, MAX_MSG_SIZE - 1);
+    msg.text[MAX_MSG_SIZE - 1] = '\0';
+    
+    // Wyślij do loggera (rozmiar BEZ pola mtype)
+    if (msgsnd(g_msgq_id, &msg, LOG_PAYLOAD_SIZE, IPC_NOWAIT) == -1) {
+        // Jeśli nie można wysłać, wypisz na stderr
+        fprintf(stderr, "[LOG ERROR] Nie mogę wysłać do MSGQ: %s\n", msg_text);
+        return -1;
+    }
+    
+    return 0;
+}
+
+// Wysłanie surowego komunikatu
+int log_raw(const char* text) {
+    if (g_msgq_id == -1) {
+        fprintf(stderr, "%s\n", text);
+        return 0;
+    }
+    
+    LogMessage msg;
+    msg.mtype = 1;
+    strncpy(msg.text, text, MAX_MSG_SIZE - 1);
+    msg.text[MAX_MSG_SIZE - 1] = '\0';
+    
+    // msgsnd - trzeci argument to rozmiar BEZ pola mtype!
+    if (msgsnd(g_msgq_id, &msg, LOG_PAYLOAD_SIZE, IPC_NOWAIT) == -1) {
+        fprintf(stderr, "%s\n", text);
+        return -1;
+    }
+    
+    return 0;
 }

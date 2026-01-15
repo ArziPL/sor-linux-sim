@@ -1,0 +1,19 @@
+[   0.00s] [Logger] Symulacja SOR startuje
+[   1.11s] Pacjent 1 pojawia się przed SOR
+[   1.12s] Pacjent 1 wchodzi do budynku
+[   1.12s] Pacjent 1 dołącza do kolejki rejestracji
+[   1.43s] [Manager] Symulacja rozpoczyna pracę
+[   1.45s] [Manager] Parametry: N=20, K=10, duration=0
+[   1.45s] [Manager] Director uruchomiony (PID=11396)
+[   1.46s] [Manager] Okienko rejestracji 1 uruchomione (PID=11397)
+[   1.47s] [Manager] Lekarz POZ (triaż) uruchomiony (PID=11398)
+[   1.48s] [Manager] Lekarz kardiolog uruchomiony (PID=11399)
+[   1.49s] [Manager] Lekarz neurolog uruchomiony (PID=11400)
+[   1.49s] [Manager] Lekarz okulista uruchomiony (PID=11401)
+[   1.50s] [Manager] Lekarz laryngolog uruchomiony (PID=11402)
+[   1.51s] [Manager] Lekarz chirurg uruchomiony (PID=11403)
+[   1.51s] [Manager] Lekarz pediatra uruchomiony (PID=11404)
+[   1.52s] [Manager] Generator pacjentów uruchomiony (PID=11405)
+[   1.53s] Okienko rejestracji 1 rozpoczyna pracę
+[   1.53s] Pacjent 1 podchodzi do okienka rejestracji 1
+[   1.54s] Pacjent 1 przekazany do triażu

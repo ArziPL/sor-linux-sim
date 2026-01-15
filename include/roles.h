@@ -23,6 +23,9 @@ int run_doctor(const char* specialization, const Config& config);
 // Patient - pacjent
 int run_patient(int patient_id, const Config& config);
 
+// Generator pacjentów (stub na potrzeby PROMPT 5)
+int run_patient_generator(const Config& config);
+
 // Logger - proces logowania
 int run_logger(const Config& config);
 
