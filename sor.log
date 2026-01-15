@@ -1,19 +1,68 @@
 [   0.00s] [Logger] Symulacja SOR startuje
-[   1.11s] Pacjent 1 pojawia się przed SOR
-[   1.12s] Pacjent 1 wchodzi do budynku
-[   1.12s] Pacjent 1 dołącza do kolejki rejestracji
-[   1.43s] [Manager] Symulacja rozpoczyna pracę
-[   1.45s] [Manager] Parametry: N=20, K=10, duration=0
-[   1.45s] [Manager] Director uruchomiony (PID=11396)
-[   1.46s] [Manager] Okienko rejestracji 1 uruchomione (PID=11397)
-[   1.47s] [Manager] Lekarz POZ (triaż) uruchomiony (PID=11398)
-[   1.48s] [Manager] Lekarz kardiolog uruchomiony (PID=11399)
-[   1.49s] [Manager] Lekarz neurolog uruchomiony (PID=11400)
-[   1.49s] [Manager] Lekarz okulista uruchomiony (PID=11401)
-[   1.50s] [Manager] Lekarz laryngolog uruchomiony (PID=11402)
-[   1.51s] [Manager] Lekarz chirurg uruchomiony (PID=11403)
-[   1.51s] [Manager] Lekarz pediatra uruchomiony (PID=11404)
-[   1.52s] [Manager] Generator pacjentów uruchomiony (PID=11405)
-[   1.53s] Okienko rejestracji 1 rozpoczyna pracę
-[   1.53s] Pacjent 1 podchodzi do okienka rejestracji 1
-[   1.54s] Pacjent 1 przekazany do triażu
+[   0.69s] [Manager] Symulacja rozpoczyna pracę
+[   0.72s] [Manager] Parametry: N=5, K=3, duration=8
+[   0.74s] [Manager] Director uruchomiony (PID=5224)
+[   0.75s] [Manager] Okienko rejestracji 1 uruchomione (PID=5225)
+[   0.76s] [Manager] Kontroler rejestracji uruchomiony (PID=5226)
+[   0.77s] [Manager] Lekarz POZ (triaż) uruchomiony (PID=5227)
+[   0.78s] [Manager] Lekarz kardiolog uruchomiony (PID=5228)
+[   0.80s] [Manager] Lekarz neurolog uruchomiony (PID=5229)
+[   0.81s] [Manager] Lekarz okulista uruchomiony (PID=5230)
+[   0.82s] [Manager] Lekarz laryngolog uruchomiony (PID=5231)
+[   0.83s] [Manager] Lekarz chirurg uruchomiony (PID=5232)
+[   0.85s] [Manager] Lekarz pediatra uruchomiony (PID=5233)
+[   0.86s] [Manager] Generator pacjentów uruchomiony (PID=5234)
+[   0.88s] [RegCtrl] Kontroler rejestracji startuje (K=3)
+[   0.89s] [Director] Dyrektor rozpoczyna pracę
+[   0.90s] Lekarz neurolog rozpoczyna pracę
+[   0.90s] Okienko rejestracji 1 rozpoczyna pracę
+[   0.91s] Lekarz okulista rozpoczyna pracę
+[   0.92s] Lekarz laryngolog rozpoczyna pracę
+[   0.92s] Lekarz chirurg rozpoczyna pracę
+[   0.93s] Lekarz POZ (triaż) rozpoczyna pracę
+[   0.94s] Lekarz kardiolog rozpoczyna pracę
+[   0.95s] [Generator] Generator pacjentów startuje
+[   0.95s] Pacjent 1 pojawia się przed SOR (wiek 21)
+[   0.96s] Pacjent 1 wchodzi do budynku
+[   0.96s] Pacjent 1 dołącza do kolejki rejestracji
+[   0.97s] Lekarz pediatra rozpoczyna pracę
+[   0.98s] Pacjent 1 podchodzi do okienka rejestracji 1
+[   0.99s] Pacjent 1 przekazany do triażu
+[   0.99s] Pacjent 1 trafia na triaż
+[   0.99s] Pacjent 1 zostaje odesłany do domu po triażu
+[   2.52s] Pacjent 2 pojawia się przed SOR (wiek 22)
+[   2.53s] Pacjent 2 wchodzi do budynku
+[   2.53s] Pacjent 2 dołącza do kolejki rejestracji
+[   2.54s] Pacjent 2 podchodzi do okienka rejestracji 1
+[   2.55s] Pacjent 2 przekazany do triażu
+[   2.56s] Pacjent 2 trafia na triaż
+[   2.56s] Pacjent 2 otrzymuje kolor: zielony
+[   2.57s] Pacjent 2 trafia do lekarza: kardiolog (kolor: zielony)
+[   4.62s] Dziecko 3 pojawia się przed SOR (wiek 7, z opiekunem)
+[   4.64s] Dziecko 3 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   4.64s] Pacjent 3 wchodzi do budynku
+[   4.64s] Pacjent 3 dołącza do kolejki rejestracji
+[   4.65s] Pacjent 3 podchodzi do okienka rejestracji 1
+[   4.66s] Pacjent 3 przekazany do triażu
+[   4.66s] Pacjent 3 trafia na triaż
+[   4.66s] Pacjent 3 otrzymuje kolor: zielony
+[   4.67s] Pacjent 3 trafia do lekarza: neurolog (kolor: zielony)
+[   4.77s] [Director] Dyrektor wysyła SIGUSR1 do lekarza okulista (PID=5230)
+[   4.78s] Lekarz okulista opuszcza SOR na rozkaz dyrektora (bez pacjenta)
+[   4.78s] Lekarz okulista pracuje na oddziale
+[   6.62s] Pacjent 4 pojawia się przed SOR (wiek 24)
+[   6.64s] Pacjent 4 wchodzi do budynku
+[   6.65s] Pacjent 4 dołącza do kolejki rejestracji
+[   6.65s] Pacjent 4 podchodzi do okienka rejestracji 1
+[   6.66s] Pacjent 4 przekazany do triażu
+[   6.67s] Pacjent 4 trafia na triaż
+[   6.67s] Pacjent 4 otrzymuje kolor: zielony
+[   6.68s] Pacjent 4 trafia do lekarza: neurolog (kolor: zielony)
+[   8.23s] Pacjent 5 pojawia się przed SOR (wiek 25)
+[   8.24s] Pacjent 5 wchodzi do budynku
+[   8.25s] Pacjent 5 (VIP) omija kolejkę rejestracji
+[   8.28s] Pacjent 5 podchodzi do okienka rejestracji 1
+[   8.29s] Pacjent 5 przekazany do triażu
+[   8.29s] Pacjent 5 trafia na triaż
+[   8.29s] Pacjent 5 otrzymuje kolor: żółty
+[   8.30s] Pacjent 5 trafia do lekarza: laryngolog (kolor: żółty)

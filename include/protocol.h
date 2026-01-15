@@ -25,11 +25,11 @@ struct PatientInQueue {
 // Pacjenci są przechowywani jako ring buffer
 // VIP wstawia się na początek (front), zwykli na koniec (back)
 struct RegistrationQueue {
-    PatientInQueue patients[1000];  // Max 1000 pacjentów (buf_size max)
+    PatientInQueue patients[1000];  // Max 1000 pacjentów (rozmiar kolejki = N)
     int front;                      // Indeks początku kolejki
     int rear;                       // Indeks końca kolejki
     int count;                      // Liczba pacjentów w kolejce
-    int max_size;                   // Maksymalny rozmiar (= buf_size = N)
+    int max_size;                   // Maksymalny rozmiar (= N)
 };
 
 // Główna struktura stanu SOR w pamięci dzielonej
@@ -48,6 +48,9 @@ struct SORState {
     // Stany lekarzy (czy są dostępni, czy są na oddziale)
     int doctors_available[6];      // 1 jeśli lekarz jest dostępny, 0 jeśli zajęty/na oddziale
     // Indeksy: 0=kardiolog, 1=neurolog, 2=okulista, 3=laryngolog, 4=chirurg, 5=pediatra
+    
+    // PROMPT 13: PIDs lekarzy do wysyłania sygnałów
+    pid_t doctor_pids[6];          // PIDs specjalistów
     
     // Timestamp symulacji (dla logów)
     time_t sim_start_time;         // Czas startu symulacji

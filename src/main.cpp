@@ -26,10 +26,27 @@ int main(int argc, char* argv[]) {
         return run_director(config);
     }
     else if (strcmp(role, "registration") == 0) {
-        // TODO: parsowanie window_id i konfiguracji
-        int window_id = 1;
+        int window_id = (argc > 2) ? atoi(argv[2]) : 1;
         Config config = {};
+        if (argc >= 7) {
+            config.N = atoi(argv[3]);
+            config.K = atoi(argv[4]);
+            config.duration = atoi(argv[5]);
+            config.speed = atof(argv[6]);
+            config.seed = (argc >= 8) ? (unsigned int)atoi(argv[7]) : (unsigned int)time(nullptr);
+        }
         return run_registration(window_id, config);
+    }
+    else if (strcmp(role, "reg_controller") == 0) {
+        Config config = {};
+        if (argc >= 7) {
+            config.N = atoi(argv[2]);
+            config.K = atoi(argv[3]);
+            config.duration = atoi(argv[4]);
+            config.speed = atof(argv[5]);
+            config.seed = (unsigned int)atoi(argv[6]);
+        }
+        return run_reg_controller(config);
     }
     else if (strcmp(role, "triage") == 0) {
         Config config = {};
@@ -49,6 +66,14 @@ int main(int argc, char* argv[]) {
     }
     else if (strcmp(role, "patient_gen") == 0) {
         Config config = {};
+        if (argc >= 8) {
+            config.N = atoi(argv[2]);
+            config.K = atoi(argv[3]);
+            config.duration = atoi(argv[4]);
+            config.speed = atof(argv[5]);
+            config.seed = (unsigned int)atoi(argv[6]);
+            config.interval = atof(argv[7]);
+        }
         return run_patient_generator(config);
     }
     else if (strcmp(role, "logger") == 0) {

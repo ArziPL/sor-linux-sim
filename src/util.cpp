@@ -22,13 +22,15 @@ void print_help(const char* program_name) {
     printf("  --K <liczba>       Próg otwarcia drugiego okienka (domyślnie: ceil(N/2))\n");
     printf("  --duration <sek>   Czas trwania symulacji w sekundach (0 = nieskończoność, domyślnie: 0)\n");
     printf("  --speed <mnożnik>  Mnożnik czasu (domyślnie: 2.0)\n");
+    printf("  --interval <sek>   Średni czas między pacjentami w sekundach (domyślnie: 3.0)\n");
     printf("  --seed <liczba>    Ziarno generatora losowego (domyślnie: time(NULL))\n");
     printf("  --help             Wyświetla tę pomoc\n");
-    printf("\nUwaga: buf_size (rozmiar kolejki rejestracji) = N\n");
+
     printf("\nPrzykłady:\n");
     printf("  %s                 # Uruchomienie z domyślnymi parametrami\n", program_name);
     printf("  %s --N 30          # 30 miejsc w poczekalni\n", program_name);
     printf("  %s --duration 60   # Symulacja przez 60 sekund\n", program_name);
+    printf("  %s --interval 5.0  # Pacjent co ~5 sekund\n", program_name);
 }
 
 bool validate_config(const Config& config) {
@@ -65,7 +67,7 @@ Config parse_arguments(int argc, char* argv[]) {
     config.duration = 0;
     config.speed = 2.0;
     config.seed = time(NULL);
-    config.buf_size = -1;  // Będzie obliczone jako N
+    config.interval = 2.0;  // Domyślnie 3 sekundy między pacjentami
     
     // Parser argumentów linii poleceń
     for (int i = 1; i < argc; i++) {
@@ -134,6 +136,19 @@ Config parse_arguments(int argc, char* argv[]) {
             config.seed = (unsigned int)atoi(argv[++i]);
         }
         
+        // Interwał między pacjentami
+        else if (arg == "--interval") {
+            if (i + 1 >= argc) {
+                fprintf(stderr, "Błąd: --interval wymaga wartości\n");
+                exit(1);
+            }
+            config.interval = atof(argv[++i]);
+            if (config.interval <= 0) {
+                fprintf(stderr, "Błąd: interval musi być > 0 (podano: %.2f)\n", config.interval);
+                exit(1);
+            }
+        }
+        
         // Nieznana opcja
         else {
             fprintf(stderr, "Błąd: nieznana opcja '%s'\n", argv[i]);
@@ -154,10 +169,7 @@ Config parse_arguments(int argc, char* argv[]) {
         exit(1);
     }
     
-    // Obliczenie buf_size = N (rozmiar kolejki = liczba miejsc w poczekalni)
-    if (config.buf_size == -1) {
-        config.buf_size = config.N;
-    }
+
     
     return config;
 }

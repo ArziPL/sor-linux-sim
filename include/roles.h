@@ -14,6 +14,9 @@ int run_director(const Config& config);
 // Registration - okienko rejestracji
 int run_registration(int window_id, const Config& config);
 
+// Reg controller - monitoruje kolejkę i otwiera/zamyka okienko 2
+int run_reg_controller(const Config& config);
+
 // Triage - lekarz POZ (triaż)
 int run_triage(const Config& config);
 

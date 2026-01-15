@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <signal.h>
 #include <sys/msg.h>
 #include "../include/common.h"
 #include "../include/roles.h"
@@ -10,9 +11,17 @@
 #include "../include/util.h"
 
 // Registration - okienko rejestracji
+// PROMPT 13: Handle SIGUSR2 for graceful shutdown
+
+static void signal_handler_usr2(int sig) {
+    (void)sig;
+    exit(0);
+}
 
 int run_registration(int window_id, const Config& config) {
     (void)config;
+    
+    signal(SIGUSR2, signal_handler_usr2);
 
     // Podłącz do istniejących zasobów IPC
     if (ipc_attach() == -1) {
