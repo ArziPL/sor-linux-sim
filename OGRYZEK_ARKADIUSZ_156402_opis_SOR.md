@@ -67,3 +67,5 @@ na SOR-rze i udaje się na oddział. Wraca na SOR po określonym losowo czasie.
 Na polecenie Dyrektora (sygnał 2) wszyscy pacjenci i lekarze natychmiast opuszczają budynek.
 Napisz procedury Dyrektor, Rejestracja, Lekarz i Pacjent symulujące działanie SOR. Raport z
 przebiegu symulacji zapisać w pliku (plikach) tekstowym
+
+### GIT TEST
