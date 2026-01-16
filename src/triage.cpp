@@ -105,7 +105,9 @@ int run_triage(const Config& config) {
 
         // Zbuduj wiadomość do lekarza
         TriageMessage tmsg{};
-        tmsg.mtype = color_code;  // Priorytet: 1=czerwony (wysoki), 2=żółty, 3=zielony (niski)
+        // mtype koduje zarówno kolor jak i specjalizację: color*10 + spec
+        // Specjalizacje: 0=kardiolog, 1=neurolog, 2=okulista, 3=laryngolog, 4=chirurg, 5=pediatra
+        tmsg.mtype = color_code * 10 + spec;
         tmsg.patient_id = msg.patient_id;
         tmsg.patient_pid = msg.patient_pid;
         tmsg.age = msg.age;

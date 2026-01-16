@@ -68,6 +68,9 @@ int run_registration(int window_id, const Config& config) {
 
         log_event("Pacjent %d podchodzi do okienka rejestracji %d", patient.patient_id, window_id);
 
+        // Symulacja czasu rejestracji: 0.5 sekundy
+        usleep(500000);  // 500ms
+
         // Zbuduj komunikat do triażu
         PatientMessage msg{};
         msg.mtype = 1;  // triaż odbiera typ 1

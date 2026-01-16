@@ -67,7 +67,7 @@ Config parse_arguments(int argc, char* argv[]) {
     config.duration = 0;
     config.speed = 2.0;
     config.seed = time(NULL);
-    config.interval = 3.0;  // Domyślnie 3 sekundy między pacjentami
+    config.interval = 0.25;  // Domyślnie 0.25 sekundy między pacjentami
     
     // Parser argumentów linii poleceń
     for (int i = 1; i < argc; i++) {

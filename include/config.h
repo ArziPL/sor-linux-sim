@@ -8,7 +8,7 @@ struct Config {
     int duration;       // Czas trwania symulacji w sekundach (0 = nieskończoność)
     double speed;       // Mnożnik czasu (domyślnie 2.0)
     unsigned int seed;  // Ziarno generatora losowego
-    double interval;    // Średni czas między pacjentami w sekundach (domyślnie 3.0)
+    double interval;    // Średni czas między pacjentami w sekundach (domyślnie 0.25)
 };
 
 #endif // CONFIG_H

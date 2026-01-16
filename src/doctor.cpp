@@ -95,19 +95,28 @@ int run_doctor(const char* specialization, const Config& config) {
 
         // PROMPT 11: Odbierz pacjenta z kolejki lekarzy priorytetowo
         // Staramy się najpierw mtype=1 (czerwony), potem 2 (żółty), potem 3 (zielony)
-        int ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 1, IPC_NOWAIT);
+        // Odczytaj specjalizację z parametru funkcji (0=kardiolog, 1=neurolog, itd.)
+        int my_spec = -1;
+        if (strcmp(specialization, "kardiolog") == 0) my_spec = 0;
+        else if (strcmp(specialization, "neurolog") == 0) my_spec = 1;
+        else if (strcmp(specialization, "okulista") == 0) my_spec = 2;
+        else if (strcmp(specialization, "laryngolog") == 0) my_spec = 3;
+        else if (strcmp(specialization, "chirurg") == 0) my_spec = 4;
+        else if (strcmp(specialization, "pediatra") == 0) my_spec = 5;
+        
+        // Czytamy pacjentów dla naszej specjalizacji z priorytetem po kolorach
+        // mtype = color*10 + spec: najpierw 10+spec (czerwony), potem 20+spec (żółty), potem 30+spec (zielony)
+        int ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 10 + my_spec, IPC_NOWAIT);
         
         if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
-            // Brak pacjenta mtype=1, spróbuj mtype=2
-            ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 2, IPC_NOWAIT);
+            ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 20 + my_spec, IPC_NOWAIT);
             
             if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
-                // Brak pacjenta mtype=2, spróbuj mtype=3
-                ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 3, IPC_NOWAIT);
+                ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 30 + my_spec, IPC_NOWAIT);
                 
                 if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
-                    // Brak żadnego pacjenta - czekaj z blokowaniem (może być przerwany sygnałem)
-                    ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 0, 0);
+                    // Brak pacjentów bez blokowania - czekaj z blokowaniem na pierwszego
+                    ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 10 + my_spec, 0);
                 }
             }
         }
