@@ -61,7 +61,7 @@ int run_triage(const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d trafia na triaż", msg.patient_id);
+        log_event("Pacjent %d jest weryfikowany przez lekarza POZ", msg.patient_id);
 
         // Losuj kolor: 10% czerwony, 35% żółty, 50% zielony, 5% do domu
         int r = rand() % 100;
@@ -97,11 +97,11 @@ int run_triage(const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d otrzymuje kolor: %s", msg.patient_id, color_name);
-
         // Losuj specjalizację (0-5: kardiolog, neurolog, okulista, laryngolog, chirurg, pediatra)
         int spec = rand() % 6;
         const char* spec_names[] = {"kardiolog", "neurolog", "okulista", "laryngolog", "chirurg", "pediatra"};
+        
+        log_event("Pacjent %d uzyskuje status [%s] — kierowany do lekarza: %s", msg.patient_id, color_name, spec_names[spec]);
 
         // Zbuduj wiadomość do lekarza
         TriageMessage tmsg{};
@@ -126,7 +126,7 @@ int run_triage(const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d trafia do lekarza: %s (kolor: %s)", msg.patient_id, spec_names[spec], color_name);
+        log_event("Pacjent %d czeka na lekarza: %s (kolor: %s)", msg.patient_id, spec_names[spec], color_name);
     }
 
     return 0;

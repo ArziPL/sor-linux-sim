@@ -82,13 +82,13 @@ int run_registration(int window_id, const Config& config) {
         strncpy(msg.symptoms, patient.symptoms, MAX_NAME_LEN - 1);
         msg.symptoms[MAX_NAME_LEN - 1] = '\0';
 
+        log_event("Pacjent %d przekazany do triażu, czeka na lekarza POZ", patient.patient_id);
+
         if (msgsnd(g_msgq_triage, &msg, PATIENT_MSG_SIZE, 0) == -1) {
             perror("msgsnd (registration->triage)");
             log_event("[BŁĄD] Nie udało się wysłać pacjenta %d do triażu", patient.patient_id);
             continue;
         }
-
-        log_event("Pacjent %d przekazany do triażu", patient.patient_id);
     }
 
     return 0;

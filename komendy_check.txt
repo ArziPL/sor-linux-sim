@@ -1,2 +1,4 @@
 ipcs -m -s -q - czy zostały jakieś kolejki MSGQ czy semafory
 ps -o pid,ppid,cmd -C sor - czy zostały jakieś procesy 
+
+ipcs -m -s -q & ps -o pid,ppid,cmd -C sor
