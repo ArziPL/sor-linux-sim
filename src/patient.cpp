@@ -147,8 +147,7 @@ int run_patient(int patient_id, const Config& config) {
         usleep(500000);  // czekaj 500ms i sprawdzaj czy parent żyje
     }
     
-    // Graceful shutdown - zwolnij zasoby
-    log_event("Pacjent %d opuszcza SOR (zamknięcie)", patient_id);
+    // Graceful shutdown - zwolnij zasoby (bez logowania)
     return 0;
 }
 
@@ -205,6 +204,5 @@ int run_patient_generator(const Config& config) {
         waitpid(-1, nullptr, WNOHANG);
     }
     
-    log_event("[Generator] Generator pacjentów opuszcza SOR");
     return 0;
 }

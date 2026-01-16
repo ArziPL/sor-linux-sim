@@ -1,1710 +1,434 @@
 [   0.00s] [Logger] Symulacja SOR startuje
-[   1.33s] [Manager] Symulacja rozpoczyna pracę
-[   1.36s] [Manager] Parametry: N=20, K=10, duration=30
-[   1.40s] [Manager] Director uruchomiony (PID=17034)
-[   1.43s] [Manager] Okienko rejestracji 1 uruchomione (PID=17035)
-[   1.45s] [Manager] Kontroler rejestracji uruchomiony (PID=17036)
-[   1.48s] [Manager] Lekarz POZ (triaż) uruchomiony (PID=17037)
-[   1.50s] [Manager] Lekarz kardiolog uruchomiony (PID=17038)
-[   1.52s] [Manager] Lekarz neurolog uruchomiony (PID=17039)
-[   1.53s] [Manager] Lekarz okulista uruchomiony (PID=17040)
-[   1.55s] Okienko rejestracji 1 rozpoczyna pracę
-[   1.56s] [Manager] Lekarz laryngolog uruchomiony (PID=17041)
-[   1.58s] [Manager] Lekarz chirurg uruchomiony (PID=17042)
-[   1.59s] [Manager] Lekarz pediatra uruchomiony (PID=17043)
-[   1.60s] [Director] Dyrektor rozpoczyna pracę
-[   1.62s] [Manager] Generator pacjentów uruchomiony (PID=17044)
-[   1.63s] [RegCtrl] Kontroler rejestracji startuje (K=10)
-[   1.65s] Lekarz neurolog rozpoczyna pracę
-[   1.66s] Lekarz POZ (triaż) rozpoczyna pracę
-[   1.68s] Lekarz okulista rozpoczyna pracę
-[   1.69s] Lekarz laryngolog rozpoczyna pracę
-[   1.71s] Lekarz kardiolog rozpoczyna pracę
-[   1.72s] Lekarz chirurg rozpoczyna pracę
-[   1.74s] Lekarz pediatra rozpoczyna pracę
-[   1.75s] [Generator] Generator pacjentów startuje
-[   1.76s] Pacjent 1 pojawia się przed SOR (wiek 21)
-[   1.77s] Pacjent 1 wchodzi do budynku
-[   1.78s] Pacjent 1 dołącza do kolejki rejestracji
-[   1.80s] Pacjent 1 podchodzi do okienka rejestracji 1
-[   1.81s] Dziecko 2 pojawia się przed SOR (wiek 16, z opiekunem)
-[   1.82s] Dziecko 2 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   1.83s] Dziecko 2 wchodzi do budynku
-[   1.84s] Dziecko 2 dołącza do kolejki rejestracji
-[   1.85s] Pacjent 1 przekazany do triażu, czeka na lekarza POZ
-[   1.86s] Dziecko 2 podchodzi do okienka rejestracji 1
-[   1.88s] Pacjent 1 jest weryfikowany przez lekarza POZ
-[   1.90s] Pacjent 1 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[   1.91s] Pacjent 1 czeka na lekarza: pediatra (kolor: żółty)
-[   1.93s] Lekarz pediatra rozpoczyna badanie - Pacjent 1
-[   1.94s] Lekarz pediatra kończy badanie - Pacjent 1 - wynik: wypis
-[   1.96s] Pacjent 3 pojawia się przed SOR (wiek 23)
-[   1.97s] Pacjent 3 wchodzi do budynku
-[   1.98s] Pacjent 3 dołącza do kolejki rejestracji
-[   1.99s] Dziecko 2 przekazany do triażu, czeka na lekarza POZ
-[   2.01s] Pacjent 3 podchodzi do okienka rejestracji 1
-[   2.03s] Dziecko 2 jest weryfikowany przez lekarza POZ
-[   2.05s] Dziecko 2 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   2.07s] Dziecko 2 czeka na lekarza: chirurg (kolor: zielony)
-[   2.11s] Lekarz chirurg rozpoczyna badanie - Dziecko 2
-[   2.13s] Lekarz chirurg kończy badanie - Dziecko 2 - wynik: wypis
-[   2.15s] Pacjent 4 pojawia się przed SOR (wiek 24)
-[   2.17s] Pacjent 4 wchodzi do budynku
-[   2.18s] Pacjent 4 dołącza do kolejki rejestracji
-[   2.20s] Pacjent 5 pojawia się przed SOR (wiek 25)
-[   2.22s] Pacjent 5 wchodzi do budynku
-[   2.25s] Pacjent 5 (VIP) omija kolejkę rejestracji
-[   2.28s] Pacjent 3 przekazany do triażu, czeka na lekarza POZ
-[   2.30s] Pacjent 5 podchodzi do okienka rejestracji 1
-[   2.32s] Pacjent 3 jest weryfikowany przez lekarza POZ
-[   2.34s] Pacjent 3 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   2.36s] Pacjent 3 czeka na lekarza: chirurg (kolor: zielony)
-[   2.40s] Lekarz chirurg rozpoczyna badanie - Pacjent 3
-[   2.42s] Lekarz chirurg kończy badanie - Pacjent 3 - wynik: oddział
-[   2.44s] Pacjent 6 pojawia się przed SOR (wiek 26)
-[   2.46s] Pacjent 6 wchodzi do budynku
-[   2.47s] Pacjent 6 dołącza do kolejki rejestracji
-[   2.49s] Pacjent 5 przekazany do triażu, czeka na lekarza POZ
-[   2.51s] Pacjent 4 podchodzi do okienka rejestracji 1
-[   2.52s] Pacjent 5 jest weryfikowany przez lekarza POZ
-[   2.54s] Pacjent 5 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[   2.55s] Pacjent 5 czeka na lekarza: neurolog (kolor: zielony)
-[   2.57s] Lekarz neurolog rozpoczyna badanie - Pacjent 5
-[   2.60s] Lekarz neurolog kończy badanie - Pacjent 5 - wynik: wypis
-[   2.62s] Pacjent 7 pojawia się przed SOR (wiek 27)
-[   2.64s] Pacjent 7 wchodzi do budynku
-[   2.67s] Pacjent 7 dołącza do kolejki rejestracji
-[   2.68s] Pacjent 8 pojawia się przed SOR (wiek 28)
-[   2.70s] Pacjent 8 wchodzi do budynku
-[   2.72s] Pacjent 8 dołącza do kolejki rejestracji
-[   2.73s] Pacjent 4 przekazany do triażu, czeka na lekarza POZ
-[   2.75s] Pacjent 6 podchodzi do okienka rejestracji 1
-[   2.77s] Pacjent 4 jest weryfikowany przez lekarza POZ
-[   2.78s] Pacjent 4 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[   2.80s] Pacjent 4 czeka na lekarza: kardiolog (kolor: zielony)
-[   2.81s] Lekarz kardiolog rozpoczyna badanie - Pacjent 4
-[   2.83s] Lekarz kardiolog kończy badanie - Pacjent 4 - wynik: wypis
-[   2.84s] Pacjent 9 pojawia się przed SOR (wiek 29)
-[   2.85s] Pacjent 9 wchodzi do budynku
-[   2.86s] Pacjent 9 dołącza do kolejki rejestracji
-[   2.87s] Pacjent 6 przekazany do triażu, czeka na lekarza POZ
-[   2.89s] Pacjent 7 podchodzi do okienka rejestracji 1
-[   2.91s] Pacjent 6 jest weryfikowany przez lekarza POZ
-[   2.92s] Pacjent 6 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[   2.94s] Pacjent 6 czeka na lekarza: kardiolog (kolor: zielony)
-[   2.96s] Pacjent 10 pojawia się przed SOR (wiek 30)
-[   2.97s] Pacjent 10 wchodzi do budynku
-[   2.99s] Pacjent 10 (VIP) omija kolejkę rejestracji
-[   3.01s] Lekarz kardiolog rozpoczyna badanie - Pacjent 6
-[   3.02s] Lekarz kardiolog kończy badanie - Pacjent 6 - wynik: wypis
-[   3.04s] Pacjent 11 pojawia się przed SOR (wiek 31)
-[   3.05s] Pacjent 11 wchodzi do budynku
-[   3.07s] Pacjent 11 dołącza do kolejki rejestracji
-[   3.08s] Pacjent 7 przekazany do triażu, czeka na lekarza POZ
-[   3.10s] Pacjent 10 podchodzi do okienka rejestracji 1
-[   3.11s] Pacjent 7 jest weryfikowany przez lekarza POZ
-[   3.13s] Pacjent 7 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[   3.15s] Pacjent 7 czeka na lekarza: kardiolog (kolor: żółty)
-[   3.16s] Lekarz kardiolog rozpoczyna badanie - Pacjent 7
-[   3.17s] Lekarz kardiolog kończy badanie - Pacjent 7 - wynik: wypis
-[   3.18s] Pacjent 12 pojawia się przed SOR (wiek 32)
-[   3.20s] Pacjent 12 wchodzi do budynku
-[   3.21s] Pacjent 12 dołącza do kolejki rejestracji
-[   3.33s] Pacjent 13 pojawia się przed SOR (wiek 33)
-[   3.36s] Pacjent 13 wchodzi do budynku
-[   3.37s] Pacjent 13 dołącza do kolejki rejestracji
-[   3.39s] Pacjent 10 przekazany do triażu, czeka na lekarza POZ
-[   3.40s] Pacjent 8 podchodzi do okienka rejestracji 1
-[   3.41s] Pacjent 10 jest weryfikowany przez lekarza POZ
-[   3.42s] Pacjent 10 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[   3.43s] Pacjent 10 czeka na lekarza: neurolog (kolor: zielony)
-[   3.45s] Lekarz neurolog rozpoczyna badanie - Pacjent 10
-[   3.47s] Lekarz neurolog kończy badanie - Pacjent 10 - wynik: wypis
-[   3.51s] Pacjent 14 pojawia się przed SOR (wiek 34)
-[   3.54s] Pacjent 14 wchodzi do budynku
-[   3.55s] Pacjent 14 dołącza do kolejki rejestracji
-[   3.64s] Pacjent 8 przekazany do triażu, czeka na lekarza POZ
-[   3.66s] Pacjent 9 podchodzi do okienka rejestracji 1
-[   3.67s] Pacjent 8 jest weryfikowany przez lekarza POZ
-[   3.68s] Dziecko 15 pojawia się przed SOR (wiek 13, z opiekunem)
-[   3.69s] Dziecko 15 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   3.72s] Dziecko 15 wchodzi do budynku
-[   3.74s] Dziecko 15 (VIP) omija kolejkę rejestracji
-[   3.78s] Pacjent 8 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   3.80s] Pacjent 8 czeka na lekarza: chirurg (kolor: zielony)
-[   3.83s] Lekarz chirurg rozpoczyna badanie - Pacjent 8
-[   3.85s] Lekarz chirurg kończy badanie - Pacjent 8 - wynik: wypis
-[   3.88s] Pacjent 9 przekazany do triażu, czeka na lekarza POZ
-[   3.90s] Dziecko 15 podchodzi do okienka rejestracji 1
-[   3.92s] Pacjent 9 jest weryfikowany przez lekarza POZ
-[   3.95s] Pacjent 9 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[   3.97s] Pacjent 9 czeka na lekarza: neurolog (kolor: zielony)
-[   4.01s] Pacjent 16 pojawia się przed SOR (wiek 36)
-[   4.05s] Pacjent 16 wchodzi do budynku
-[   4.07s] Pacjent 16 dołącza do kolejki rejestracji
-[   4.09s] Lekarz neurolog rozpoczyna badanie - Pacjent 9
-[   4.11s] Lekarz neurolog kończy badanie - Pacjent 9 - wynik: wypis
-[   4.12s] Pacjent 17 pojawia się przed SOR (wiek 37)
-[   4.15s] Pacjent 17 wchodzi do budynku
-[   4.17s] Pacjent 17 dołącza do kolejki rejestracji
-[   4.19s] Dziecko 15 przekazany do triażu, czeka na lekarza POZ
-[   4.22s] Pacjent 11 podchodzi do okienka rejestracji 1
-[   4.23s] Dziecko 15 jest weryfikowany przez lekarza POZ
-[   4.24s] Dziecko 15 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   4.25s] Dziecko 15 czeka na lekarza: chirurg (kolor: zielony)
-[   4.26s] Lekarz chirurg rozpoczyna badanie - Dziecko 15
-[   4.26s] Lekarz chirurg kończy badanie - Dziecko 15 - wynik: wypis
-[   4.27s] Pacjent 18 pojawia się przed SOR (wiek 38)
-[   4.28s] Pacjent 18 wchodzi do budynku
-[   4.29s] Pacjent 18 dołącza do kolejki rejestracji
-[   4.30s] Pacjent 19 pojawia się przed SOR (wiek 39)
-[   4.31s] Pacjent 19 wchodzi do budynku
-[   4.32s] Pacjent 19 dołącza do kolejki rejestracji
-[   4.34s] Pacjent 11 przekazany do triażu, czeka na lekarza POZ
-[   4.35s] Pacjent 11 jest weryfikowany przez lekarza POZ
-[   4.37s] Pacjent 11 uzyskuje status [czerwony] — kierowany do lekarza: neurolog
-[   4.38s] Pacjent 11 czeka na lekarza: neurolog (kolor: czerwony)
-[   4.40s] Pacjent 12 podchodzi do okienka rejestracji 1
-[   4.42s] Lekarz neurolog rozpoczyna badanie - Pacjent 11
-[   4.43s] Lekarz neurolog kończy badanie - Pacjent 11 - wynik: wypis
-[   4.45s] Pacjent 20 pojawia się przed SOR (wiek 40)
-[   4.47s] Pacjent 20 wchodzi do budynku
-[   4.48s] Pacjent 20 (VIP) omija kolejkę rejestracji
-[   4.54s] Pacjent 21 pojawia się przed SOR (wiek 41)
-[   4.55s] Pacjent 21 wchodzi do budynku
-[   4.57s] Pacjent 21 dołącza do kolejki rejestracji
-[   4.63s] Pacjent 12 przekazany do triażu, czeka na lekarza POZ
-[   4.64s] Pacjent 12 jest weryfikowany przez lekarza POZ
-[   4.65s] Pacjent 12 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[   4.66s] Pacjent 12 czeka na lekarza: neurolog (kolor: zielony)
-[   4.67s] Pacjent 20 podchodzi do okienka rejestracji 1
-[   4.68s] Lekarz neurolog rozpoczyna badanie - Pacjent 12
-[   4.69s] Lekarz neurolog kończy badanie - Pacjent 12 - wynik: wypis
-[   4.70s] Pacjent 22 pojawia się przed SOR (wiek 42)
-[   4.72s] Pacjent 22 wchodzi do budynku
-[   4.74s] Pacjent 22 dołącza do kolejki rejestracji
-[   4.83s] Pacjent 23 pojawia się przed SOR (wiek 43)
-[   4.85s] Pacjent 23 wchodzi do budynku
-[   4.87s] Pacjent 23 dołącza do kolejki rejestracji
-[   4.90s] Pacjent 20 przekazany do triażu, czeka na lekarza POZ
-[   4.93s] Pacjent 13 podchodzi do okienka rejestracji 1
-[   4.96s] Pacjent 20 jest weryfikowany przez lekarza POZ
-[   4.99s] Pacjent 20 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[   5.01s] Pacjent 20 czeka na lekarza: laryngolog (kolor: zielony)
-[   5.04s] Lekarz laryngolog rozpoczyna badanie - Pacjent 20
-[   5.07s] Lekarz laryngolog kończy badanie - Pacjent 20 - wynik: wypis
-[   5.08s] Pacjent 24 pojawia się przed SOR (wiek 44)
-[   5.10s] Pacjent 24 wchodzi do budynku
-[   5.13s] Pacjent 24 dołącza do kolejki rejestracji
-[   5.19s] Pacjent 13 przekazany do triażu, czeka na lekarza POZ
-[   5.20s] Pacjent 14 podchodzi do okienka rejestracji 1
-[   5.22s] Pacjent 13 jest weryfikowany przez lekarza POZ
-[   5.24s] Pacjent 13 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[   5.25s] Pacjent 13 czeka na lekarza: chirurg (kolor: żółty)
-[   5.27s] Pacjent 25 pojawia się przed SOR (wiek 45)
-[   5.30s] Pacjent 25 wchodzi do budynku
-[   5.31s] Pacjent 25 (VIP) omija kolejkę rejestracji
-[   5.32s] Lekarz chirurg rozpoczyna badanie - Pacjent 13
-[   5.34s] Lekarz chirurg kończy badanie - Pacjent 13 - wynik: wypis
-[   5.35s] Pacjent 26 pojawia się przed SOR (wiek 46)
-[   5.37s] Pacjent 26 wchodzi do budynku
-[   5.38s] Pacjent 26 dołącza do kolejki rejestracji
-[   5.41s] Pacjent 14 przekazany do triażu, czeka na lekarza POZ
-[   5.42s] Pacjent 25 podchodzi do okienka rejestracji 1
-[   5.44s] Pacjent 14 jest weryfikowany przez lekarza POZ
-[   5.46s] Pacjent 14 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[   5.47s] Pacjent 14 czeka na lekarza: pediatra (kolor: żółty)
-[   5.48s] Lekarz pediatra rozpoczyna badanie - Pacjent 14
-[   5.50s] Lekarz pediatra kończy badanie - Pacjent 14 - wynik: oddział
-[   5.50s] Pacjent 27 pojawia się przed SOR (wiek 47)
-[   5.51s] Pacjent 27 wchodzi do budynku
-[   5.52s] Pacjent 27 dołącza do kolejki rejestracji
-[   5.60s] Pacjent 28 pojawia się przed SOR (wiek 48)
-[   5.62s] Pacjent 28 wchodzi do budynku
-[   5.64s] Pacjent 28 dołącza do kolejki rejestracji
-[   5.65s] Okienko rejestracji 2 zostaje otwarte (PID=17134)
-[   5.67s] Pacjent 25 przekazany do triażu, czeka na lekarza POZ
-[   5.68s] Pacjent 16 podchodzi do okienka rejestracji 1
-[   5.70s] Pacjent 25 jest weryfikowany przez lekarza POZ
-[   5.72s] Pacjent 25 uzyskuje status [żółty] — kierowany do lekarza: okulista
-[   5.74s] Pacjent 25 czeka na lekarza: okulista (kolor: żółty)
-[   5.75s] Okienko rejestracji 2 rozpoczyna pracę
-[   5.77s] Pacjent 17 podchodzi do okienka rejestracji 2
-[   5.78s] Lekarz okulista rozpoczyna badanie - Pacjent 25
-[   5.80s] Lekarz okulista kończy badanie - Pacjent 25 - wynik: wypis
-[   5.81s] Pacjent 29 pojawia się przed SOR (wiek 49)
-[   5.84s] Pacjent 29 wchodzi do budynku
-[   5.85s] Pacjent 29 dołącza do kolejki rejestracji
-[   5.87s] Pacjent 16 przekazany do triażu, czeka na lekarza POZ
-[   5.88s] Pacjent 16 jest weryfikowany przez lekarza POZ
-[   5.90s] Pacjent 18 podchodzi do okienka rejestracji 1
-[   5.91s] Pacjent 16 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[   5.92s] Pacjent 16 czeka na lekarza: laryngolog (kolor: zielony)
-[   5.94s] Pacjent 30 pojawia się przed SOR (wiek 50)
-[   5.96s] Pacjent 30 wchodzi do budynku
-[   5.98s] Pacjent 30 (VIP) omija kolejkę rejestracji
-[   6.00s] Lekarz laryngolog rozpoczyna badanie - Pacjent 16
-[   6.02s] Lekarz laryngolog kończy badanie - Pacjent 16 - wynik: wypis
-[   6.05s] Pacjent 17 przekazany do triażu, czeka na lekarza POZ
-[   6.07s] Pacjent 17 jest weryfikowany przez lekarza POZ
-[   6.09s] Pacjent 30 podchodzi do okienka rejestracji 2
-[   6.10s] Pacjent 17 uzyskuje status [czerwony] — kierowany do lekarza: kardiolog
-[   6.12s] Pacjent 17 czeka na lekarza: kardiolog (kolor: czerwony)
-[   6.13s] Lekarz kardiolog rozpoczyna badanie - Pacjent 17
-[   6.15s] Lekarz kardiolog kończy badanie - Pacjent 17 - wynik: wypis
-[   6.16s] Pacjent 31 pojawia się przed SOR (wiek 51)
-[   6.18s] Pacjent 31 wchodzi do budynku
-[   6.19s] Pacjent 31 dołącza do kolejki rejestracji
-[   6.21s] Pacjent 30 przekazany do triażu, czeka na lekarza POZ
-[   6.22s] Pacjent 19 podchodzi do okienka rejestracji 2
-[   6.23s] Pacjent 30 jest weryfikowany przez lekarza POZ
-[   6.25s] Pacjent 30 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[   6.26s] Pacjent 30 czeka na lekarza: okulista (kolor: zielony)
-[   6.30s] Lekarz okulista rozpoczyna badanie - Pacjent 30
-[   6.31s] Lekarz okulista kończy badanie - Pacjent 30 - wynik: wypis
-[   6.33s] Pacjent 18 przekazany do triażu, czeka na lekarza POZ
-[   6.34s] Pacjent 21 podchodzi do okienka rejestracji 1
-[   6.37s] Pacjent 18 jest weryfikowany przez lekarza POZ
-[   6.38s] Pacjent 18 uzyskuje status [czerwony] — kierowany do lekarza: okulista
-[   6.40s] Pacjent 18 czeka na lekarza: okulista (kolor: czerwony)
-[   6.43s] Lekarz okulista rozpoczyna badanie - Pacjent 18
-[   6.44s] Lekarz okulista kończy badanie - Pacjent 18 - wynik: wypis
-[   6.46s] Dziecko 32 pojawia się przed SOR (wiek 14, z opiekunem)
-[   6.49s] Dziecko 32 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   6.50s] Dziecko 32 wchodzi do budynku
-[   6.52s] Dziecko 32 dołącza do kolejki rejestracji
-[   6.53s] Pacjent 19 przekazany do triażu, czeka na lekarza POZ
-[   6.54s] Pacjent 22 podchodzi do okienka rejestracji 2
-[   6.56s] Pacjent 19 jest weryfikowany przez lekarza POZ
-[   6.58s] Pacjent 19 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[   6.60s] Pacjent 19 czeka na lekarza: kardiolog (kolor: zielony)
-[   6.61s] Pacjent 33 pojawia się przed SOR (wiek 53)
-[   6.62s] Pacjent 33 wchodzi do budynku
-[   6.63s] Pacjent 33 dołącza do kolejki rejestracji
-[   6.64s] Lekarz kardiolog rozpoczyna badanie - Pacjent 19
-[   6.65s] Lekarz kardiolog kończy badanie - Pacjent 19 - wynik: wypis
-[   6.66s] Pacjent 21 przekazany do triażu, czeka na lekarza POZ
-[   6.67s] Pacjent 23 podchodzi do okienka rejestracji 1
-[   6.68s] Pacjent 21 jest weryfikowany przez lekarza POZ
-[   6.70s] Pacjent 21 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[   6.71s] Pacjent 21 czeka na lekarza: neurolog (kolor: żółty)
-[   6.72s] Lekarz neurolog rozpoczyna badanie - Pacjent 21
-[   6.73s] Lekarz neurolog kończy badanie - Pacjent 21 - wynik: oddział
-[   6.74s] Pacjent 34 pojawia się przed SOR (wiek 54)
-[   6.75s] Pacjent 34 wchodzi do budynku
-[   6.76s] Pacjent 34 dołącza do kolejki rejestracji
-[   6.78s] Pacjent 22 przekazany do triażu, czeka na lekarza POZ
-[   6.80s] Pacjent 24 podchodzi do okienka rejestracji 2
-[   6.81s] Pacjent 22 jest weryfikowany przez lekarza POZ
-[   6.83s] Pacjent 22 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[   6.84s] Pacjent 22 czeka na lekarza: neurolog (kolor: zielony)
-[   6.86s] Lekarz neurolog rozpoczyna badanie - Pacjent 22
-[   6.89s] Lekarz neurolog kończy badanie - Pacjent 22 - wynik: wypis
-[   6.93s] Dziecko 35 pojawia się przed SOR (wiek 8, z opiekunem)
-[   6.98s] Dziecko 35 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   7.00s] Dziecko 35 wchodzi do budynku
-[   7.02s] Dziecko 35 (VIP) omija kolejkę rejestracji
-[   7.04s] Pacjent 23 przekazany do triażu, czeka na lekarza POZ
-[   7.06s] Dziecko 35 podchodzi do okienka rejestracji 1
-[   7.07s] Pacjent 23 jest weryfikowany przez lekarza POZ
-[   7.09s] Pacjent 23 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[   7.11s] Pacjent 23 czeka na lekarza: okulista (kolor: zielony)
-[   7.12s] Lekarz okulista rozpoczyna badanie - Pacjent 23
-[   7.14s] Lekarz okulista kończy badanie - Pacjent 23 - wynik: wypis
-[   7.15s] Pacjent 36 pojawia się przed SOR (wiek 56)
-[   7.18s] Pacjent 36 wchodzi do budynku
-[   7.19s] Pacjent 36 dołącza do kolejki rejestracji
-[   7.20s] Pacjent 24 przekazany do triażu, czeka na lekarza POZ
-[   7.21s] Pacjent 26 podchodzi do okienka rejestracji 2
-[   7.23s] Pacjent 24 jest weryfikowany przez lekarza POZ
-[   7.24s] Pacjent 24 uzyskuje status [czerwony] — kierowany do lekarza: neurolog
-[   7.26s] Pacjent 24 czeka na lekarza: neurolog (kolor: czerwony)
-[   7.27s] Lekarz neurolog rozpoczyna badanie - Pacjent 24
-[   7.29s] Lekarz neurolog kończy badanie - Pacjent 24 - wynik: wypis
-[   7.30s] Pacjent 37 pojawia się przed SOR (wiek 57)
-[   7.32s] Pacjent 37 wchodzi do budynku
-[   7.34s] Pacjent 37 dołącza do kolejki rejestracji
-[   7.35s] Dziecko 35 przekazany do triażu, czeka na lekarza POZ
-[   7.37s] Dziecko 35 jest weryfikowany przez lekarza POZ
-[   7.38s] Dziecko 35 zostaje odesłany do domu po triażu
-[   7.40s] Pacjent 27 podchodzi do okienka rejestracji 1
-[   7.41s] Pacjent 26 przekazany do triażu, czeka na lekarza POZ
-[   7.43s] Pacjent 28 podchodzi do okienka rejestracji 2
-[   7.44s] Pacjent 26 jest weryfikowany przez lekarza POZ
-[   7.47s] Pacjent 26 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[   7.50s] Pacjent 26 czeka na lekarza: kardiolog (kolor: zielony)
-[   7.52s] Pacjent 38 pojawia się przed SOR (wiek 58)
-[   7.54s] Pacjent 38 wchodzi do budynku
-[   7.56s] Pacjent 38 dołącza do kolejki rejestracji
-[   7.58s] Lekarz kardiolog rozpoczyna badanie - Pacjent 26
-[   7.61s] Lekarz kardiolog kończy badanie - Pacjent 26 - wynik: wypis
-[   7.64s] Pacjent 39 pojawia się przed SOR (wiek 59)
-[   7.66s] Pacjent 39 wchodzi do budynku
-[   7.68s] Pacjent 39 dołącza do kolejki rejestracji
-[   7.70s] Pacjent 27 przekazany do triażu, czeka na lekarza POZ
-[   7.72s] Pacjent 27 jest weryfikowany przez lekarza POZ
-[   7.74s] Pacjent 29 podchodzi do okienka rejestracji 1
-[   7.76s] Pacjent 27 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[   7.77s] Pacjent 27 czeka na lekarza: pediatra (kolor: zielony)
-[   7.79s] Pacjent 28 przekazany do triażu, czeka na lekarza POZ
-[   7.81s] Pacjent 28 jest weryfikowany przez lekarza POZ
-[   7.82s] Pacjent 31 podchodzi do okienka rejestracji 2
-[   7.84s] Pacjent 28 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[   7.86s] Pacjent 28 czeka na lekarza: chirurg (kolor: żółty)
-[   7.87s] Lekarz pediatra rozpoczyna badanie - Pacjent 27
-[   7.89s] Lekarz pediatra kończy badanie - Pacjent 27 - wynik: oddział
-[   7.90s] Lekarz chirurg rozpoczyna badanie - Pacjent 28
-[   7.92s] Lekarz chirurg kończy badanie - Pacjent 28 - wynik: wypis
-[   7.93s] Pacjent 40 pojawia się przed SOR (wiek 20)
-[   7.95s] Pacjent 40 wchodzi do budynku
-[   7.96s] Pacjent 40 (VIP) omija kolejkę rejestracji
-[   7.97s] Pacjent 29 przekazany do triażu, czeka na lekarza POZ
-[   7.97s] Pacjent 40 podchodzi do okienka rejestracji 1
-[   7.99s] Pacjent 29 jest weryfikowany przez lekarza POZ
-[   8.00s] Dziecko 41 pojawia się przed SOR (wiek 17, z opiekunem)
-[   8.01s] Pacjent 29 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[   8.02s] Dziecko 41 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   8.04s] Dziecko 41 wchodzi do budynku
-[   8.05s] Pacjent 29 czeka na lekarza: kardiolog (kolor: zielony)
-[   8.06s] Dziecko 41 dołącza do kolejki rejestracji
-[   8.07s] Lekarz kardiolog rozpoczyna badanie - Pacjent 29
-[   8.08s] Lekarz kardiolog kończy badanie - Pacjent 29 - wynik: wypis
-[   8.10s] Pacjent 31 przekazany do triażu, czeka na lekarza POZ
-[   8.11s] Pacjent 31 jest weryfikowany przez lekarza POZ
-[   8.12s] Pacjent 31 uzyskuje status [czerwony] — kierowany do lekarza: neurolog
-[   8.14s] Pacjent 31 czeka na lekarza: neurolog (kolor: czerwony)
-[   8.15s] Dziecko 32 podchodzi do okienka rejestracji 2
-[   8.17s] Lekarz neurolog rozpoczyna badanie - Pacjent 31
-[   8.19s] Lekarz neurolog kończy badanie - Pacjent 31 - wynik: wypis
-[   8.21s] Dziecko 42 pojawia się przed SOR (wiek 9, z opiekunem)
-[   8.23s] Dziecko 42 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   8.25s] Dziecko 42 wchodzi do budynku
-[   8.27s] Dziecko 42 dołącza do kolejki rejestracji
-[   8.28s] Pacjent 43 pojawia się przed SOR (wiek 23)
-[   8.30s] Pacjent 43 wchodzi do budynku
-[   8.32s] Pacjent 43 dołącza do kolejki rejestracji
-[   8.33s] Pacjent 40 przekazany do triażu, czeka na lekarza POZ
-[   8.34s] Pacjent 33 podchodzi do okienka rejestracji 1
-[   8.36s] Pacjent 40 jest weryfikowany przez lekarza POZ
-[   8.38s] Pacjent 40 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   8.40s] Pacjent 40 czeka na lekarza: chirurg (kolor: zielony)
-[   8.41s] Lekarz chirurg rozpoczyna badanie - Pacjent 40
-[   8.42s] Lekarz chirurg kończy badanie - Pacjent 40 - wynik: wypis
-[   8.44s] Dziecko 32 przekazany do triażu, czeka na lekarza POZ
-[   8.45s] Dziecko 32 jest weryfikowany przez lekarza POZ
-[   8.48s] Pacjent 34 podchodzi do okienka rejestracji 2
-[   8.51s] Dziecko 32 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[   8.53s] Dziecko 32 czeka na lekarza: pediatra (kolor: zielony)
-[   8.56s] Lekarz pediatra rozpoczyna badanie - Dziecko 32
-[   8.60s] Lekarz pediatra kończy badanie - Dziecko 32 - wynik: wypis
-[   8.62s] Dziecko 44 pojawia się przed SOR (wiek 10, z opiekunem)
-[   8.64s] Dziecko 44 przychodzi z opiekunem (zajmuje 2 miejsca)
-[   8.66s] Dziecko 44 wchodzi do budynku
-[   8.68s] Dziecko 44 dołącza do kolejki rejestracji
-[   8.71s] Pacjent 34 przekazany do triażu, czeka na lekarza POZ
-[   8.73s] Pacjent 34 jest weryfikowany przez lekarza POZ
-[   8.75s] Pacjent 36 podchodzi do okienka rejestracji 2
-[   8.77s] Pacjent 34 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   8.78s] Pacjent 34 czeka na lekarza: chirurg (kolor: zielony)
-[   8.80s] Lekarz chirurg rozpoczyna badanie - Pacjent 34
-[   8.82s] Lekarz chirurg kończy badanie - Pacjent 34 - wynik: wypis
-[   8.84s] Pacjent 33 przekazany do triażu, czeka na lekarza POZ
-[   8.86s] Pacjent 37 podchodzi do okienka rejestracji 1
-[   8.87s] Pacjent 33 jest weryfikowany przez lekarza POZ
-[   8.89s] Pacjent 33 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[   8.92s] Pacjent 33 czeka na lekarza: kardiolog (kolor: żółty)
-[   8.95s] Pacjent 45 pojawia się przed SOR (wiek 25)
-[   8.98s] Pacjent 45 wchodzi do budynku
-[   9.01s] Pacjent 45 (VIP) omija kolejkę rejestracji
-[   9.04s] Lekarz kardiolog rozpoczyna badanie - Pacjent 33
-[   9.11s] Lekarz kardiolog kończy badanie - Pacjent 33 - wynik: wypis
-[   9.21s] Pacjent 36 przekazany do triażu, czeka na lekarza POZ
-[   9.24s] Pacjent 45 podchodzi do okienka rejestracji 2
-[   9.26s] Pacjent 36 jest weryfikowany przez lekarza POZ
-[   9.27s] Pacjent 36 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[   9.29s] Pacjent 36 czeka na lekarza: neurolog (kolor: żółty)
-[   9.30s] Pacjent 46 pojawia się przed SOR (wiek 26)
-[   9.32s] Pacjent 46 wchodzi do budynku
-[   9.35s] Pacjent 46 dołącza do kolejki rejestracji
-[   9.36s] Lekarz neurolog rozpoczyna badanie - Pacjent 36
-[   9.38s] Lekarz neurolog kończy badanie - Pacjent 36 - wynik: wypis
-[   9.40s] Pacjent 37 przekazany do triażu, czeka na lekarza POZ
-[   9.41s] Pacjent 38 podchodzi do okienka rejestracji 1
-[   9.43s] Pacjent 37 jest weryfikowany przez lekarza POZ
-[   9.44s] [Director] Dyrektor wysyła SIGUSR1 do lekarza pediatra (PID=17043)
-[   9.47s] Pacjent 37 uzyskuje status [czerwony] — kierowany do lekarza: okulista
-[   9.49s] Lekarz pediatra opuszcza SOR na rozkaz dyrektora (bez pacjenta)
-[   9.51s] Lekarz pediatra pracuje na oddziale
-[   9.53s] Pacjent 37 czeka na lekarza: okulista (kolor: czerwony)
-[   9.54s] Pacjent 47 pojawia się przed SOR (wiek 27)
-[   9.56s] Pacjent 47 wchodzi do budynku
-[   9.57s] Pacjent 47 dołącza do kolejki rejestracji
-[   9.59s] Lekarz okulista rozpoczyna badanie - Pacjent 37
-[   9.60s] Lekarz okulista kończy badanie - Pacjent 37 - wynik: oddział
-[   9.62s] Pacjent 48 pojawia się przed SOR (wiek 28)
-[   9.63s] Pacjent 48 wchodzi do budynku
-[   9.64s] Pacjent 48 dołącza do kolejki rejestracji
-[   9.66s] Pacjent 45 przekazany do triażu, czeka na lekarza POZ
-[   9.67s] Pacjent 39 podchodzi do okienka rejestracji 2
-[   9.69s] Pacjent 45 jest weryfikowany przez lekarza POZ
-[   9.70s] Pacjent 45 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[   9.72s] Pacjent 45 czeka na lekarza: chirurg (kolor: zielony)
-[   9.74s] Pacjent 38 przekazany do triażu, czeka na lekarza POZ
-[   9.76s] Pacjent 38 jest weryfikowany przez lekarza POZ
-[   9.78s] Dziecko 41 podchodzi do okienka rejestracji 1
-[   9.80s] Pacjent 38 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[   9.84s] Pacjent 38 czeka na lekarza: neurolog (kolor: żółty)
-[   9.86s] Lekarz neurolog rozpoczyna badanie - Pacjent 38
-[   9.88s] Lekarz neurolog kończy badanie - Pacjent 38 - wynik: wypis
-[   9.90s] Lekarz chirurg rozpoczyna badanie - Pacjent 45
-[   9.92s] Lekarz chirurg kończy badanie - Pacjent 45 - wynik: wypis
-[   9.94s] Pacjent 49 pojawia się przed SOR (wiek 29)
-[   9.96s] Pacjent 49 wchodzi do budynku
-[   9.97s] Pacjent 49 dołącza do kolejki rejestracji
-[   9.99s] Pacjent 50 pojawia się przed SOR (wiek 30)
-[  10.01s] Pacjent 50 wchodzi do budynku
-[  10.02s] Pacjent 50 (VIP) omija kolejkę rejestracji
-[  10.03s] Pacjent 39 przekazany do triażu, czeka na lekarza POZ
-[  10.05s] Pacjent 50 podchodzi do okienka rejestracji 2
-[  10.06s] Pacjent 39 jest weryfikowany przez lekarza POZ
-[  10.08s] Dziecko 41 przekazany do triażu, czeka na lekarza POZ
-[  10.09s] Dziecko 42 podchodzi do okienka rejestracji 1
-[  10.10s] Pacjent 39 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  10.12s] Pacjent 39 czeka na lekarza: pediatra (kolor: żółty)
-[  10.13s] Dziecko 41 jest weryfikowany przez lekarza POZ
-[  10.14s] Dziecko 41 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  10.16s] Dziecko 41 czeka na lekarza: chirurg (kolor: zielony)
-[  10.18s] Lekarz chirurg rozpoczyna badanie - Dziecko 41
-[  10.19s] Pacjent 51 pojawia się przed SOR (wiek 31)
-[  10.21s] Pacjent 51 wchodzi do budynku
-[  10.22s] Pacjent 51 dołącza do kolejki rejestracji
-[  10.24s] Pacjent 50 przekazany do triażu, czeka na lekarza POZ
-[  10.25s] Pacjent 43 podchodzi do okienka rejestracji 2
-[  10.26s] Pacjent 52 pojawia się przed SOR (wiek 32)
-[  10.27s] Pacjent 52 wchodzi do budynku
-[  10.28s] Pacjent 53 pojawia się przed SOR (wiek 33)
-[  10.29s] Dziecko 54 pojawia się przed SOR (wiek 5, z opiekunem)
-[  10.30s] Dziecko 54 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  10.32s] Dziecko 54 wchodzi do budynku
-[  10.34s] Dziecko 54 dołącza do kolejki rejestracji
-[  10.36s] Pacjent 43 przekazany do triażu, czeka na lekarza POZ
-[  10.37s] Pacjent 43 jest weryfikowany przez lekarza POZ
-[  10.39s] Pacjent 46 podchodzi do okienka rejestracji 2
-[  10.41s] Pacjent 43 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  10.43s] Pacjent 43 czeka na lekarza: okulista (kolor: zielony)
-[  10.44s] Lekarz okulista rozpoczyna badanie - Pacjent 43
-[  10.47s] Lekarz okulista kończy badanie - Pacjent 43 - wynik: wypis
-[  10.48s] Dziecko 44 przekazany do triażu, czeka na lekarza POZ
-[  10.50s] Pacjent 47 podchodzi do okienka rejestracji 1
-[  10.51s] Dziecko 44 jest weryfikowany przez lekarza POZ
-[  10.53s] Dziecko 44 uzyskuje status [czerwony] — kierowany do lekarza: neurolog
-[  10.54s] Dziecko 44 czeka na lekarza: neurolog (kolor: czerwony)
-[  10.56s] Pacjent 46 przekazany do triażu, czeka na lekarza POZ
-[  10.58s] Dziecko 55 podchodzi do okienka rejestracji 2
-[  10.60s] Pacjent 46 jest weryfikowany przez lekarza POZ
-[  10.62s] Pacjent 46 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  10.64s] Pacjent 46 czeka na lekarza: kardiolog (kolor: żółty)
-[  10.67s] Lekarz kardiolog rozpoczyna badanie - Pacjent 46
-[  10.69s] Lekarz kardiolog kończy badanie - Pacjent 46 - wynik: wypis
-[  10.71s] Pacjent 56 pojawia się przed SOR (wiek 36)
-[  10.73s] Pacjent 56 wchodzi do budynku
-[  10.76s] Pacjent 56 dołącza do kolejki rejestracji
-[  10.78s] Pacjent 47 przekazany do triażu, czeka na lekarza POZ
-[  10.79s] Pacjent 48 podchodzi do okienka rejestracji 1
-[  10.82s] Pacjent 47 jest weryfikowany przez lekarza POZ
-[  10.85s] Pacjent 47 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  10.88s] Pacjent 47 czeka na lekarza: laryngolog (kolor: zielony)
-[  10.90s] Dziecko 57 pojawia się przed SOR (wiek 14, z opiekunem)
-[  10.91s] Dziecko 57 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  10.93s] Dziecko 57 wchodzi do budynku
-[  10.95s] Lekarz laryngolog rozpoczyna badanie - Pacjent 47
-[  10.97s] Lekarz laryngolog kończy badanie - Pacjent 47 - wynik: wypis
-[  10.99s] Dziecko 55 przekazany do triażu, czeka na lekarza POZ
-[  11.01s] Lekarz kardiolog rozpoczyna badanie - Dziecko 55
-[  11.03s] Pacjent 58 pojawia się przed SOR (wiek 38)
-[  11.05s] Pacjent 58 wchodzi do budynku
-[  11.06s] Pacjent 58 dołącza do kolejki rejestracji
-[  11.08s] Pacjent 49 przekazany do triażu, czeka na lekarza POZ
-[  11.10s] Pacjent 51 podchodzi do okienka rejestracji 2
-[  11.12s] Pacjent 49 jest weryfikowany przez lekarza POZ
-[  11.14s] Pacjent 49 uzyskuje status [żółty] — kierowany do lekarza: okulista
-[  11.16s] Pacjent 49 czeka na lekarza: okulista (kolor: żółty)
-[  11.18s] Pacjent 59 pojawia się przed SOR (wiek 39)
-[  11.20s] Pacjent 59 wchodzi do budynku
-[  11.22s] Pacjent 59 dołącza do kolejki rejestracji
-[  11.24s] Lekarz okulista rozpoczyna badanie - Pacjent 49
-[  11.27s] Lekarz okulista kończy badanie - Pacjent 49 - wynik: wypis
-[  11.29s] Pacjent 48 przekazany do triażu, czeka na lekarza POZ
-[  11.30s] Pacjent 52 podchodzi do okienka rejestracji 1
-[  11.32s] Pacjent 48 jest weryfikowany przez lekarza POZ
-[  11.33s] Pacjent 60 pojawia się przed SOR (wiek 40)
-[  11.35s] Pacjent 60 wchodzi do budynku
-[  11.36s] Pacjent 60 (VIP) omija kolejkę rejestracji
-[  11.36s] Pacjent 52 przekazany do triażu, czeka na lekarza POZ
-[  11.37s] Pacjent 60 podchodzi do okienka rejestracji 1
-[  11.38s] Pacjent 52 jest weryfikowany przez lekarza POZ
-[  11.40s] Pacjent 52 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  11.41s] Pacjent 52 czeka na lekarza: neurolog (kolor: zielony)
-[  11.42s] Lekarz neurolog rozpoczyna badanie - Pacjent 52
-[  11.43s] Lekarz neurolog kończy badanie - Pacjent 52 - wynik: wypis
-[  11.45s] Pacjent 51 przekazany do triażu, czeka na lekarza POZ
-[  11.47s] Pacjent 51 jest weryfikowany przez lekarza POZ
-[  11.48s] Pacjent 53 podchodzi do okienka rejestracji 2
-[  11.50s] Pacjent 51 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  11.51s] Pacjent 51 czeka na lekarza: kardiolog (kolor: żółty)
-[  11.53s] Pacjent 61 pojawia się przed SOR (wiek 41)
-[  11.54s] Pacjent 61 wchodzi do budynku
-[  11.55s] Lekarz kardiolog rozpoczyna badanie - Pacjent 51
-[  11.57s] Pacjent 62 pojawia się przed SOR (wiek 42)
-[  11.58s] Pacjent 62 wchodzi do budynku
-[  11.60s] Pacjent 62 dołącza do kolejki rejestracji
-[  11.61s] Pacjent 60 przekazany do triażu, czeka na lekarza POZ
-[  11.63s] Pacjent 60 jest weryfikowany przez lekarza POZ
-[  11.64s] Dziecko 54 podchodzi do okienka rejestracji 1
-[  11.65s] Pacjent 60 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[  11.67s] Pacjent 60 czeka na lekarza: kardiolog (kolor: zielony)
-[  11.68s] Lekarz kardiolog rozpoczyna badanie - Pacjent 60
-[  11.71s] Lekarz kardiolog kończy badanie - Pacjent 60 - wynik: wypis
-[  11.72s] Pacjent 63 pojawia się przed SOR (wiek 43)
-[  11.73s] Pacjent 63 wchodzi do budynku
-[  11.75s] Pacjent 63 dołącza do kolejki rejestracji
-[  11.76s] Pacjent 53 przekazany do triażu, czeka na lekarza POZ
-[  11.78s] Pacjent 53 jest weryfikowany przez lekarza POZ
-[  11.79s] Pacjent 56 podchodzi do okienka rejestracji 2
-[  11.80s] Lekarz okulista rozpoczyna badanie - Pacjent 53
-[  11.81s] Lekarz okulista kończy badanie - Pacjent 53 - wynik: wypis
-[  11.82s] Dziecko 54 przekazany do triażu, czeka na lekarza POZ
-[  11.83s] Dziecko 54 jest weryfikowany przez lekarza POZ
-[  11.83s] Lekarz okulista rozpoczyna badanie - Dziecko 54
-[  11.84s] Pacjent 64 pojawia się przed SOR (wiek 44)
-[  11.85s] Pacjent 56 przekazany do triażu, czeka na lekarza POZ
-[  11.87s] Pacjent 58 podchodzi do okienka rejestracji 2
-[  11.88s] Pacjent 56 jest weryfikowany przez lekarza POZ
-[  11.90s] Pacjent 56 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  11.91s] Pacjent 56 czeka na lekarza: okulista (kolor: zielony)
-[  11.92s] Pacjent 58 przekazany do triażu, czeka na lekarza POZ
-[  11.94s] Lekarz okulista rozpoczyna badanie - Pacjent 58
-[  11.96s] Pacjent 65 pojawia się przed SOR (wiek 45)
-[  11.97s] Pacjent 65 wchodzi do budynku
-[  11.99s] Pacjent 65 (VIP) omija kolejkę rejestracji
-[  12.01s] Dziecko 57 przekazany do triażu, czeka na lekarza POZ
-[  12.02s] Pacjent 65 podchodzi do okienka rejestracji 1
-[  12.04s] Lekarz okulista rozpoczyna badanie - Dziecko 57
-[  12.06s] Pacjent 66 pojawia się przed SOR (wiek 46)
-[  12.07s] Pacjent 66 wchodzi do budynku
-[  12.10s] Pacjent 66 dołącza do kolejki rejestracji
-[  12.12s] Pacjent 67 pojawia się przed SOR (wiek 47)
-[  12.14s] Pacjent 67 wchodzi do budynku
-[  12.17s] Pacjent 67 dołącza do kolejki rejestracji
-[  12.18s] Pacjent 65 przekazany do triażu, czeka na lekarza POZ
-[  12.20s] Pacjent 59 podchodzi do okienka rejestracji 1
-[  12.21s] Pacjent 65 jest weryfikowany przez lekarza POZ
-[  12.23s] Pacjent 65 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
-[  12.24s] Pacjent 65 czeka na lekarza: laryngolog (kolor: czerwony)
-[  12.26s] Lekarz laryngolog rozpoczyna badanie - Pacjent 65
-[  12.28s] Lekarz laryngolog kończy badanie - Pacjent 65 - wynik: wypis
-[  12.29s] Pacjent 68 pojawia się przed SOR (wiek 48)
-[  12.31s] Pacjent 68 wchodzi do budynku
-[  12.33s] Pacjent 68 dołącza do kolejki rejestracji
-[  12.34s] Pacjent 69 pojawia się przed SOR (wiek 49)
-[  12.36s] Pacjent 69 wchodzi do budynku
-[  12.37s] Pacjent 69 dołącza do kolejki rejestracji
-[  12.39s] Pacjent 59 przekazany do triażu, czeka na lekarza POZ
-[  12.40s] Pacjent 61 podchodzi do okienka rejestracji 1
-[  12.42s] Pacjent 59 jest weryfikowany przez lekarza POZ
-[  12.43s] Pacjent 59 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  12.45s] Pacjent 59 czeka na lekarza: pediatra (kolor: zielony)
-[  12.47s] Pacjent 70 pojawia się przed SOR (wiek 50)
-[  12.48s] Pacjent 70 wchodzi do budynku
-[  12.51s] Pacjent 70 (VIP) omija kolejkę rejestracji
-[  12.54s] Pacjent 61 przekazany do triażu, czeka na lekarza POZ
-[  12.56s] Pacjent 70 podchodzi do okienka rejestracji 1
-[  12.58s] Pacjent 61 jest weryfikowany przez lekarza POZ
-[  12.61s] Pacjent 61 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  12.62s] Pacjent 61 czeka na lekarza: neurolog (kolor: żółty)
-[  12.64s] Pacjent 71 pojawia się przed SOR (wiek 51)
-[  12.67s] Pacjent 71 wchodzi do budynku
-[  12.69s] Pacjent 71 dołącza do kolejki rejestracji
-[  12.72s] Lekarz neurolog rozpoczyna badanie - Pacjent 61
-[  12.74s] Lekarz neurolog kończy badanie - Pacjent 61 - wynik: wypis
-[  12.77s] Pacjent 72 pojawia się przed SOR (wiek 52)
-[  12.78s] Pacjent 72 wchodzi do budynku
-[  12.80s] Pacjent 72 dołącza do kolejki rejestracji
-[  12.81s] Pacjent 70 przekazany do triażu, czeka na lekarza POZ
-[  12.83s] Pacjent 62 podchodzi do okienka rejestracji 1
-[  12.84s] Pacjent 70 jest weryfikowany przez lekarza POZ
-[  12.86s] Pacjent 70 uzyskuje status [żółty] — kierowany do lekarza: laryngolog
-[  12.88s] Pacjent 70 czeka na lekarza: laryngolog (kolor: żółty)
-[  12.90s] Lekarz laryngolog rozpoczyna badanie - Pacjent 70
-[  12.91s] Lekarz laryngolog kończy badanie - Pacjent 70 - wynik: wypis
-[  12.93s] Pacjent 73 pojawia się przed SOR (wiek 53)
-[  12.94s] Pacjent 73 wchodzi do budynku
-[  12.96s] Pacjent 73 dołącza do kolejki rejestracji
-[  12.98s] Pacjent 62 przekazany do triażu, czeka na lekarza POZ
-[  13.00s] Pacjent 63 podchodzi do okienka rejestracji 1
-[  13.02s] Pacjent 62 jest weryfikowany przez lekarza POZ
-[  13.05s] Pacjent 62 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  13.07s] Pacjent 62 czeka na lekarza: pediatra (kolor: żółty)
-[  13.09s] [Director] Dyrektor wysyła SIGUSR1 do lekarza pediatra (PID=17043)
-[  13.11s] Lekarz pediatra wraca do SOR
-[  13.13s] Lekarz pediatra rozpoczyna badanie - Pacjent 39
-[  13.14s] Lekarz pediatra kończy badanie - Pacjent 39 - wynik: wypis
-[  13.15s] Lekarz pediatra rozpoczyna badanie - Pacjent 62
-[  13.17s] Lekarz pediatra kończy badanie - Pacjent 62 - wynik: wypis
-[  13.18s] Lekarz pediatra rozpoczyna badanie - Pacjent 59
-[  13.20s] Lekarz pediatra kończy badanie - Pacjent 59 - wynik: wypis
-[  13.21s] Pacjent 74 pojawia się przed SOR (wiek 54)
-[  13.23s] Pacjent 74 wchodzi do budynku
-[  13.24s] Pacjent 74 dołącza do kolejki rejestracji
-[  13.26s] Pacjent 63 przekazany do triażu, czeka na lekarza POZ
-[  13.27s] Pacjent 63 jest weryfikowany przez lekarza POZ
-[  13.29s] Pacjent 64 podchodzi do okienka rejestracji 1
-[  13.31s] Pacjent 63 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
-[  13.32s] Pacjent 63 czeka na lekarza: laryngolog (kolor: czerwony)
-[  13.34s] Pacjent 75 pojawia się przed SOR (wiek 55)
-[  13.35s] Pacjent 75 wchodzi do budynku
-[  13.38s] Pacjent 75 (VIP) omija kolejkę rejestracji
-[  13.40s] Lekarz laryngolog rozpoczyna badanie - Pacjent 63
-[  13.42s] Lekarz laryngolog kończy badanie - Pacjent 63 - wynik: wypis
-[  13.44s] Dziecko 76 pojawia się przed SOR (wiek 16, z opiekunem)
-[  13.47s] Dziecko 76 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  13.49s] Dziecko 76 wchodzi do budynku
-[  13.51s] Dziecko 76 dołącza do kolejki rejestracji
-[  13.52s] Pacjent 64 przekazany do triażu, czeka na lekarza POZ
-[  13.54s] Pacjent 75 podchodzi do okienka rejestracji 1
-[  13.56s] Pacjent 64 jest weryfikowany przez lekarza POZ
-[  13.58s] Pacjent 64 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  13.59s] Pacjent 64 czeka na lekarza: kardiolog (kolor: żółty)
-[  13.60s] Lekarz kardiolog rozpoczyna badanie - Pacjent 64
-[  13.62s] Lekarz kardiolog kończy badanie - Pacjent 64 - wynik: wypis
-[  13.63s] Pacjent 77 pojawia się przed SOR (wiek 57)
-[  13.64s] Pacjent 77 wchodzi do budynku
-[  13.66s] Pacjent 77 dołącza do kolejki rejestracji
-[  13.67s] Pacjent 75 przekazany do triażu, czeka na lekarza POZ
-[  13.69s] Pacjent 66 podchodzi do okienka rejestracji 1
-[  13.70s] Pacjent 75 jest weryfikowany przez lekarza POZ
-[  13.72s] Pacjent 75 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  13.74s] Pacjent 75 czeka na lekarza: okulista (kolor: zielony)
-[  13.75s] Lekarz okulista rozpoczyna badanie - Pacjent 75
-[  13.77s] Lekarz okulista kończy badanie - Pacjent 75 - wynik: wypis
-[  13.79s] Pacjent 78 pojawia się przed SOR (wiek 58)
-[  13.81s] Pacjent 78 wchodzi do budynku
-[  13.83s] Pacjent 78 dołącza do kolejki rejestracji
-[  13.84s] Pacjent 66 przekazany do triażu, czeka na lekarza POZ
-[  13.87s] Pacjent 67 podchodzi do okienka rejestracji 1
-[  13.88s] Pacjent 66 jest weryfikowany przez lekarza POZ
-[  13.90s] Pacjent 66 uzyskuje status [czerwony] — kierowany do lekarza: okulista
-[  13.92s] Pacjent 66 czeka na lekarza: okulista (kolor: czerwony)
-[  13.94s] Lekarz okulista rozpoczyna badanie - Pacjent 66
-[  13.95s] Lekarz okulista kończy badanie - Pacjent 66 - wynik: oddział
-[  13.96s] Pacjent 79 pojawia się przed SOR (wiek 59)
-[  13.98s] Pacjent 79 wchodzi do budynku
-[  14.00s] Pacjent 79 dołącza do kolejki rejestracji
-[  14.02s] Pacjent 67 przekazany do triażu, czeka na lekarza POZ
-[  14.04s] Pacjent 68 podchodzi do okienka rejestracji 1
-[  14.05s] Pacjent 67 jest weryfikowany przez lekarza POZ
-[  14.07s] Pacjent 67 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  14.11s] Pacjent 67 czeka na lekarza: okulista (kolor: zielony)
-[  14.13s] Lekarz okulista rozpoczyna badanie - Pacjent 67
-[  14.16s] Lekarz okulista kończy badanie - Pacjent 67 - wynik: wypis
-[  14.18s] Pacjent 80 pojawia się przed SOR (wiek 20)
-[  14.20s] Pacjent 80 wchodzi do budynku
-[  14.22s] Pacjent 80 (VIP) omija kolejkę rejestracji
-[  14.25s] Pacjent 81 pojawia się przed SOR (wiek 21)
-[  14.27s] Pacjent 81 wchodzi do budynku
-[  14.28s] Pacjent 81 dołącza do kolejki rejestracji
-[  14.30s] Pacjent 68 przekazany do triażu, czeka na lekarza POZ
-[  14.32s] Pacjent 80 podchodzi do okienka rejestracji 1
-[  14.33s] Pacjent 68 jest weryfikowany przez lekarza POZ
-[  14.35s] Pacjent 82 pojawia się przed SOR (wiek 22)
-[  14.36s] Pacjent 82 wchodzi do budynku
-[  14.38s] Pacjent 82 dołącza do kolejki rejestracji
-[  14.40s] Pacjent 68 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  14.42s] Pacjent 68 czeka na lekarza: chirurg (kolor: zielony)
-[  14.45s] Lekarz chirurg rozpoczyna badanie - Pacjent 68
-[  14.47s] Lekarz chirurg kończy badanie - Pacjent 68 - wynik: oddział
-[  14.49s] Okienko rejestracji 2 zostaje otwarte (PID=17413)
-[  14.50s] Okienko rejestracji 2 rozpoczyna pracę
-[  14.51s] Pacjent 69 podchodzi do okienka rejestracji 2
-[  14.53s] Pacjent 80 przekazany do triażu, czeka na lekarza POZ
-[  14.54s] Pacjent 71 podchodzi do okienka rejestracji 1
-[  14.55s] Pacjent 80 jest weryfikowany przez lekarza POZ
-[  14.57s] Pacjent 80 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  14.57s] Pacjent 80 czeka na lekarza: laryngolog (kolor: zielony)
-[  14.59s] Pacjent 83 pojawia się przed SOR (wiek 23)
-[  14.60s] Pacjent 83 wchodzi do budynku
-[  14.61s] Pacjent 83 dołącza do kolejki rejestracji
-[  14.62s] Lekarz laryngolog rozpoczyna badanie - Pacjent 80
-[  14.63s] Lekarz laryngolog kończy badanie - Pacjent 80 - wynik: wypis
-[  14.65s] Pacjent 71 przekazany do triażu, czeka na lekarza POZ
-[  14.66s] Pacjent 72 podchodzi do okienka rejestracji 1
-[  14.68s] Pacjent 71 jest weryfikowany przez lekarza POZ
-[  14.69s] Pacjent 71 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  14.71s] Pacjent 71 czeka na lekarza: chirurg (kolor: zielony)
-[  14.73s] Pacjent 84 pojawia się przed SOR (wiek 24)
-[  14.75s] Pacjent 84 wchodzi do budynku
-[  14.77s] Pacjent 84 dołącza do kolejki rejestracji
-[  14.79s] Lekarz chirurg rozpoczyna badanie - Pacjent 71
-[  14.81s] Lekarz chirurg kończy badanie - Pacjent 71 - wynik: wypis
-[  14.82s] Pacjent 69 przekazany do triażu, czeka na lekarza POZ
-[  14.84s] Pacjent 69 jest weryfikowany przez lekarza POZ
-[  14.85s] Pacjent 73 podchodzi do okienka rejestracji 2
-[  14.89s] Pacjent 69 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  14.91s] Pacjent 69 czeka na lekarza: pediatra (kolor: żółty)
-[  14.93s] Lekarz pediatra rozpoczyna badanie - Pacjent 69
-[  14.95s] Lekarz pediatra kończy badanie - Pacjent 69 - wynik: wypis
-[  14.97s] Pacjent 85 pojawia się przed SOR (wiek 25)
-[  14.98s] Pacjent 85 wchodzi do budynku
-[  15.00s] Pacjent 85 (VIP) omija kolejkę rejestracji
-[  15.01s] Pacjent 72 przekazany do triażu, czeka na lekarza POZ
-[  15.02s] Pacjent 85 podchodzi do okienka rejestracji 1
-[  15.04s] Pacjent 72 jest weryfikowany przez lekarza POZ
-[  15.06s] Pacjent 72 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[  15.09s] Pacjent 72 czeka na lekarza: chirurg (kolor: żółty)
-[  15.10s] Pacjent 73 przekazany do triażu, czeka na lekarza POZ
-[  15.12s] Pacjent 73 jest weryfikowany przez lekarza POZ
-[  15.13s] Pacjent 74 podchodzi do okienka rejestracji 2
-[  15.15s] Pacjent 73 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  15.17s] Pacjent 73 czeka na lekarza: chirurg (kolor: zielony)
-[  15.19s] Lekarz chirurg rozpoczyna badanie - Pacjent 72
-[  15.21s] Lekarz chirurg kończy badanie - Pacjent 72 - wynik: oddział
-[  15.22s] Lekarz chirurg rozpoczyna badanie - Pacjent 73
-[  15.25s] Lekarz chirurg kończy badanie - Pacjent 73 - wynik: wypis
-[  15.27s] Pacjent 86 pojawia się przed SOR (wiek 26)
-[  15.29s] Pacjent 86 wchodzi do budynku
-[  15.30s] Pacjent 86 dołącza do kolejki rejestracji
-[  15.32s] Pacjent 85 przekazany do triażu, czeka na lekarza POZ
-[  15.33s] Dziecko 76 podchodzi do okienka rejestracji 1
-[  15.35s] Pacjent 85 jest weryfikowany przez lekarza POZ
-[  15.38s] Pacjent 85 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  15.39s] Pacjent 85 czeka na lekarza: laryngolog (kolor: zielony)
-[  15.41s] Pacjent 87 pojawia się przed SOR (wiek 27)
-[  15.43s] Pacjent 87 wchodzi do budynku
-[  15.45s] Pacjent 87 dołącza do kolejki rejestracji
-[  15.48s] Pacjent 74 przekazany do triażu, czeka na lekarza POZ
-[  15.50s] Lekarz laryngolog rozpoczyna badanie - Pacjent 85
-[  15.51s] Lekarz laryngolog kończy badanie - Pacjent 85 - wynik: wypis
-[  15.53s] Pacjent 77 podchodzi do okienka rejestracji 2
-[  15.54s] Pacjent 74 jest weryfikowany przez lekarza POZ
-[  15.56s] Pacjent 74 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  15.58s] Pacjent 74 czeka na lekarza: pediatra (kolor: zielony)
-[  15.60s] Lekarz pediatra rozpoczyna badanie - Pacjent 74
-[  15.61s] Lekarz pediatra kończy badanie - Pacjent 74 - wynik: wypis
-[  15.63s] Dziecko 88 pojawia się przed SOR (wiek 11, z opiekunem)
-[  15.64s] Dziecko 88 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  15.66s] Dziecko 88 wchodzi do budynku
-[  15.67s] Dziecko 88 dołącza do kolejki rejestracji
-[  15.68s] Pacjent 77 przekazany do triażu, czeka na lekarza POZ
-[  15.70s] Pacjent 78 podchodzi do okienka rejestracji 2
-[  15.71s] Pacjent 77 jest weryfikowany przez lekarza POZ
-[  15.72s] Pacjent 77 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[  15.74s] Pacjent 77 czeka na lekarza: chirurg (kolor: żółty)
-[  15.75s] Lekarz chirurg rozpoczyna badanie - Pacjent 77
-[  15.77s] Lekarz chirurg kończy badanie - Pacjent 77 - wynik: oddział
-[  15.79s] Dziecko 76 przekazany do triażu, czeka na lekarza POZ
-[  15.80s] Dziecko 76 jest weryfikowany przez lekarza POZ
-[  15.82s] Pacjent 79 podchodzi do okienka rejestracji 1
-[  15.84s] Dziecko 76 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  15.86s] Dziecko 76 czeka na lekarza: okulista (kolor: zielony)
-[  15.88s] Lekarz okulista rozpoczyna badanie - Dziecko 76
-[  15.89s] Lekarz okulista kończy badanie - Dziecko 76 - wynik: wypis
-[  15.91s] Pacjent 89 pojawia się przed SOR (wiek 29)
-[  15.92s] Pacjent 89 wchodzi do budynku
-[  15.93s] Pacjent 89 dołącza do kolejki rejestracji
-[  15.94s] Pacjent 90 pojawia się przed SOR (wiek 30)
-[  15.95s] Pacjent 90 wchodzi do budynku
-[  15.97s] Pacjent 90 (VIP) omija kolejkę rejestracji
-[  15.98s] Pacjent 78 przekazany do triażu, czeka na lekarza POZ
-[  15.99s] Pacjent 90 podchodzi do okienka rejestracji 2
-[  16.01s] Pacjent 78 jest weryfikowany przez lekarza POZ
-[  16.02s] Pacjent 78 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  16.04s] Pacjent 78 czeka na lekarza: laryngolog (kolor: zielony)
-[  16.05s] Lekarz laryngolog rozpoczyna badanie - Pacjent 78
-[  16.08s] Lekarz laryngolog kończy badanie - Pacjent 78 - wynik: oddział
-[  16.09s] Pacjent 79 przekazany do triażu, czeka na lekarza POZ
-[  16.11s] Pacjent 81 podchodzi do okienka rejestracji 1
-[  16.12s] Pacjent 79 jest weryfikowany przez lekarza POZ
-[  16.14s] Pacjent 79 uzyskuje status [żółty] — kierowany do lekarza: laryngolog
-[  16.16s] Pacjent 79 czeka na lekarza: laryngolog (kolor: żółty)
-[  16.17s] Lekarz laryngolog rozpoczyna badanie - Pacjent 79
-[  16.19s] Lekarz laryngolog kończy badanie - Pacjent 79 - wynik: wypis
-[  16.21s] Pacjent 91 pojawia się przed SOR (wiek 31)
-[  16.23s] Pacjent 91 wchodzi do budynku
-[  16.25s] Pacjent 91 dołącza do kolejki rejestracji
-[  16.28s] Pacjent 90 przekazany do triażu, czeka na lekarza POZ
-[  16.29s] Pacjent 82 podchodzi do okienka rejestracji 2
-[  16.31s] Pacjent 90 jest weryfikowany przez lekarza POZ
-[  16.32s] Pacjent 90 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[  16.34s] Pacjent 90 czeka na lekarza: kardiolog (kolor: zielony)
-[  16.36s] Lekarz kardiolog rozpoczyna badanie - Pacjent 90
-[  16.37s] Lekarz kardiolog kończy badanie - Pacjent 90 - wynik: oddział
-[  16.39s] Dziecko 92 pojawia się przed SOR (wiek 11, z opiekunem)
-[  16.41s] Dziecko 92 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  16.43s] [Director] Dyrektor wysyła SIGUSR1 do lekarza chirurg (PID=17042)
-[  16.45s] Lekarz chirurg opuszcza SOR na rozkaz dyrektora (bez pacjenta)
-[  16.47s] Lekarz kardiolog rozpoczyna badanie - Pacjent 81
-[  16.49s] Lekarz kardiolog kończy badanie - Pacjent 81 - wynik: wypis
-[  16.51s] Pacjent 82 przekazany do triażu, czeka na lekarza POZ
-[  16.53s] Pacjent 84 podchodzi do okienka rejestracji 2
-[  16.54s] Pacjent 82 jest weryfikowany przez lekarza POZ
-[  16.56s] Pacjent 82 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  16.57s] Pacjent 82 czeka na lekarza: pediatra (kolor: zielony)
-[  16.59s] Lekarz pediatra rozpoczyna badanie - Pacjent 82
-[  16.62s] Dziecko 93 pojawia się przed SOR (wiek 15, z opiekunem)
-[  16.63s] Pacjent 83 przekazany do triażu, czeka na lekarza POZ
-[  16.65s] Pacjent 83 jest weryfikowany przez lekarza POZ
-[  16.66s] Pacjent 83 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  16.68s] Pacjent 94 pojawia się przed SOR (wiek 34)
-[  16.70s] Pacjent 94 wchodzi do budynku
-[  16.72s] Pacjent 94 dołącza do kolejki rejestracji
-[  16.73s] Pacjent 86 przekazany do triażu, czeka na lekarza POZ
-[  16.75s] Pacjent 87 podchodzi do okienka rejestracji 1
-[  16.77s] Pacjent 86 jest weryfikowany przez lekarza POZ
-[  16.78s] Pacjent 86 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  16.79s] Pacjent 86 czeka na lekarza: laryngolog (kolor: zielony)
-[  16.81s] Pacjent 84 przekazany do triażu, czeka na lekarza POZ
-[  16.82s] Pacjent 84 jest weryfikowany przez lekarza POZ
-[  16.84s] Pacjent 84 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  16.85s] Dziecko 88 podchodzi do okienka rejestracji 2
-[  16.87s] Pacjent 84 czeka na lekarza: neurolog (kolor: zielony)
-[  16.89s] Lekarz neurolog rozpoczyna badanie - Pacjent 84
-[  16.90s] Lekarz neurolog kończy badanie - Pacjent 84 - wynik: wypis
-[  16.92s] Dziecko 88 przekazany do triażu, czeka na lekarza POZ
-[  16.95s] Dziecko 88 czeka na lekarza: okulista (kolor: żółty)
-[  16.98s] Pacjent 95 pojawia się przed SOR (wiek 35)
-[  16.99s] Pacjent 96 pojawia się przed SOR (wiek 36)
-[  17.03s] Pacjent 96 wchodzi do budynku
-[  17.05s] Pacjent 96 dołącza do kolejki rejestracji
-[  17.07s] Pacjent 87 przekazany do triażu, czeka na lekarza POZ
-[  17.09s] Pacjent 87 jest weryfikowany przez lekarza POZ
-[  17.11s] Pacjent 95 podchodzi do okienka rejestracji 1
-[  17.12s] Pacjent 87 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  17.14s] Pacjent 87 czeka na lekarza: pediatra (kolor: żółty)
-[  17.16s] Lekarz pediatra rozpoczyna badanie - Pacjent 87
-[  17.18s] Lekarz pediatra kończy badanie - Pacjent 87 - wynik: wypis
-[  17.20s] Pacjent 97 pojawia się przed SOR (wiek 37)
-[  17.22s] Pacjent 97 wchodzi do budynku
-[  17.25s] Pacjent 97 dołącza do kolejki rejestracji
-[  17.26s] Dziecko 98 pojawia się przed SOR (wiek 7, z opiekunem)
-[  17.28s] Dziecko 98 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  17.30s] Dziecko 98 wchodzi do budynku
-[  17.31s] Dziecko 98 dołącza do kolejki rejestracji
-[  17.32s] Pacjent 95 przekazany do triażu, czeka na lekarza POZ
-[  17.34s] Pacjent 89 podchodzi do okienka rejestracji 1
-[  17.35s] Pacjent 95 jest weryfikowany przez lekarza POZ
-[  17.37s] Pacjent 95 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  17.39s] Pacjent 95 czeka na lekarza: laryngolog (kolor: zielony)
-[  17.41s] Pacjent 99 pojawia się przed SOR (wiek 39)
-[  17.42s] Pacjent 99 wchodzi do budynku
-[  17.44s] Pacjent 99 dołącza do kolejki rejestracji
-[  17.45s] Lekarz laryngolog rozpoczyna badanie - Pacjent 95
-[  17.47s] Lekarz laryngolog kończy badanie - Pacjent 95 - wynik: oddział
-[  17.49s] Pacjent 100 pojawia się przed SOR (wiek 40)
-[  17.50s] Pacjent 100 wchodzi do budynku
-[  17.52s] Pacjent 100 (VIP) omija kolejkę rejestracji
-[  17.53s] Pacjent 89 przekazany do triażu, czeka na lekarza POZ
-[  17.55s] Pacjent 100 podchodzi do okienka rejestracji 1
-[  17.56s] Pacjent 89 jest weryfikowany przez lekarza POZ
-[  17.58s] Pacjent 89 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  17.59s] Pacjent 89 czeka na lekarza: pediatra (kolor: żółty)
-[  17.61s] Lekarz pediatra rozpoczyna badanie - Pacjent 89
-[  17.63s] Lekarz pediatra kończy badanie - Pacjent 89 - wynik: oddział
-[  17.66s] Pacjent 101 pojawia się przed SOR (wiek 41)
-[  17.67s] Pacjent 101 wchodzi do budynku
-[  17.69s] Pacjent 101 dołącza do kolejki rejestracji
-[  17.70s] Pacjent 102 pojawia się przed SOR (wiek 42)
-[  17.72s] Pacjent 102 wchodzi do budynku
-[  17.73s] Pacjent 102 dołącza do kolejki rejestracji
-[  17.75s] Pacjent 100 przekazany do triażu, czeka na lekarza POZ
-[  17.76s] Pacjent 91 podchodzi do okienka rejestracji 1
-[  17.78s] Pacjent 100 jest weryfikowany przez lekarza POZ
-[  17.81s] Pacjent 100 uzyskuje status [żółty] — kierowany do lekarza: okulista
-[  17.84s] Pacjent 100 czeka na lekarza: okulista (kolor: żółty)
-[  17.86s] Lekarz okulista rozpoczyna badanie - Pacjent 100
-[  17.88s] Lekarz okulista kończy badanie - Pacjent 100 - wynik: inna placówka
-[  17.91s] Pacjent 103 pojawia się przed SOR (wiek 43)
-[  17.92s] Pacjent 103 wchodzi do budynku
-[  17.93s] Pacjent 103 dołącza do kolejki rejestracji
-[  17.95s] Pacjent 104 pojawia się przed SOR (wiek 44)
-[  17.96s] Pacjent 104 wchodzi do budynku
-[  17.97s] Pacjent 104 dołącza do kolejki rejestracji
-[  17.98s] Pacjent 91 przekazany do triażu, czeka na lekarza POZ
-[  17.99s] Pacjent 91 jest weryfikowany przez lekarza POZ
-[  18.00s] Dziecko 92 podchodzi do okienka rejestracji 1
-[  18.02s] Pacjent 91 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  18.03s] Pacjent 91 czeka na lekarza: neurolog (kolor: żółty)
-[  18.05s] Lekarz neurolog rozpoczyna badanie - Pacjent 91
-[  18.06s] Lekarz neurolog kończy badanie - Pacjent 91 - wynik: wypis
-[  18.08s] Pacjent 105 pojawia się przed SOR (wiek 45)
-[  18.10s] Pacjent 105 wchodzi do budynku
-[  18.12s] Pacjent 105 (VIP) omija kolejkę rejestracji
-[  18.14s] Dziecko 92 przekazany do triażu, czeka na lekarza POZ
-[  18.15s] Pacjent 105 podchodzi do okienka rejestracji 1
-[  18.16s] Dziecko 92 jest weryfikowany przez lekarza POZ
-[  18.18s] Dziecko 92 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  18.20s] Dziecko 92 czeka na lekarza: chirurg (kolor: zielony)
-[  18.22s] Dziecko 106 pojawia się przed SOR (wiek 6, z opiekunem)
-[  18.23s] Dziecko 106 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  18.25s] Dziecko 106 wchodzi do budynku
-[  18.27s] Dziecko 106 dołącza do kolejki rejestracji
-[  18.29s] Pacjent 107 pojawia się przed SOR (wiek 47)
-[  18.31s] Pacjent 107 wchodzi do budynku
-[  18.33s] Pacjent 107 dołącza do kolejki rejestracji
-[  18.34s] Pacjent 105 przekazany do triażu, czeka na lekarza POZ
-[  18.36s] Dziecko 93 podchodzi do okienka rejestracji 1
-[  18.38s] Pacjent 105 jest weryfikowany przez lekarza POZ
-[  18.40s] Pacjent 105 uzyskuje status [żółty] — kierowany do lekarza: laryngolog
-[  18.42s] Pacjent 105 czeka na lekarza: laryngolog (kolor: żółty)
-[  18.44s] Okienko rejestracji 2 zostaje otwarte (PID=17560)
-[  18.45s] Lekarz laryngolog rozpoczyna badanie - Pacjent 105
-[  18.48s] Lekarz laryngolog kończy badanie - Pacjent 105 - wynik: wypis
-[  18.49s] Okienko rejestracji 2 rozpoczyna pracę
-[  18.52s] Pacjent 94 podchodzi do okienka rejestracji 2
-[  18.55s] Dziecko 108 pojawia się przed SOR (wiek 6, z opiekunem)
-[  18.57s] Dziecko 108 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  18.58s] Dziecko 108 wchodzi do budynku
-[  18.60s] Dziecko 108 dołącza do kolejki rejestracji
-[  18.62s] Dziecko 93 przekazany do triażu, czeka na lekarza POZ
-[  18.63s] Pacjent 96 podchodzi do okienka rejestracji 1
-[  18.66s] Dziecko 93 jest weryfikowany przez lekarza POZ
-[  18.68s] Dziecko 93 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  18.69s] Dziecko 93 czeka na lekarza: pediatra (kolor: żółty)
-[  18.72s] Pacjent 109 pojawia się przed SOR (wiek 49)
-[  18.73s] Lekarz pediatra rozpoczyna badanie - Dziecko 93
-[  18.75s] Lekarz pediatra kończy badanie - Dziecko 93 - wynik: wypis
-[  18.76s] Pacjent 109 wchodzi do budynku
-[  18.79s] Pacjent 109 dołącza do kolejki rejestracji
-[  18.82s] Pacjent 94 przekazany do triażu, czeka na lekarza POZ
-[  18.83s] Pacjent 97 podchodzi do okienka rejestracji 2
-[  18.85s] Pacjent 94 jest weryfikowany przez lekarza POZ
-[  18.87s] Pacjent 94 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  18.89s] Pacjent 94 czeka na lekarza: neurolog (kolor: zielony)
-[  18.91s] Lekarz neurolog rozpoczyna badanie - Pacjent 94
-[  18.92s] Lekarz neurolog kończy badanie - Pacjent 94 - wynik: wypis
-[  18.94s] Pacjent 110 pojawia się przed SOR (wiek 50)
-[  18.96s] Pacjent 97 przekazany do triażu, czeka na lekarza POZ
-[  18.98s] Dziecko 98 podchodzi do okienka rejestracji 2
-[  18.99s] Pacjent 110 wchodzi do budynku
-[  19.01s] Pacjent 110 (VIP) omija kolejkę rejestracji
-[  19.02s] Pacjent 97 jest weryfikowany przez lekarza POZ
-[  19.04s] Pacjent 97 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  19.06s] Pacjent 97 czeka na lekarza: pediatra (kolor: żółty)
-[  19.08s] Pacjent 96 przekazany do triażu, czeka na lekarza POZ
-[  19.09s] Pacjent 110 podchodzi do okienka rejestracji 1
-[  19.11s] Pacjent 96 jest weryfikowany przez lekarza POZ
-[  19.13s] Pacjent 96 zostaje odesłany do domu po triażu
-[  19.14s] Lekarz pediatra rozpoczyna badanie - Pacjent 97
-[  19.16s] Lekarz pediatra kończy badanie - Pacjent 97 - wynik: wypis
-[  19.17s] Dziecko 111 pojawia się przed SOR (wiek 5, z opiekunem)
-[  19.20s] Dziecko 111 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  19.22s] Dziecko 111 wchodzi do budynku
-[  19.24s] Dziecko 111 dołącza do kolejki rejestracji
-[  19.25s] Pacjent 110 przekazany do triażu, czeka na lekarza POZ
-[  19.28s] Pacjent 99 podchodzi do okienka rejestracji 1
-[  19.29s] Pacjent 110 jest weryfikowany przez lekarza POZ
-[  19.31s] Pacjent 110 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  19.33s] Pacjent 110 czeka na lekarza: pediatra (kolor: zielony)
-[  19.35s] Dziecko 98 przekazany do triażu, czeka na lekarza POZ
-[  19.37s] Pacjent 101 podchodzi do okienka rejestracji 2
-[  19.39s] Lekarz pediatra rozpoczyna badanie - Pacjent 110
-[  19.42s] Lekarz pediatra kończy badanie - Pacjent 110 - wynik: wypis
-[  19.44s] Dziecko 98 jest weryfikowany przez lekarza POZ
-[  19.47s] Dziecko 98 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  19.49s] Dziecko 98 czeka na lekarza: pediatra (kolor: żółty)
-[  19.52s] Lekarz pediatra rozpoczyna badanie - Dziecko 98
-[  19.54s] Lekarz pediatra kończy badanie - Dziecko 98 - wynik: wypis
-[  19.56s] Pacjent 112 pojawia się przed SOR (wiek 52)
-[  19.57s] Pacjent 112 wchodzi do budynku
-[  19.59s] Pacjent 112 dołącza do kolejki rejestracji
-[  19.61s] Pacjent 101 przekazany do triażu, czeka na lekarza POZ
-[  19.63s] Pacjent 102 podchodzi do okienka rejestracji 2
-[  19.64s] Pacjent 101 jest weryfikowany przez lekarza POZ
-[  19.66s] Pacjent 101 uzyskuje status [żółty] — kierowany do lekarza: okulista
-[  19.69s] Pacjent 101 czeka na lekarza: okulista (kolor: żółty)
-[  19.71s] Lekarz okulista rozpoczyna badanie - Pacjent 101
-[  19.75s] Lekarz okulista kończy badanie - Pacjent 101 - wynik: wypis
-[  19.77s] Pacjent 99 przekazany do triażu, czeka na lekarza POZ
-[  19.80s] Pacjent 103 podchodzi do okienka rejestracji 1
-[  19.83s] Pacjent 99 jest weryfikowany przez lekarza POZ
-[  19.84s] Pacjent 99 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  19.86s] Pacjent 99 czeka na lekarza: chirurg (kolor: zielony)
-[  19.88s] Pacjent 113 pojawia się przed SOR (wiek 53)
-[  19.91s] Pacjent 113 wchodzi do budynku
-[  19.93s] Pacjent 113 dołącza do kolejki rejestracji
-[  19.95s] Pacjent 114 pojawia się przed SOR (wiek 54)
-[  19.96s] Pacjent 114 wchodzi do budynku
-[  19.98s] Pacjent 114 dołącza do kolejki rejestracji
-[  19.99s] Pacjent 102 przekazany do triażu, czeka na lekarza POZ
-[  20.01s] Pacjent 104 podchodzi do okienka rejestracji 2
-[  20.03s] Pacjent 102 jest weryfikowany przez lekarza POZ
-[  20.05s] Pacjent 102 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  20.06s] Pacjent 102 czeka na lekarza: chirurg (kolor: zielony)
-[  20.08s] Pacjent 103 przekazany do triażu, czeka na lekarza POZ
-[  20.10s] Dziecko 106 podchodzi do okienka rejestracji 1
-[  20.11s] Pacjent 103 jest weryfikowany przez lekarza POZ
-[  20.13s] Pacjent 103 uzyskuje status [żółty] — kierowany do lekarza: laryngolog
-[  20.15s] Pacjent 103 czeka na lekarza: laryngolog (kolor: żółty)
-[  20.17s] Lekarz laryngolog rozpoczyna badanie - Pacjent 103
-[  20.19s] Lekarz laryngolog kończy badanie - Pacjent 103 - wynik: wypis
-[  20.20s] Dziecko 115 pojawia się przed SOR (wiek 17, z opiekunem)
-[  20.22s] Dziecko 115 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  20.24s] Dziecko 115 wchodzi do budynku
-[  20.25s] Dziecko 115 (VIP) omija kolejkę rejestracji
-[  20.26s] Dziecko 106 przekazany do triażu, czeka na lekarza POZ
-[  20.28s] Dziecko 115 podchodzi do okienka rejestracji 1
-[  20.31s] Dziecko 106 jest weryfikowany przez lekarza POZ
-[  20.34s] Dziecko 106 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  20.38s] Dziecko 106 czeka na lekarza: chirurg (kolor: zielony)
-[  20.42s] Pacjent 104 przekazany do triażu, czeka na lekarza POZ
-[  20.44s] Pacjent 107 podchodzi do okienka rejestracji 2
-[  20.47s] Pacjent 104 jest weryfikowany przez lekarza POZ
-[  20.52s] Pacjent 104 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[  20.54s] Pacjent 116 pojawia się przed SOR (wiek 56)
-[  20.56s] Pacjent 117 pojawia się przed SOR (wiek 57)
-[  20.58s] Pacjent 117 wchodzi do budynku
-[  20.59s] Pacjent 117 dołącza do kolejki rejestracji
-[  20.61s] Dziecko 115 przekazany do triażu, czeka na lekarza POZ
-[  20.63s] Dziecko 108 podchodzi do okienka rejestracji 1
-[  20.65s] Dziecko 115 jest weryfikowany przez lekarza POZ
-[  20.67s] Dziecko 115 uzyskuje status [czerwony] — kierowany do lekarza: okulista
-[  20.68s] Dziecko 115 czeka na lekarza: okulista (kolor: czerwony)
-[  20.70s] Pacjent 107 przekazany do triażu, czeka na lekarza POZ
-[  20.71s] Pacjent 109 podchodzi do okienka rejestracji 2
-[  20.72s] Lekarz neurolog rozpoczyna badanie - Pacjent 107
-[  20.73s] Lekarz neurolog kończy badanie - Pacjent 107 - wynik: wypis
-[  20.75s] Pacjent 118 pojawia się przed SOR (wiek 58)
-[  20.76s] Dziecko 108 przekazany do triażu, czeka na lekarza POZ
-[  20.78s] Dziecko 111 podchodzi do okienka rejestracji 1
-[  20.79s] Pacjent 119 pojawia się przed SOR (wiek 59)
-[  20.80s] Pacjent 119 wchodzi do budynku
-[  20.82s] Pacjent 119 dołącza do kolejki rejestracji
-[  20.83s] Dziecko 111 przekazany do triażu, czeka na lekarza POZ
-[  20.85s] Pacjent 112 podchodzi do okienka rejestracji 1
-[  20.87s] Dziecko 111 jest weryfikowany przez lekarza POZ
-[  20.89s] Dziecko 111 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  20.90s] Dziecko 111 czeka na lekarza: laryngolog (kolor: zielony)
-[  20.91s] Pacjent 109 przekazany do triażu, czeka na lekarza POZ
-[  20.92s] Lekarz okulista rozpoczyna badanie - Pacjent 109
-[  20.94s] Pacjent 113 przekazany do triażu, czeka na lekarza POZ
-[  20.96s] Pacjent 112 przekazany do triażu, czeka na lekarza POZ
-[  20.96s] Pacjent 120 podchodzi do okienka rejestracji 1
-[  20.98s] Pacjent 112 jest weryfikowany przez lekarza POZ
-[  21.00s] Pacjent 121 pojawia się przed SOR (wiek 21)
-[  21.04s] Pacjent 121 wchodzi do budynku
-[  21.06s] Pacjent 121 dołącza do kolejki rejestracji
-[  21.08s] Pacjent 120 przekazany do triażu, czeka na lekarza POZ
-[  21.11s] Pacjent 114 podchodzi do okienka rejestracji 1
-[  21.13s] Pacjent 120 jest weryfikowany przez lekarza POZ
-[  21.15s] Pacjent 120 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  21.17s] Pacjent 120 czeka na lekarza: kardiolog (kolor: żółty)
-[  21.19s] Lekarz kardiolog rozpoczyna badanie - Pacjent 120
-[  21.20s] Lekarz kardiolog kończy badanie - Pacjent 120 - wynik: wypis
-[  21.21s] Pacjent 122 pojawia się przed SOR (wiek 22)
-[  21.23s] Pacjent 122 wchodzi do budynku
-[  21.24s] Pacjent 122 dołącza do kolejki rejestracji
-[  21.26s] Pacjent 114 przekazany do triażu, czeka na lekarza POZ
-[  21.28s] Pacjent 116 podchodzi do okienka rejestracji 1
-[  21.29s] Pacjent 114 jest weryfikowany przez lekarza POZ
-[  21.30s] Pacjent 114 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  21.32s] Pacjent 114 czeka na lekarza: pediatra (kolor: żółty)
-[  21.33s] Lekarz pediatra rozpoczyna badanie - Pacjent 114
-[  21.35s] Lekarz pediatra kończy badanie - Pacjent 114 - wynik: wypis
-[  21.36s] Dziecko 123 pojawia się przed SOR (wiek 8, z opiekunem)
-[  21.39s] Dziecko 123 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  21.41s] Dziecko 123 wchodzi do budynku
-[  21.42s] Dziecko 123 dołącza do kolejki rejestracji
-[  21.44s] Pacjent 124 pojawia się przed SOR (wiek 24)
-[  21.46s] Pacjent 124 wchodzi do budynku
-[  21.48s] Pacjent 124 dołącza do kolejki rejestracji
-[  21.50s] Pacjent 116 przekazany do triażu, czeka na lekarza POZ
-[  21.52s] Pacjent 117 podchodzi do okienka rejestracji 1
-[  21.53s] Pacjent 116 jest weryfikowany przez lekarza POZ
-[  21.55s] Pacjent 116 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  21.57s] Pacjent 116 czeka na lekarza: chirurg (kolor: zielony)
-[  21.58s] Pacjent 125 pojawia się przed SOR (wiek 25)
-[  21.61s] Pacjent 125 wchodzi do budynku
-[  21.63s] Pacjent 125 (VIP) omija kolejkę rejestracji
-[  21.64s] Pacjent 126 pojawia się przed SOR (wiek 26)
-[  21.66s] Pacjent 126 wchodzi do budynku
-[  21.68s] Pacjent 126 dołącza do kolejki rejestracji
-[  21.70s] Pacjent 117 przekazany do triażu, czeka na lekarza POZ
-[  21.72s] Pacjent 125 podchodzi do okienka rejestracji 1
-[  21.73s] Pacjent 117 jest weryfikowany przez lekarza POZ
-[  21.75s] Pacjent 117 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  21.77s] Pacjent 117 czeka na lekarza: pediatra (kolor: zielony)
-[  21.78s] Lekarz pediatra rozpoczyna badanie - Pacjent 117
-[  21.80s] Lekarz pediatra kończy badanie - Pacjent 117 - wynik: wypis
-[  21.81s] Pacjent 127 pojawia się przed SOR (wiek 27)
-[  21.83s] Pacjent 127 wchodzi do budynku
-[  21.84s] Pacjent 127 dołącza do kolejki rejestracji
-[  21.85s] Pacjent 128 pojawia się przed SOR (wiek 28)
-[  21.86s] Pacjent 125 przekazany do triażu, czeka na lekarza POZ
-[  21.88s] Pacjent 118 podchodzi do okienka rejestracji 1
-[  21.89s] Pacjent 125 jest weryfikowany przez lekarza POZ
-[  21.90s] Pacjent 125 zostaje odesłany do domu po triażu
-[  21.91s] Pacjent 128 wchodzi do budynku
-[  21.93s] Pacjent 128 dołącza do kolejki rejestracji
-[  21.96s] Pacjent 129 pojawia się przed SOR (wiek 29)
-[  21.98s] Pacjent 130 pojawia się przed SOR (wiek 30)
-[  22.01s] Pacjent 118 przekazany do triażu, czeka na lekarza POZ
-[  22.03s] Pacjent 119 podchodzi do okienka rejestracji 1
-[  22.05s] Pacjent 118 jest weryfikowany przez lekarza POZ
-[  22.07s] Pacjent 118 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  22.09s] Pacjent 118 czeka na lekarza: pediatra (kolor: zielony)
-[  22.11s] Lekarz pediatra rozpoczyna badanie - Pacjent 118
-[  22.13s] Lekarz pediatra kończy badanie - Pacjent 118 - wynik: wypis
-[  22.17s] Pacjent 129 wchodzi do budynku
-[  22.20s] Pacjent 129 dołącza do kolejki rejestracji
-[  22.21s] Pacjent 131 pojawia się przed SOR (wiek 31)
-[  22.24s] Dziecko 132 pojawia się przed SOR (wiek 17, z opiekunem)
-[  22.26s] Pacjent 133 pojawia się przed SOR (wiek 33)
-[  22.30s] Pacjent 119 przekazany do triażu, czeka na lekarza POZ
-[  22.32s] Pacjent 121 podchodzi do okienka rejestracji 1
-[  22.34s] Pacjent 119 jest weryfikowany przez lekarza POZ
-[  22.35s] Pacjent 119 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  22.37s] Pacjent 119 czeka na lekarza: pediatra (kolor: zielony)
-[  22.39s] Lekarz pediatra rozpoczyna badanie - Pacjent 119
-[  22.40s] Lekarz pediatra kończy badanie - Pacjent 119 - wynik: wypis
-[  22.41s] Pacjent 130 wchodzi do budynku
-[  22.42s] Pacjent 130 (VIP) omija kolejkę rejestracji
-[  22.43s] Pacjent 134 pojawia się przed SOR (wiek 34)
-[  22.46s] Pacjent 121 przekazany do triażu, czeka na lekarza POZ
-[  22.48s] Pacjent 130 podchodzi do okienka rejestracji 1
-[  22.50s] Pacjent 135 pojawia się przed SOR (wiek 35)
-[  22.52s] Pacjent 121 jest weryfikowany przez lekarza POZ
-[  22.54s] Pacjent 121 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  22.56s] Pacjent 121 czeka na lekarza: okulista (kolor: zielony)
-[  22.57s] Lekarz okulista rozpoczyna badanie - Pacjent 121
-[  22.58s] Lekarz okulista kończy badanie - Pacjent 121 - wynik: wypis
-[  22.60s] Pacjent 131 wchodzi do budynku
-[  22.61s] Pacjent 131 dołącza do kolejki rejestracji
-[  22.63s] Pacjent 136 pojawia się przed SOR (wiek 36)
-[  22.64s] Pacjent 130 przekazany do triażu, czeka na lekarza POZ
-[  22.65s] Pacjent 130 jest weryfikowany przez lekarza POZ
-[  22.67s] Pacjent 122 podchodzi do okienka rejestracji 1
-[  22.69s] Pacjent 130 zostaje odesłany do domu po triażu
-[  22.70s] Dziecko 137 pojawia się przed SOR (wiek 6, z opiekunem)
-[  22.72s] [Director] Dyrektor wysyła SIGUSR1 do lekarza pediatra (PID=17043)
-[  22.74s] Lekarz pediatra opuszcza SOR na rozkaz dyrektora (bez pacjenta)
-[  22.76s] Lekarz pediatra pracuje na oddziale
-[  22.78s] Dziecko 138 pojawia się przed SOR (wiek 16, z opiekunem)
-[  22.80s] Pacjent 122 przekazany do triażu, czeka na lekarza POZ
-[  22.82s] Dziecko 123 podchodzi do okienka rejestracji 1
-[  22.85s] Pacjent 122 jest weryfikowany przez lekarza POZ
-[  22.89s] Pacjent 122 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  22.92s] Pacjent 122 czeka na lekarza: laryngolog (kolor: zielony)
-[  22.94s] Lekarz laryngolog rozpoczyna badanie - Pacjent 122
-[  22.97s] Lekarz laryngolog kończy badanie - Pacjent 122 - wynik: wypis
-[  22.99s] Pacjent 133 wchodzi do budynku
-[  23.01s] Pacjent 133 dołącza do kolejki rejestracji
-[  23.03s] Dziecko 139 pojawia się przed SOR (wiek 14, z opiekunem)
-[  23.04s] Pacjent 140 pojawia się przed SOR (wiek 40)
-[  23.06s] Dziecko 123 przekazany do triażu, czeka na lekarza POZ
-[  23.08s] Pacjent 124 podchodzi do okienka rejestracji 1
-[  23.10s] Dziecko 123 jest weryfikowany przez lekarza POZ
-[  23.12s] Dziecko 123 uzyskuje status [czerwony] — kierowany do lekarza: pediatra
-[  23.13s] Dziecko 123 czeka na lekarza: pediatra (kolor: czerwony)
-[  23.15s] Pacjent 141 pojawia się przed SOR (wiek 41)
-[  23.17s] Pacjent 142 pojawia się przed SOR (wiek 42)
-[  23.20s] Pacjent 124 przekazany do triażu, czeka na lekarza POZ
-[  23.22s] Pacjent 124 jest weryfikowany przez lekarza POZ
-[  23.24s] Pacjent 126 podchodzi do okienka rejestracji 1
-[  23.26s] Pacjent 124 uzyskuje status [czerwony] — kierowany do lekarza: pediatra
-[  23.28s] Pacjent 124 czeka na lekarza: pediatra (kolor: czerwony)
-[  23.33s] Dziecko 143 pojawia się przed SOR (wiek 17, z opiekunem)
-[  23.43s] Pacjent 144 pojawia się przed SOR (wiek 44)
-[  23.48s] Pacjent 126 przekazany do triażu, czeka na lekarza POZ
-[  23.52s] Pacjent 127 podchodzi do okienka rejestracji 1
-[  23.55s] Pacjent 126 jest weryfikowany przez lekarza POZ
-[  23.58s] Pacjent 126 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[  23.61s] Pacjent 126 czeka na lekarza: chirurg (kolor: żółty)
-[  23.63s] Pacjent 145 pojawia się przed SOR (wiek 45)
-[  23.68s] Pacjent 146 pojawia się przed SOR (wiek 46)
-[  23.74s] Lekarz chirurg wraca do SOR
-[  23.77s] Lekarz chirurg rozpoczyna badanie - Pacjent 126
-[  23.80s] Lekarz chirurg kończy badanie - Pacjent 126 - wynik: wypis
-[  23.83s] Pacjent 134 wchodzi do budynku
-[  23.89s] Pacjent 134 dołącza do kolejki rejestracji
-[  23.92s] Lekarz chirurg rozpoczyna badanie - Pacjent 83
-[  23.94s] Lekarz chirurg kończy badanie - Pacjent 83 - wynik: wypis
-[  23.98s] Lekarz chirurg rozpoczyna badanie - Dziecko 92
-[  24.01s] Lekarz chirurg kończy badanie - Dziecko 92 - wynik: oddział
-[  24.04s] Dziecko 132 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  24.07s] Dziecko 132 wchodzi do budynku
-[  24.09s] Dziecko 132 dołącza do kolejki rejestracji
-[  24.12s] Lekarz chirurg rozpoczyna badanie - Pacjent 99
-[  24.15s] Lekarz chirurg kończy badanie - Pacjent 99 - wynik: wypis
-[  24.17s] Lekarz chirurg rozpoczyna badanie - Pacjent 102
-[  24.20s] Lekarz chirurg kończy badanie - Pacjent 102 - wynik: oddział
-[  24.23s] Lekarz chirurg rozpoczyna badanie - Dziecko 106
-[  24.24s] Lekarz chirurg kończy badanie - Dziecko 106 - wynik: wypis
-[  24.26s] Lekarz chirurg rozpoczyna badanie - Dziecko 108
-[  24.29s] Lekarz chirurg kończy badanie - Dziecko 108 - wynik: wypis
-[  24.31s] Lekarz chirurg rozpoczyna badanie - Pacjent 116
-[  24.34s] Pacjent 135 wchodzi do budynku
-[  24.37s] Pacjent 136 wchodzi do budynku
-[  24.38s] Pacjent 135 (VIP) omija kolejkę rejestracji
-[  24.40s] Pacjent 136 dołącza do kolejki rejestracji
-[  24.42s] Lekarz chirurg kończy badanie - Pacjent 116 - wynik: wypis
-[  24.44s] Pacjent 141 wchodzi do budynku
-[  24.45s] Pacjent 141 dołącza do kolejki rejestracji
-[  24.47s] Pacjent 140 wchodzi do budynku
-[  24.48s] Pacjent 142 wchodzi do budynku
-[  24.51s] Pacjent 140 (VIP) omija kolejkę rejestracji
-[  24.52s] Pacjent 142 dołącza do kolejki rejestracji
-[  24.53s] Okienko rejestracji 2 zostaje otwarte (PID=17901)
-[  24.56s] Pacjent 127 przekazany do triażu, czeka na lekarza POZ
-[  24.57s] Pacjent 140 podchodzi do okienka rejestracji 1
-[  24.58s] Pacjent 127 jest weryfikowany przez lekarza POZ
-[  24.59s] Pacjent 127 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  24.60s] Pacjent 127 czeka na lekarza: neurolog (kolor: żółty)
-[  24.62s] Lekarz neurolog rozpoczyna badanie - Pacjent 127
-[  24.64s] Lekarz neurolog kończy badanie - Pacjent 127 - wynik: oddział
-[  24.65s] Pacjent 144 wchodzi do budynku
-[  24.67s] Pacjent 144 dołącza do kolejki rejestracji
-[  24.69s] Dziecko 147 pojawia się przed SOR (wiek 6, z opiekunem)
-[  24.71s] Okienko rejestracji 2 rozpoczyna pracę
-[  24.72s] Pacjent 135 podchodzi do okienka rejestracji 2
-[  24.74s] Pacjent 148 pojawia się przed SOR (wiek 48)
-[  24.76s] Pacjent 135 przekazany do triażu, czeka na lekarza POZ
-[  24.78s] Pacjent 128 podchodzi do okienka rejestracji 2
-[  24.79s] Pacjent 135 jest weryfikowany przez lekarza POZ
-[  24.80s] Pacjent 135 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  24.81s] Pacjent 135 czeka na lekarza: chirurg (kolor: zielony)
-[  24.82s] Pacjent 140 przekazany do triażu, czeka na lekarza POZ
-[  24.83s] Pacjent 129 podchodzi do okienka rejestracji 1
-[  24.84s] Lekarz chirurg rozpoczyna badanie - Pacjent 135
-[  24.86s] Lekarz chirurg kończy badanie - Pacjent 135 - wynik: wypis
-[  24.87s] Pacjent 140 jest weryfikowany przez lekarza POZ
-[  24.89s] Pacjent 140 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  24.91s] Pacjent 140 czeka na lekarza: kardiolog (kolor: żółty)
-[  24.93s] Pacjent 145 wchodzi do budynku
-[  24.94s] Pacjent 145 (VIP) omija kolejkę rejestracji
-[  24.96s] Lekarz kardiolog rozpoczyna badanie - Pacjent 140
-[  24.97s] Lekarz kardiolog kończy badanie - Pacjent 140 - wynik: wypis
-[  24.99s] Pacjent 146 wchodzi do budynku
-[  25.02s] Pacjent 146 dołącza do kolejki rejestracji
-[  25.03s] Pacjent 149 pojawia się przed SOR (wiek 49)
-[  25.04s] Pacjent 128 przekazany do triażu, czeka na lekarza POZ
-[  25.06s] Pacjent 145 podchodzi do okienka rejestracji 2
-[  25.08s] Pacjent 128 jest weryfikowany przez lekarza POZ
-[  25.11s] Pacjent 128 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  25.13s] Pacjent 128 czeka na lekarza: okulista (kolor: zielony)
-[  25.15s] Pacjent 129 przekazany do triażu, czeka na lekarza POZ
-[  25.17s] Pacjent 131 podchodzi do okienka rejestracji 1
-[  25.21s] Pacjent 129 jest weryfikowany przez lekarza POZ
-[  25.23s] Lekarz okulista rozpoczyna badanie - Pacjent 128
-[  25.25s] Lekarz okulista kończy badanie - Pacjent 128 - wynik: wypis
-[  25.27s] Pacjent 129 uzyskuje status [żółty] — kierowany do lekarza: okulista
-[  25.29s] Pacjent 129 czeka na lekarza: okulista (kolor: żółty)
-[  25.32s] Dziecko 138 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  25.34s] Dziecko 138 wchodzi do budynku
-[  25.36s] Dziecko 138 dołącza do kolejki rejestracji
-[  25.37s] Pacjent 150 pojawia się przed SOR (wiek 50)
-[  25.39s] Lekarz okulista rozpoczyna badanie - Pacjent 129
-[  25.41s] Lekarz okulista kończy badanie - Pacjent 129 - wynik: wypis
-[  25.42s] Dziecko 139 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  25.44s] Dziecko 139 wchodzi do budynku
-[  25.46s] Dziecko 139 dołącza do kolejki rejestracji
-[  25.48s] Dziecko 151 pojawia się przed SOR (wiek 12, z opiekunem)
-[  25.50s] Pacjent 131 przekazany do triażu, czeka na lekarza POZ
-[  25.53s] Pacjent 133 podchodzi do okienka rejestracji 1
-[  25.57s] Pacjent 145 przekazany do triażu, czeka na lekarza POZ
-[  25.59s] Pacjent 134 podchodzi do okienka rejestracji 2
-[  25.62s] Pacjent 131 jest weryfikowany przez lekarza POZ
-[  25.66s] Pacjent 131 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  25.68s] Pacjent 131 czeka na lekarza: pediatra (kolor: zielony)
-[  25.70s] Pacjent 145 jest weryfikowany przez lekarza POZ
-[  25.72s] Pacjent 145 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  25.75s] Pacjent 145 czeka na lekarza: kardiolog (kolor: żółty)
-[  25.78s] Lekarz kardiolog rozpoczyna badanie - Pacjent 145
-[  25.81s] Lekarz kardiolog kończy badanie - Pacjent 145 - wynik: oddział
-[  25.82s] Pacjent 152 pojawia się przed SOR (wiek 52)
-[  25.83s] Dziecko 143 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  25.84s] Dziecko 143 wchodzi do budynku
-[  25.86s] Dziecko 143 dołącza do kolejki rejestracji
-[  25.88s] Pacjent 134 przekazany do triażu, czeka na lekarza POZ
-[  25.91s] Pacjent 134 jest weryfikowany przez lekarza POZ
-[  25.93s] Dziecko 132 podchodzi do okienka rejestracji 2
-[  25.95s] Pacjent 134 uzyskuje status [żółty] — kierowany do lekarza: laryngolog
-[  25.96s] Pacjent 134 czeka na lekarza: laryngolog (kolor: żółty)
-[  25.98s] Lekarz laryngolog rozpoczyna badanie - Pacjent 134
-[  26.00s] Lekarz laryngolog kończy badanie - Pacjent 134 - wynik: wypis
-[  26.02s] Pacjent 133 przekazany do triażu, czeka na lekarza POZ
-[  26.03s] Pacjent 136 podchodzi do okienka rejestracji 1
-[  26.05s] Pacjent 133 jest weryfikowany przez lekarza POZ
-[  26.06s] Pacjent 153 pojawia się przed SOR (wiek 53)
-[  26.08s] Pacjent 133 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  26.10s] Pacjent 133 czeka na lekarza: neurolog (kolor: żółty)
-[  26.12s] Lekarz neurolog rozpoczyna badanie - Pacjent 133
-[  26.14s] Lekarz neurolog kończy badanie - Pacjent 133 - wynik: wypis
-[  26.17s] Pacjent 154 pojawia się przed SOR (wiek 54)
-[  26.18s] Dziecko 132 przekazany do triażu, czeka na lekarza POZ
-[  26.20s] Pacjent 141 podchodzi do okienka rejestracji 2
-[  26.22s] Dziecko 132 jest weryfikowany przez lekarza POZ
-[  26.25s] Dziecko 132 zostaje odesłany do domu po triażu
-[  26.26s] Pacjent 148 wchodzi do budynku
-[  26.28s] Pacjent 148 dołącza do kolejki rejestracji
-[  26.30s] Pacjent 149 wchodzi do budynku
-[  26.31s] Pacjent 149 dołącza do kolejki rejestracji
-[  26.34s] Pacjent 136 przekazany do triażu, czeka na lekarza POZ
-[  26.36s] Pacjent 142 podchodzi do okienka rejestracji 1
-[  26.38s] Pacjent 136 jest weryfikowany przez lekarza POZ
-[  26.39s] Pacjent 136 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  26.40s] Pacjent 136 czeka na lekarza: pediatra (kolor: zielony)
-[  26.41s] Dziecko 155 pojawia się przed SOR (wiek 12, z opiekunem)
-[  26.42s] Pacjent 141 przekazany do triażu, czeka na lekarza POZ
-[  26.43s] Pacjent 144 podchodzi do okienka rejestracji 2
-[  26.45s] Pacjent 141 jest weryfikowany przez lekarza POZ
-[  26.47s] Pacjent 141 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  26.50s] Pacjent 141 czeka na lekarza: okulista (kolor: zielony)
-[  26.52s] Lekarz okulista rozpoczyna badanie - Pacjent 141
-[  26.54s] Lekarz okulista kończy badanie - Pacjent 141 - wynik: wypis
-[  26.56s] Pacjent 142 przekazany do triażu, czeka na lekarza POZ
-[  26.57s] Pacjent 146 podchodzi do okienka rejestracji 1
-[  26.59s] Lekarz chirurg rozpoczyna badanie - Pacjent 142
-[  26.61s] Lekarz chirurg kończy badanie - Pacjent 142 - wynik: wypis
-[  26.63s] Pacjent 156 pojawia się przed SOR (wiek 56)
-[  26.65s] Pacjent 144 przekazany do triażu, czeka na lekarza POZ
-[  26.67s] Pacjent 144 jest weryfikowany przez lekarza POZ
-[  26.69s] Pacjent 150 podchodzi do okienka rejestracji 2
-[  26.71s] Pacjent 144 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  26.73s] Pacjent 144 czeka na lekarza: neurolog (kolor: żółty)
-[  26.74s] Pacjent 157 pojawia się przed SOR (wiek 57)
-[  26.76s] Lekarz neurolog rozpoczyna badanie - Pacjent 144
-[  26.78s] Lekarz neurolog kończy badanie - Pacjent 144 - wynik: wypis
-[  26.80s] Pacjent 152 wchodzi do budynku
-[  26.81s] Pacjent 146 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  26.83s] Lekarz laryngolog rozpoczyna badanie - Pacjent 146
-[  26.84s] Dziecko 138 przekazany do triażu, czeka na lekarza POZ
-[  26.85s] Dziecko 139 podchodzi do okienka rejestracji 1
-[  26.86s] Dziecko 138 jest weryfikowany przez lekarza POZ
-[  26.88s] Lekarz kardiolog rozpoczyna badanie - Dziecko 138
-[  26.90s] Pacjent 150 przekazany do triażu, czeka na lekarza POZ
-[  26.91s] Dziecko 143 podchodzi do okienka rejestracji 2
-[  26.93s] Pacjent 150 jest weryfikowany przez lekarza POZ
-[  26.94s] Pacjent 150 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
-[  26.97s] Pacjent 150 czeka na lekarza: laryngolog (kolor: czerwony)
-[  27.00s] Pacjent 159 pojawia się przed SOR (wiek 59)
-[  27.02s] Dziecko 139 przekazany do triażu, czeka na lekarza POZ
-[  27.05s] Dziecko 139 jest weryfikowany przez lekarza POZ
-[  27.07s] Dziecko 139 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  27.09s] Dziecko 139 czeka na lekarza: laryngolog (kolor: zielony)
-[  27.11s] Dziecko 137 podchodzi do okienka rejestracji 1
-[  27.15s] Lekarz laryngolog rozpoczyna badanie - Dziecko 139
-[  27.17s] Lekarz laryngolog kończy badanie - Dziecko 139 - wynik: wypis
-[  27.19s] Pacjent 160 pojawia się przed SOR (wiek 20)
-[  27.21s] Dziecko 143 przekazany do triażu, czeka na lekarza POZ
-[  27.23s] Pacjent 148 podchodzi do okienka rejestracji 2
-[  27.25s] Dziecko 143 jest weryfikowany przez lekarza POZ
-[  27.28s] Dziecko 143 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
-[  27.31s] Dziecko 143 czeka na lekarza: laryngolog (kolor: czerwony)
-[  27.32s] Dziecko 137 przekazany do triażu, czeka na lekarza POZ
-[  27.34s] Dziecko 137 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  27.36s] Lekarz laryngolog rozpoczyna badanie - Dziecko 143
-[  27.37s] Pacjent 161 pojawia się przed SOR (wiek 21)
-[  27.39s] Pacjent 148 przekazany do triażu, czeka na lekarza POZ
-[  27.41s] Pacjent 148 jest weryfikowany przez lekarza POZ
-[  27.43s] Pacjent 148 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  27.44s] Lekarz okulista rozpoczyna badanie - Pacjent 148
-[  27.47s] Lekarz okulista kończy badanie - Pacjent 148 - wynik: wypis
-[  27.49s] Pacjent 162 pojawia się przed SOR (wiek 22)
-[  27.51s] Pacjent 149 przekazany do triażu, czeka na lekarza POZ
-[  27.53s] Pacjent 160 podchodzi do okienka rejestracji 1
-[  27.56s] Pacjent 149 jest weryfikowany przez lekarza POZ
-[  27.58s] Pacjent 149 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  27.59s] Pacjent 149 czeka na lekarza: okulista (kolor: zielony)
-[  27.61s] Dziecko 155 przekazany do triażu, czeka na lekarza POZ
-[  27.63s] Dziecko 155 jest weryfikowany przez lekarza POZ
-[  27.66s] Pacjent 152 podchodzi do okienka rejestracji 2
-[  27.68s] Dziecko 155 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[  27.71s] Dziecko 155 czeka na lekarza: kardiolog (kolor: zielony)
-[  27.72s] Lekarz okulista rozpoczyna badanie - Pacjent 149
-[  27.74s] Lekarz okulista kończy badanie - Pacjent 149 - wynik: wypis
-[  27.77s] Pacjent 161 wchodzi do budynku
-[  27.79s] Pacjent 163 pojawia się przed SOR (wiek 23)
-[  27.81s] Pacjent 163 dołącza do kolejki rejestracji
-[  27.83s] Pacjent 164 pojawia się przed SOR (wiek 24)
-[  27.84s] Pacjent 160 przekazany do triażu, czeka na lekarza POZ
-[  27.86s] Pacjent 153 podchodzi do okienka rejestracji 1
-[  27.87s] Pacjent 160 jest weryfikowany przez lekarza POZ
-[  27.89s] Pacjent 160 zostaje odesłany do domu po triażu
-[  27.91s] Pacjent 164 wchodzi do budynku
-[  27.92s] Pacjent 164 dołącza do kolejki rejestracji
-[  27.93s] Pacjent 152 przekazany do triażu, czeka na lekarza POZ
-[  27.95s] Pacjent 152 jest weryfikowany przez lekarza POZ
-[  27.96s] Dziecko 147 podchodzi do okienka rejestracji 2
-[  27.98s] Pacjent 152 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  27.99s] Pacjent 152 czeka na lekarza: neurolog (kolor: żółty)
-[  28.00s] Lekarz neurolog rozpoczyna badanie - Pacjent 152
-[  28.01s] Lekarz neurolog kończy badanie - Pacjent 152 - wynik: wypis
-[  28.03s] Pacjent 165 pojawia się przed SOR (wiek 25)
-[  28.05s] Pacjent 165 wchodzi do budynku
-[  28.07s] Pacjent 165 (VIP) omija kolejkę rejestracji
-[  28.08s] Pacjent 166 pojawia się przed SOR (wiek 26)
-[  28.10s] Pacjent 153 przekazany do triażu, czeka na lekarza POZ
-[  28.12s] Pacjent 165 podchodzi do okienka rejestracji 1
-[  28.13s] Pacjent 153 jest weryfikowany przez lekarza POZ
-[  28.15s] Pacjent 153 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  28.16s] Pacjent 153 czeka na lekarza: pediatra (kolor: żółty)
-[  28.18s] Dziecko 147 przekazany do triażu, czeka na lekarza POZ
-[  28.20s] Pacjent 154 podchodzi do okienka rejestracji 2
-[  28.21s] Dziecko 147 jest weryfikowany przez lekarza POZ
-[  28.23s] Dziecko 147 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  28.26s] Dziecko 147 czeka na lekarza: neurolog (kolor: zielony)
-[  28.28s] Lekarz neurolog rozpoczyna badanie - Dziecko 147
-[  28.29s] Lekarz neurolog kończy badanie - Dziecko 147 - wynik: wypis
-[  28.30s] Pacjent 167 pojawia się przed SOR (wiek 27)
-[  28.31s] Pacjent 167 wchodzi do budynku
-[  28.32s] Pacjent 167 dołącza do kolejki rejestracji
-[  28.33s] Pacjent 166 wchodzi do budynku
-[  28.35s] Pacjent 154 przekazany do triażu, czeka na lekarza POZ
-[  28.36s] Dziecko 151 podchodzi do okienka rejestracji 2
-[  28.37s] Pacjent 154 jest weryfikowany przez lekarza POZ
-[  28.39s] Pacjent 154 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  28.40s] Pacjent 154 czeka na lekarza: neurolog (kolor: zielony)
-[  28.41s] Pacjent 168 pojawia się przed SOR (wiek 28)
-[  28.42s] Pacjent 165 przekazany do triażu, czeka na lekarza POZ
-[  28.44s] Pacjent 165 jest weryfikowany przez lekarza POZ
-[  28.45s] Pacjent 156 podchodzi do okienka rejestracji 1
-[  28.48s] Dziecko 169 pojawia się przed SOR (wiek 9, z opiekunem)
-[  28.50s] Pacjent 156 przekazany do triażu, czeka na lekarza POZ
-[  28.52s] Pacjent 156 jest weryfikowany przez lekarza POZ
-[  28.54s] Pacjent 158 podchodzi do okienka rejestracji 1
-[  28.57s] Pacjent 156 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  28.60s] Pacjent 156 czeka na lekarza: chirurg (kolor: zielony)
-[  28.61s] Dziecko 151 przekazany do triażu, czeka na lekarza POZ
-[  28.63s] Pacjent 157 podchodzi do okienka rejestracji 2
-[  28.64s] Dziecko 151 jest weryfikowany przez lekarza POZ
-[  28.66s] Dziecko 151 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  28.67s] Dziecko 151 czeka na lekarza: pediatra (kolor: żółty)
-[  28.69s] Lekarz chirurg rozpoczyna badanie - Pacjent 156
-[  28.71s] Lekarz chirurg kończy badanie - Pacjent 156 - wynik: wypis
-[  28.73s] Dziecko 170 pojawia się przed SOR (wiek 12, z opiekunem)
-[  28.74s] Pacjent 158 przekazany do triażu, czeka na lekarza POZ
-[  28.77s] Pacjent 159 podchodzi do okienka rejestracji 1
-[  28.78s] Pacjent 158 jest weryfikowany przez lekarza POZ
-[  28.80s] Pacjent 158 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  28.82s] Pacjent 158 czeka na lekarza: okulista (kolor: zielony)
-[  28.83s] Lekarz okulista rozpoczyna badanie - Pacjent 158
-[  28.84s] Lekarz okulista kończy badanie - Pacjent 158 - wynik: wypis
-[  28.85s] Dziecko 169 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  28.86s] Pacjent 157 przekazany do triażu, czeka na lekarza POZ
-[  28.88s] Pacjent 161 podchodzi do okienka rejestracji 2
-[  28.89s] Pacjent 157 jest weryfikowany przez lekarza POZ
-[  28.92s] Dziecko 171 pojawia się przed SOR (wiek 8, z opiekunem)
-[  28.94s] Pacjent 172 pojawia się przed SOR (wiek 32)
-[  28.97s] Pacjent 159 przekazany do triażu, czeka na lekarza POZ
-[  29.00s] Pacjent 162 podchodzi do okienka rejestracji 1
-[  29.02s] Pacjent 159 jest weryfikowany przez lekarza POZ
-[  29.04s] Pacjent 159 uzyskuje status [zielony] — kierowany do lekarza: okulista
-[  29.06s] Pacjent 159 czeka na lekarza: okulista (kolor: zielony)
-[  29.07s] Lekarz okulista rozpoczyna badanie - Pacjent 159
-[  29.10s] Lekarz okulista kończy badanie - Pacjent 159 - wynik: oddział
-[  29.12s] Dziecko 170 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  29.14s] Dziecko 170 wchodzi do budynku
-[  29.16s] Dziecko 170 (VIP) omija kolejkę rejestracji
-[  29.19s] Pacjent 161 przekazany do triażu, czeka na lekarza POZ
-[  29.21s] Dziecko 170 podchodzi do okienka rejestracji 2
-[  29.23s] Pacjent 161 jest weryfikowany przez lekarza POZ
-[  29.25s] Pacjent 161 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  29.28s] Pacjent 161 czeka na lekarza: pediatra (kolor: żółty)
-[  29.33s] Pacjent 173 pojawia się przed SOR (wiek 33)
-[  29.37s] Dziecko 170 przekazany do triażu, czeka na lekarza POZ
-[  29.40s] Dziecko 170 jest weryfikowany przez lekarza POZ
-[  29.42s] Dziecko 170 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
-[  29.44s] Dziecko 170 czeka na lekarza: kardiolog (kolor: zielony)
-[  29.47s] Pacjent 163 podchodzi do okienka rejestracji 2
-[  29.50s] Pacjent 162 przekazany do triażu, czeka na lekarza POZ
-[  29.52s] Pacjent 164 podchodzi do okienka rejestracji 1
-[  29.55s] Pacjent 162 jest weryfikowany przez lekarza POZ
-[  29.57s] Pacjent 162 uzyskuje status [czerwony] — kierowany do lekarza: pediatra
-[  29.59s] Pacjent 162 czeka na lekarza: pediatra (kolor: czerwony)
-[  29.60s] Dziecko 174 pojawia się przed SOR (wiek 14, z opiekunem)
-[  29.62s] Lekarz kardiolog rozpoczyna badanie - Dziecko 170
-[  29.64s] Lekarz kardiolog kończy badanie - Dziecko 170 - wynik: wypis
-[  29.66s] Pacjent 172 wchodzi do budynku
-[  29.68s] Pacjent 172 dołącza do kolejki rejestracji
-[  29.70s] [Director] Dyrektor wysyła SIGUSR1 do lekarza neurolog (PID=17039)
-[  29.72s] Lekarz neurolog opuszcza SOR na rozkaz dyrektora (bez pacjenta)
-[  29.75s] Pacjent 164 przekazany do triażu, czeka na lekarza POZ
-[  29.77s] Pacjent 167 podchodzi do okienka rejestracji 1
-[  29.80s] Pacjent 164 jest weryfikowany przez lekarza POZ
-[  29.81s] Pacjent 164 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  29.83s] Pacjent 163 przekazany do triażu, czeka na lekarza POZ
-[  29.85s] Pacjent 175 pojawia się przed SOR (wiek 35)
-[  29.86s] Pacjent 176 pojawia się przed SOR (wiek 36)
-[  29.88s] Pacjent 167 przekazany do triażu, czeka na lekarza POZ
-[  29.90s] Pacjent 166 podchodzi do okienka rejestracji 1
-[  29.92s] Pacjent 167 jest weryfikowany przez lekarza POZ
-[  29.93s] Pacjent 167 uzyskuje status [żółty] — kierowany do lekarza: pediatra
-[  29.95s] Pacjent 167 czeka na lekarza: pediatra (kolor: żółty)
-[  29.96s] Pacjent 177 pojawia się przed SOR (wiek 37)
-[  29.98s] Pacjent 166 przekazany do triażu, czeka na lekarza POZ
-[  29.99s] Pacjent 168 podchodzi do okienka rejestracji 1
-[  30.01s] Pacjent 166 jest weryfikowany przez lekarza POZ
-[  30.02s] Pacjent 166 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  30.04s] Pacjent 166 czeka na lekarza: neurolog (kolor: żółty)
-[  30.06s] Pacjent 178 pojawia się przed SOR (wiek 38)
-[  30.08s] Pacjent 179 pojawia się przed SOR (wiek 39)
-[  30.09s] Pacjent 168 przekazany do triażu, czeka na lekarza POZ
-[  30.11s] Pacjent 168 jest weryfikowany przez lekarza POZ
-[  30.13s] Dziecko 169 podchodzi do okienka rejestracji 1
-[  30.14s] Pacjent 168 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[  30.16s] Pacjent 168 czeka na lekarza: chirurg (kolor: żółty)
-[  30.18s] Lekarz chirurg rozpoczyna badanie - Pacjent 168
-[  30.20s] Lekarz chirurg kończy badanie - Pacjent 168 - wynik: wypis
-[  30.22s] Pacjent 173 wchodzi do budynku
-[  30.24s] Pacjent 173 dołącza do kolejki rejestracji
-[  30.26s] Lekarz pediatra wraca do SOR
-[  30.28s] Lekarz pediatra rozpoczyna badanie - Dziecko 123
-[  30.31s] Lekarz pediatra kończy badanie - Dziecko 123 - wynik: oddział
-[  30.32s] Dziecko 171 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  30.36s] Dziecko 171 wchodzi do budynku
-[  30.38s] Dziecko 171 dołącza do kolejki rejestracji
-[  30.41s] Lekarz pediatra rozpoczyna badanie - Pacjent 124
-[  30.43s] Lekarz pediatra kończy badanie - Pacjent 124 - wynik: wypis
-[  30.45s] Lekarz pediatra rozpoczyna badanie - Pacjent 162
-[  30.47s] Pacjent 175 wchodzi do budynku
-[  30.49s] Lekarz pediatra kończy badanie - Pacjent 162 - wynik: wypis
-[  30.51s] Pacjent 175 (VIP) omija kolejkę rejestracji
-[  30.53s] Pacjent 176 wchodzi do budynku
-[  30.54s] Pacjent 176 dołącza do kolejki rejestracji
-[  30.57s] Lekarz pediatra rozpoczyna badanie - Pacjent 163
-[  30.58s] Lekarz pediatra kończy badanie - Pacjent 163 - wynik: wypis
-[  30.60s] Lekarz pediatra rozpoczyna badanie - Pacjent 153
-[  30.62s] Dziecko 180 pojawia się przed SOR (wiek 9, z opiekunem)
-[  30.63s] Dziecko 169 przekazany do triażu, czeka na lekarza POZ
-[  30.65s] Dziecko 180 podchodzi do okienka rejestracji 1
-[  30.67s] Dziecko 169 jest weryfikowany przez lekarza POZ
-[  30.68s] Pacjent 181 pojawia się przed SOR (wiek 41)
-[  30.69s] Pacjent 182 pojawia się przed SOR (wiek 42)
-[  30.71s] Pacjent 182 wchodzi do budynku
-[  30.73s] Pacjent 182 dołącza do kolejki rejestracji
-[  30.76s] Okienko rejestracji 2 zostaje otwarte (PID=18351)
-[  30.77s] Okienko rejestracji 2 rozpoczyna pracę
-[  30.78s] Pacjent 175 podchodzi do okienka rejestracji 2
-[  30.82s] Dziecko 180 przekazany do triażu, czeka na lekarza POZ
-[  30.84s] Pacjent 172 podchodzi do okienka rejestracji 1
-[  30.86s] Pacjent 183 pojawia się przed SOR (wiek 43)
-[  30.89s] Pacjent 183 wchodzi do budynku
-[  30.91s] Dziecko 180 jest weryfikowany przez lekarza POZ
-[  30.94s] Dziecko 180 uzyskuje status [zielony] — kierowany do lekarza: chirurg
-[  30.96s] Dziecko 180 czeka na lekarza: chirurg (kolor: zielony)
-[  30.98s] Pacjent 183 dołącza do kolejki rejestracji
-[  31.01s] Lekarz chirurg rozpoczyna badanie - Dziecko 180
-[  31.04s] Pacjent 184 pojawia się przed SOR (wiek 44)
-[  31.07s] Pacjent 184 wchodzi do budynku
-[  31.09s] Pacjent 184 dołącza do kolejki rejestracji
-[  31.10s] Pacjent 172 przekazany do triażu, czeka na lekarza POZ
-[  31.12s] Pacjent 173 podchodzi do okienka rejestracji 1
-[  31.14s] Pacjent 175 przekazany do triażu, czeka na lekarza POZ
-[  31.16s] Dziecko 171 podchodzi do okienka rejestracji 2
-[  31.18s] Pacjent 172 jest weryfikowany przez lekarza POZ
-[  31.20s] Pacjent 172 uzyskuje status [zielony] — kierowany do lekarza: neurolog
-[  31.22s] Pacjent 172 czeka na lekarza: neurolog (kolor: zielony)
-[  31.23s] Pacjent 175 jest weryfikowany przez lekarza POZ
-[  31.25s] Lekarz pediatra rozpoczyna badanie - Pacjent 175
-[  31.27s] Lekarz pediatra kończy badanie - Pacjent 175 - wynik: wypis
-[  31.29s] Pacjent 185 pojawia się przed SOR (wiek 45)
-[  31.31s] Pacjent 185 wchodzi do budynku
-[  31.33s] Pacjent 185 (VIP) omija kolejkę rejestracji
-[  31.34s] Dziecko 171 przekazany do triażu, czeka na lekarza POZ
-[  31.36s] Pacjent 185 podchodzi do okienka rejestracji 2
-[  31.37s] Dziecko 171 jest weryfikowany przez lekarza POZ
-[  31.41s] Dziecko 171 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
-[  31.42s] Dziecko 171 czeka na lekarza: laryngolog (kolor: zielony)
-[  31.44s] Lekarz laryngolog rozpoczyna badanie - Dziecko 171
-[  31.46s] Pacjent 173 przekazany do triażu, czeka na lekarza POZ
-[  31.49s] Pacjent 176 podchodzi do okienka rejestracji 1
-[  31.51s] Pacjent 173 jest weryfikowany przez lekarza POZ
-[  31.53s] Pacjent 173 uzyskuje status [żółty] — kierowany do lekarza: chirurg
-[  31.55s] Pacjent 173 czeka na lekarza: chirurg (kolor: żółty)
-[  31.58s] Pacjent 176 przekazany do triażu, czeka na lekarza POZ
-[  31.60s] Pacjent 179 podchodzi do okienka rejestracji 1
-[  31.61s] Pacjent 187 pojawia się przed SOR (wiek 47)
-[  31.63s] Pacjent 187 wchodzi do budynku
-[  31.65s] Pacjent 187 dołącza do kolejki rejestracji
-[  31.67s] Pacjent 176 jest weryfikowany przez lekarza POZ
-[  31.69s] Pacjent 185 przekazany do triażu, czeka na lekarza POZ
-[  31.71s] Lekarz kardiolog rozpoczyna badanie - Pacjent 185
-[  31.73s] Lekarz kardiolog kończy badanie - Pacjent 185 - wynik: wypis
-[  31.74s] Pacjent 188 pojawia się przed SOR (wiek 48)
-[  31.76s] Pacjent 188 wchodzi do budynku
-[  31.77s] Pacjent 188 dołącza do kolejki rejestracji
-[  31.79s] Pacjent 178 przekazany do triażu, czeka na lekarza POZ
-[  31.81s] Pacjent 177 podchodzi do okienka rejestracji 2
-[  31.82s] Pacjent 178 jest weryfikowany przez lekarza POZ
-[  31.83s] Lekarz chirurg rozpoczyna badanie - Pacjent 178
-[  31.85s] Lekarz chirurg kończy badanie - Pacjent 178 - wynik: wypis
-[  31.86s] Pacjent 179 przekazany do triażu, czeka na lekarza POZ
-[  31.87s] Lekarz okulista rozpoczyna badanie - Pacjent 179
-[  31.88s] Lekarz okulista kończy badanie - Pacjent 179 - wynik: wypis
-[  31.89s] Pacjent 189 pojawia się przed SOR (wiek 49)
-[  31.91s] Pacjent 189 wchodzi do budynku
-[  31.93s] Pacjent 190 pojawia się przed SOR (wiek 50)
-[  31.95s] Pacjent 190 wchodzi do budynku
-[  31.97s] Pacjent 190 (VIP) omija kolejkę rejestracji
-[  31.98s] Dziecko 174 przekazany do triażu, czeka na lekarza POZ
-[  32.00s] Pacjent 190 podchodzi do okienka rejestracji 1
-[  32.02s] Dziecko 174 jest weryfikowany przez lekarza POZ
-[  32.03s] Dziecko 174 uzyskuje status [żółty] — kierowany do lekarza: neurolog
-[  32.05s] Dziecko 174 czeka na lekarza: neurolog (kolor: żółty)
-[  32.06s] Pacjent 177 przekazany do triażu, czeka na lekarza POZ
-[  32.08s] Pacjent 181 podchodzi do okienka rejestracji 2
-[  32.09s] Pacjent 177 jest weryfikowany przez lekarza POZ
-[  32.10s] Lekarz pediatra rozpoczyna badanie - Pacjent 177
-[  32.11s] Dziecko 191 pojawia się przed SOR (wiek 9, z opiekunem)
-[  32.13s] Dziecko 191 przychodzi z opiekunem (zajmuje 2 miejsca)
-[  32.15s] Dziecko 191 wchodzi do budynku
-[  32.16s] Dziecko 191 dołącza do kolejki rejestracji
-[  32.18s] Pacjent 181 przekazany do triażu, czeka na lekarza POZ
-[  32.19s] Pacjent 182 podchodzi do okienka rejestracji 2
-[  32.21s] Pacjent 181 jest weryfikowany przez lekarza POZ
-[  32.23s] Pacjent 181 uzyskuje status [zielony] — kierowany do lekarza: pediatra
-[  32.24s] Pacjent 181 czeka na lekarza: pediatra (kolor: zielony)
-[  32.26s] Pacjent 190 przekazany do triażu, czeka na lekarza POZ
-[  32.28s] Pacjent 190 jest weryfikowany przez lekarza POZ
-[  32.30s] Lekarz pediatra rozpoczyna badanie - Pacjent 181
-[  32.32s] Pacjent 192 pojawia się przed SOR (wiek 52)
-[  32.35s] Pacjent 193 pojawia się przed SOR (wiek 53)
-[  32.37s] Pacjent 193 wchodzi do budynku
-[  32.39s] Pacjent 193 dołącza do kolejki rejestracji
-[  32.42s] Pacjent 182 przekazany do triażu, czeka na lekarza POZ
-[  32.44s] Pacjent 182 jest weryfikowany przez lekarza POZ
-[  32.46s] Pacjent 184 podchodzi do okienka rejestracji 2
-[  32.50s] Pacjent 182 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
-[  32.51s] Pacjent 182 czeka na lekarza: kardiolog (kolor: żółty)
-[  32.53s] Lekarz kardiolog rozpoczyna badanie - Pacjent 182
-[  32.54s] [Manager] Czas symulacji skończył się — zarządzam normalne zamknięciem SOR
-[  32.56s] Pacjent 183 przekazany do triażu, czeka na lekarza POZ
-[  32.57s] Lekarz kardiolog kończy pracę
-[  32.58s] Lekarz kardiolog opuszcza SOR
-[  32.60s] Pacjent 9 opuszcza SOR (zamknięcie)
-[  32.61s] Pacjent 33 opuszcza SOR (zamknięcie)
-[  32.63s] Pacjent 162 opuszcza SOR (zamknięcie)
-[  32.65s] Pacjent 191 opuszcza SOR (zamknięcie)
-[  32.66s] Pacjent 182 opuszcza SOR (zamknięcie)
-[  32.68s] Pacjent 170 opuszcza SOR (zamknięcie)
-[  32.69s] Pacjent 133 opuszcza SOR (zamknięcie)
-[  32.71s] Pacjent 44 opuszcza SOR (zamknięcie)
-[  32.73s] Pacjent 1 opuszcza SOR (zamknięcie)
-[  32.74s] Pacjent 128 opuszcza SOR (zamknięcie)
-[  32.76s] Pacjent 159 opuszcza SOR (zamknięcie)
-[  32.77s] Pacjent 173 opuszcza SOR (zamknięcie)
-[  32.79s] Pacjent 164 opuszcza SOR (zamknięcie)
-[  32.81s] Pacjent 137 opuszcza SOR (zamknięcie)
-[  32.83s] Pacjent 18 opuszcza SOR (zamknięcie)
-[  32.85s] Pacjent 97 opuszcza SOR (zamknięcie)
-[  32.87s] Pacjent 183 opuszcza SOR (zamknięcie)
-[  32.88s] Pacjent 176 opuszcza SOR (zamknięcie)
-[  32.90s] Pacjent 174 opuszcza SOR (zamknięcie)
-[  32.91s] Pacjent 88 opuszcza SOR (zamknięcie)
-[  32.92s] Pacjent 180 opuszcza SOR (zamknięcie)
-[  32.94s] Pacjent 169 opuszcza SOR (zamknięcie)
-[  32.95s] Pacjent 193 opuszcza SOR (zamknięcie)
-[  32.96s] Pacjent 140 opuszcza SOR (zamknięcie)
-[  32.98s] Pacjent 139 opuszcza SOR (zamknięcie)
-[  33.00s] Pacjent 172 opuszcza SOR (zamknięcie)
-[  33.01s] Pacjent 184 opuszcza SOR (zamknięcie)
-[  33.02s] Pacjent 181 opuszcza SOR (zamknięcie)
+[   1.34s] [Manager] Symulacja rozpoczyna pracę
+[   1.37s] [Manager] Parametry: N=20, K=10, duration=10
+[   1.38s] [Manager] Director uruchomiony (PID=21192)
+[   1.39s] [Manager] Okienko rejestracji 1 uruchomione (PID=21193)
+[   1.40s] [Manager] Kontroler rejestracji uruchomiony (PID=21194)
+[   1.41s] [Manager] Lekarz POZ (triaż) uruchomiony (PID=21195)
+[   1.42s] [Manager] Lekarz kardiolog uruchomiony (PID=21196)
+[   1.43s] [Manager] Lekarz neurolog uruchomiony (PID=21197)
+[   1.44s] [Manager] Lekarz okulista uruchomiony (PID=21198)
+[   1.45s] [Manager] Lekarz laryngolog uruchomiony (PID=21199)
+[   1.46s] [Manager] Lekarz chirurg uruchomiony (PID=21200)
+[   1.47s] Lekarz kardiolog rozpoczyna pracę
+[   1.49s] [Manager] Lekarz pediatra uruchomiony (PID=21201)
+[   1.50s] [Manager] Generator pacjentów uruchomiony (PID=21202)
+[   1.51s] [RegCtrl] Kontroler rejestracji startuje (K=10)
+[   1.52s] Okienko rejestracji 1 rozpoczyna pracę
+[   1.53s] Lekarz chirurg rozpoczyna pracę
+[   1.55s] Lekarz okulista rozpoczyna pracę
+[   1.56s] [Director] Dyrektor rozpoczyna pracę
+[   1.58s] Lekarz neurolog rozpoczyna pracę
+[   1.59s] Lekarz POZ (triaż) rozpoczyna pracę
+[   1.60s] [Generator] Generator pacjentów startuje
+[   1.62s] Pacjent 1 pojawia się przed SOR (wiek 21)
+[   1.64s] Pacjent 1 wchodzi do budynku
+[   1.66s] Pacjent 1 dołącza do kolejki rejestracji
+[   1.68s] Lekarz pediatra rozpoczyna pracę
+[   1.70s] Pacjent 1 podchodzi do okienka rejestracji 1
+[   1.72s] Lekarz laryngolog rozpoczyna pracę
+[   1.75s] Pacjent 2 pojawia się przed SOR (wiek 22)
+[   1.76s] Pacjent 2 wchodzi do budynku
+[   1.78s] Pacjent 2 dołącza do kolejki rejestracji
+[   1.80s] Pacjent 1 przekazany do triażu, czeka na lekarza POZ
+[   1.82s] Pacjent 2 podchodzi do okienka rejestracji 1
+[   1.84s] Pacjent 1 jest weryfikowany przez lekarza POZ
+[   1.86s] Pacjent 1 zostaje odesłany do domu po triażu
+[   1.88s] Pacjent 2 przekazany do triażu, czeka na lekarza POZ
+[   1.89s] Pacjent 2 jest weryfikowany przez lekarza POZ
+[   1.91s] Pacjent 2 uzyskuje status [zielony] — kierowany do lekarza: pediatra
+[   1.93s] Pacjent 2 czeka na lekarza: pediatra (kolor: zielony)
+[   1.95s] Lekarz pediatra rozpoczyna badanie - Pacjent 2
+[   1.96s] Lekarz pediatra kończy badanie - Pacjent 2 - wynik: wypis
+[   1.99s] Dziecko 3 pojawia się przed SOR (wiek 12, z opiekunem)
+[   2.02s] Dziecko 3 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   2.04s] Dziecko 3 wchodzi do budynku
+[   2.06s] Dziecko 3 dołącza do kolejki rejestracji
+[   2.08s] Dziecko 3 podchodzi do okienka rejestracji 1
+[   2.11s] Pacjent 4 pojawia się przed SOR (wiek 24)
+[   2.13s] Pacjent 4 wchodzi do budynku
+[   2.15s] Pacjent 4 dołącza do kolejki rejestracji
+[   2.16s] Dziecko 3 przekazany do triażu, czeka na lekarza POZ
+[   2.18s] Pacjent 4 podchodzi do okienka rejestracji 1
+[   2.20s] Dziecko 3 jest weryfikowany przez lekarza POZ
+[   2.22s] Dziecko 3 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   2.24s] Dziecko 3 czeka na lekarza: neurolog (kolor: zielony)
+[   2.27s] Lekarz neurolog rozpoczyna badanie - Dziecko 3
+[   2.29s] Lekarz neurolog kończy badanie - Dziecko 3 - wynik: wypis
+[   2.31s] Pacjent 5 pojawia się przed SOR (wiek 25)
+[   2.35s] Pacjent 5 wchodzi do budynku
+[   2.37s] Pacjent 5 (VIP) omija kolejkę rejestracji
+[   2.40s] Pacjent 4 przekazany do triażu, czeka na lekarza POZ
+[   2.43s] Pacjent 5 podchodzi do okienka rejestracji 1
+[   2.46s] Pacjent 4 jest weryfikowany przez lekarza POZ
+[   2.49s] Pacjent 4 uzyskuje status [zielony] — kierowany do lekarza: pediatra
+[   2.51s] Pacjent 4 czeka na lekarza: pediatra (kolor: zielony)
+[   2.54s] Lekarz pediatra rozpoczyna badanie - Pacjent 4
+[   2.56s] Lekarz pediatra kończy badanie - Pacjent 4 - wynik: wypis
+[   2.58s] Pacjent 6 pojawia się przed SOR (wiek 26)
+[   2.61s] Pacjent 6 wchodzi do budynku
+[   2.64s] Pacjent 6 dołącza do kolejki rejestracji
+[   2.66s] Pacjent 5 przekazany do triażu, czeka na lekarza POZ
+[   2.68s] Pacjent 6 podchodzi do okienka rejestracji 1
+[   2.70s] Pacjent 5 jest weryfikowany przez lekarza POZ
+[   2.71s] Pacjent 5 uzyskuje status [czerwony] — kierowany do lekarza: kardiolog
+[   2.73s] Pacjent 5 czeka na lekarza: kardiolog (kolor: czerwony)
+[   2.74s] Pacjent 7 pojawia się przed SOR (wiek 27)
+[   2.76s] Pacjent 7 wchodzi do budynku
+[   2.77s] Pacjent 7 dołącza do kolejki rejestracji
+[   2.79s] Lekarz kardiolog rozpoczyna badanie - Pacjent 5
+[   2.82s] Lekarz kardiolog kończy badanie - Pacjent 5 - wynik: wypis
+[   2.86s] Dziecko 8 pojawia się przed SOR (wiek 14, z opiekunem)
+[   2.88s] Dziecko 8 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   2.91s] Dziecko 8 wchodzi do budynku
+[   2.95s] Dziecko 8 dołącza do kolejki rejestracji
+[   2.98s] Pacjent 6 przekazany do triażu, czeka na lekarza POZ
+[   3.01s] Pacjent 7 podchodzi do okienka rejestracji 1
+[   3.03s] Pacjent 6 jest weryfikowany przez lekarza POZ
+[   3.06s] Pacjent 6 uzyskuje status [zielony] — kierowany do lekarza: okulista
+[   3.08s] Pacjent 6 czeka na lekarza: okulista (kolor: zielony)
+[   3.10s] Lekarz okulista rozpoczyna badanie - Pacjent 6
+[   3.11s] Lekarz okulista kończy badanie - Pacjent 6 - wynik: wypis
+[   3.13s] Dziecko 9 pojawia się przed SOR (wiek 8, z opiekunem)
+[   3.14s] Dziecko 9 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   3.15s] Dziecko 9 wchodzi do budynku
+[   3.16s] Dziecko 9 dołącza do kolejki rejestracji
+[   3.18s] Pacjent 7 przekazany do triażu, czeka na lekarza POZ
+[   3.19s] Dziecko 8 podchodzi do okienka rejestracji 1
+[   3.20s] Pacjent 7 jest weryfikowany przez lekarza POZ
+[   3.21s] Pacjent 7 uzyskuje status [zielony] — kierowany do lekarza: pediatra
+[   3.22s] Pacjent 7 czeka na lekarza: pediatra (kolor: zielony)
+[   3.23s] Lekarz pediatra rozpoczyna badanie - Pacjent 7
+[   3.24s] Lekarz pediatra kończy badanie - Pacjent 7 - wynik: wypis
+[   3.25s] Dziecko 10 pojawia się przed SOR (wiek 17, z opiekunem)
+[   3.26s] Dziecko 10 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   3.27s] Dziecko 10 wchodzi do budynku
+[   3.28s] Dziecko 10 (VIP) omija kolejkę rejestracji
+[   3.36s] Dziecko 8 przekazany do triażu, czeka na lekarza POZ
+[   3.37s] Dziecko 10 podchodzi do okienka rejestracji 1
+[   3.38s] Dziecko 8 jest weryfikowany przez lekarza POZ
+[   3.40s] Dziecko 8 uzyskuje status [żółty] — kierowany do lekarza: okulista
+[   3.41s] Dziecko 8 czeka na lekarza: okulista (kolor: żółty)
+[   3.42s] Lekarz okulista rozpoczyna badanie - Dziecko 8
+[   3.43s] Lekarz okulista kończy badanie - Dziecko 8 - wynik: wypis
+[   3.45s] Pacjent 11 pojawia się przed SOR (wiek 31)
+[   3.47s] Pacjent 11 wchodzi do budynku
+[   3.49s] Pacjent 11 dołącza do kolejki rejestracji
+[   3.59s] Pacjent 12 pojawia się przed SOR (wiek 32)
+[   3.61s] Pacjent 12 wchodzi do budynku
+[   3.64s] Pacjent 12 dołącza do kolejki rejestracji
+[   3.66s] Dziecko 10 przekazany do triażu, czeka na lekarza POZ
+[   3.67s] Dziecko 9 podchodzi do okienka rejestracji 1
+[   3.68s] Dziecko 10 jest weryfikowany przez lekarza POZ
+[   3.70s] Dziecko 10 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   3.71s] Dziecko 10 czeka na lekarza: neurolog (kolor: zielony)
+[   3.72s] Lekarz neurolog rozpoczyna badanie - Dziecko 10
+[   3.73s] Lekarz neurolog kończy badanie - Dziecko 10 - wynik: wypis
+[   3.75s] Dziecko 9 przekazany do triażu, czeka na lekarza POZ
+[   3.76s] Pacjent 11 podchodzi do okienka rejestracji 1
+[   3.77s] Dziecko 9 jest weryfikowany przez lekarza POZ
+[   3.78s] Dziecko 9 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
+[   3.79s] Dziecko 9 czeka na lekarza: kardiolog (kolor: żółty)
+[   3.81s] Lekarz kardiolog rozpoczyna badanie - Dziecko 9
+[   3.82s] Lekarz kardiolog kończy badanie - Dziecko 9 - wynik: wypis
+[   3.83s] Pacjent 13 pojawia się przed SOR (wiek 33)
+[   3.84s] Pacjent 13 wchodzi do budynku
+[   3.85s] Pacjent 13 dołącza do kolejki rejestracji
+[   4.00s] Pacjent 11 przekazany do triażu, czeka na lekarza POZ
+[   4.03s] Pacjent 12 podchodzi do okienka rejestracji 1
+[   4.04s] Pacjent 11 jest weryfikowany przez lekarza POZ
+[   4.05s] Pacjent 11 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
+[   4.06s] Pacjent 11 czeka na lekarza: laryngolog (kolor: czerwony)
+[   4.07s] Lekarz laryngolog rozpoczyna badanie - Pacjent 11
+[   4.08s] Lekarz laryngolog kończy badanie - Pacjent 11 - wynik: wypis
+[   4.09s] Dziecko 14 pojawia się przed SOR (wiek 5, z opiekunem)
+[   4.10s] Dziecko 14 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   4.12s] Dziecko 14 wchodzi do budynku
+[   4.13s] Dziecko 14 dołącza do kolejki rejestracji
+[   4.29s] Pacjent 15 pojawia się przed SOR (wiek 35)
+[   4.31s] Pacjent 15 wchodzi do budynku
+[   4.33s] Pacjent 15 (VIP) omija kolejkę rejestracji
+[   4.35s] Pacjent 12 przekazany do triażu, czeka na lekarza POZ
+[   4.36s] Pacjent 15 podchodzi do okienka rejestracji 1
+[   4.37s] Pacjent 12 jest weryfikowany przez lekarza POZ
+[   4.38s] Pacjent 12 uzyskuje status [zielony] — kierowany do lekarza: chirurg
+[   4.39s] Pacjent 12 czeka na lekarza: chirurg (kolor: zielony)
+[   4.41s] Lekarz chirurg rozpoczyna badanie - Pacjent 12
+[   4.42s] Lekarz chirurg kończy badanie - Pacjent 12 - wynik: wypis
+[   4.49s] Pacjent 16 pojawia się przed SOR (wiek 36)
+[   4.50s] Pacjent 16 wchodzi do budynku
+[   4.51s] Pacjent 16 dołącza do kolejki rejestracji
+[   4.62s] Pacjent 15 przekazany do triażu, czeka na lekarza POZ
+[   4.63s] Pacjent 15 jest weryfikowany przez lekarza POZ
+[   4.65s] Pacjent 13 podchodzi do okienka rejestracji 1
+[   4.66s] Pacjent 15 uzyskuje status [zielony] — kierowany do lekarza: okulista
+[   4.68s] Pacjent 15 czeka na lekarza: okulista (kolor: zielony)
+[   4.68s] Lekarz okulista rozpoczyna badanie - Pacjent 15
+[   4.69s] Lekarz okulista kończy badanie - Pacjent 15 - wynik: wypis
+[   4.71s] Pacjent 17 pojawia się przed SOR (wiek 37)
+[   4.72s] Pacjent 17 wchodzi do budynku
+[   4.73s] Pacjent 17 dołącza do kolejki rejestracji
+[   4.85s] Pacjent 13 przekazany do triażu, czeka na lekarza POZ
+[   4.87s] Pacjent 13 jest weryfikowany przez lekarza POZ
+[   4.88s] Dziecko 14 podchodzi do okienka rejestracji 1
+[   4.89s] Pacjent 13 uzyskuje status [czerwony] — kierowany do lekarza: kardiolog
+[   4.91s] Pacjent 13 czeka na lekarza: kardiolog (kolor: czerwony)
+[   4.92s] Lekarz kardiolog rozpoczyna badanie - Pacjent 13
+[   4.94s] Lekarz kardiolog kończy badanie - Pacjent 13 - wynik: wypis
+[   4.96s] Pacjent 18 pojawia się przed SOR (wiek 38)
+[   4.97s] Pacjent 18 wchodzi do budynku
+[   4.98s] Pacjent 18 dołącza do kolejki rejestracji
+[   5.06s] Pacjent 19 pojawia się przed SOR (wiek 39)
+[   5.07s] Pacjent 19 wchodzi do budynku
+[   5.09s] Pacjent 19 dołącza do kolejki rejestracji
+[   5.17s] Dziecko 14 przekazany do triażu, czeka na lekarza POZ
+[   5.18s] Pacjent 16 podchodzi do okienka rejestracji 1
+[   5.20s] Dziecko 14 jest weryfikowany przez lekarza POZ
+[   5.22s] Dziecko 14 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
+[   5.24s] Dziecko 14 czeka na lekarza: kardiolog (kolor: żółty)
+[   5.25s] Lekarz kardiolog rozpoczyna badanie - Dziecko 14
+[   5.26s] Lekarz kardiolog kończy badanie - Dziecko 14 - wynik: wypis
+[   5.32s] Pacjent 20 pojawia się przed SOR (wiek 40)
+[   5.34s] Pacjent 20 wchodzi do budynku
+[   5.35s] Pacjent 20 (VIP) omija kolejkę rejestracji
+[   5.37s] Pacjent 16 przekazany do triażu, czeka na lekarza POZ
+[   5.39s] Pacjent 20 podchodzi do okienka rejestracji 1
+[   5.41s] [Director] Dyrektor wysyła SIGUSR1 do lekarza chirurg (PID=21200)
+[   5.42s] Pacjent 16 jest weryfikowany przez lekarza POZ
+[   5.43s] Lekarz chirurg opuszcza SOR na rozkaz dyrektora (bez pacjenta)
+[   5.44s] Lekarz chirurg pracuje na oddziale
+[   5.45s] Pacjent 16 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   5.46s] Pacjent 16 czeka na lekarza: neurolog (kolor: zielony)
+[   5.47s] Lekarz neurolog rozpoczyna badanie - Pacjent 16
+[   5.48s] Lekarz neurolog kończy badanie - Pacjent 16 - wynik: wypis
+[   5.58s] Pacjent 21 pojawia się przed SOR (wiek 41)
+[   5.59s] Pacjent 21 wchodzi do budynku
+[   5.61s] Pacjent 21 dołącza do kolejki rejestracji
+[   5.63s] Pacjent 20 przekazany do triażu, czeka na lekarza POZ
+[   5.65s] Pacjent 17 podchodzi do okienka rejestracji 1
+[   5.66s] Pacjent 20 jest weryfikowany przez lekarza POZ
+[   5.67s] Pacjent 20 uzyskuje status [żółty] — kierowany do lekarza: chirurg
+[   5.68s] Pacjent 20 czeka na lekarza: chirurg (kolor: żółty)
+[   5.81s] Pacjent 17 przekazany do triażu, czeka na lekarza POZ
+[   5.83s] Pacjent 18 podchodzi do okienka rejestracji 1
+[   5.84s] Pacjent 17 jest weryfikowany przez lekarza POZ
+[   5.86s] Pacjent 17 uzyskuje status [żółty] — kierowany do lekarza: chirurg
+[   5.87s] Pacjent 17 czeka na lekarza: chirurg (kolor: żółty)
+[   5.88s] Pacjent 22 pojawia się przed SOR (wiek 42)
+[   5.90s] Pacjent 22 wchodzi do budynku
+[   5.91s] Pacjent 22 dołącza do kolejki rejestracji
+[   5.99s] Pacjent 23 pojawia się przed SOR (wiek 43)
+[   6.00s] Pacjent 23 wchodzi do budynku
+[   6.01s] Pacjent 23 dołącza do kolejki rejestracji
+[   6.12s] Pacjent 18 przekazany do triażu, czeka na lekarza POZ
+[   6.15s] Pacjent 19 podchodzi do okienka rejestracji 1
+[   6.16s] Pacjent 18 jest weryfikowany przez lekarza POZ
+[   6.17s] Pacjent 18 uzyskuje status [zielony] — kierowany do lekarza: pediatra
+[   6.18s] Pacjent 18 czeka na lekarza: pediatra (kolor: zielony)
+[   6.19s] Lekarz pediatra rozpoczyna badanie - Pacjent 18
+[   6.20s] Lekarz pediatra kończy badanie - Pacjent 18 - wynik: wypis
+[   6.21s] Pacjent 24 pojawia się przed SOR (wiek 44)
+[   6.22s] Pacjent 24 wchodzi do budynku
+[   6.23s] Pacjent 24 dołącza do kolejki rejestracji
+[   6.41s] Pacjent 25 pojawia się przed SOR (wiek 45)
+[   6.44s] Pacjent 25 wchodzi do budynku
+[   6.45s] Pacjent 25 (VIP) omija kolejkę rejestracji
+[   6.46s] Pacjent 19 przekazany do triażu, czeka na lekarza POZ
+[   6.47s] Pacjent 19 jest weryfikowany przez lekarza POZ
+[   6.48s] Pacjent 25 podchodzi do okienka rejestracji 1
+[   6.49s] Pacjent 19 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   6.50s] Pacjent 19 czeka na lekarza: neurolog (kolor: zielony)
+[   6.51s] Lekarz neurolog rozpoczyna badanie - Pacjent 19
+[   6.52s] Lekarz neurolog kończy badanie - Pacjent 19 - wynik: oddział
+[   6.67s] Pacjent 26 pojawia się przed SOR (wiek 46)
+[   6.69s] Pacjent 26 wchodzi do budynku
+[   6.70s] Pacjent 26 dołącza do kolejki rejestracji
+[   6.72s] Pacjent 25 przekazany do triażu, czeka na lekarza POZ
+[   6.73s] Pacjent 21 podchodzi do okienka rejestracji 1
+[   6.74s] Pacjent 25 jest weryfikowany przez lekarza POZ
+[   6.76s] Pacjent 25 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   6.78s] Pacjent 25 czeka na lekarza: neurolog (kolor: zielony)
+[   6.80s] Lekarz neurolog rozpoczyna badanie - Pacjent 25
+[   6.81s] Lekarz neurolog kończy badanie - Pacjent 25 - wynik: wypis
+[   6.92s] Pacjent 27 pojawia się przed SOR (wiek 47)
+[   6.94s] Pacjent 27 wchodzi do budynku
+[   6.97s] Pacjent 27 dołącza do kolejki rejestracji
+[   7.14s] Dziecko 28 pojawia się przed SOR (wiek 14, z opiekunem)
+[   7.16s] Dziecko 28 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   7.18s] Dziecko 28 wchodzi do budynku
+[   7.20s] Dziecko 28 dołącza do kolejki rejestracji
+[   7.22s] Pacjent 21 przekazany do triażu, czeka na lekarza POZ
+[   7.23s] Pacjent 21 jest weryfikowany przez lekarza POZ
+[   7.26s] Pacjent 21 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[   7.27s] Pacjent 21 czeka na lekarza: neurolog (kolor: zielony)
+[   7.29s] Pacjent 22 podchodzi do okienka rejestracji 1
+[   7.30s] Lekarz neurolog rozpoczyna badanie - Pacjent 21
+[   7.32s] Lekarz neurolog kończy badanie - Pacjent 21 - wynik: wypis
+[   7.33s] Dziecko 29 pojawia się przed SOR (wiek 13, z opiekunem)
+[   7.36s] Dziecko 29 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   7.37s] Dziecko 29 wchodzi do budynku
+[   7.39s] Dziecko 29 dołącza do kolejki rejestracji
+[   7.41s] Pacjent 22 przekazany do triażu, czeka na lekarza POZ
+[   7.42s] Pacjent 22 jest weryfikowany przez lekarza POZ
+[   7.44s] Pacjent 22 uzyskuje status [żółty] — kierowany do lekarza: kardiolog
+[   7.46s] Pacjent 22 czeka na lekarza: kardiolog (kolor: żółty)
+[   7.48s] Pacjent 23 podchodzi do okienka rejestracji 1
+[   7.49s] Lekarz kardiolog rozpoczyna badanie - Pacjent 22
+[   7.51s] Lekarz kardiolog kończy badanie - Pacjent 22 - wynik: wypis
+[   7.52s] Pacjent 30 pojawia się przed SOR (wiek 50)
+[   7.53s] Pacjent 30 wchodzi do budynku
+[   7.54s] Pacjent 30 (VIP) omija kolejkę rejestracji
+[   7.56s] Pacjent 23 przekazany do triażu, czeka na lekarza POZ
+[   7.57s] Pacjent 23 jest weryfikowany przez lekarza POZ
+[   7.59s] Pacjent 30 podchodzi do okienka rejestracji 1
+[   7.60s] Pacjent 23 uzyskuje status [żółty] — kierowany do lekarza: neurolog
+[   7.61s] Pacjent 23 czeka na lekarza: neurolog (kolor: żółty)
+[   7.63s] Lekarz neurolog rozpoczyna badanie - Pacjent 23
+[   7.64s] Lekarz neurolog kończy badanie - Pacjent 23 - wynik: oddział
+[   7.66s] Dziecko 31 pojawia się przed SOR (wiek 6, z opiekunem)
+[   7.67s] Dziecko 31 przychodzi z opiekunem (zajmuje 2 miejsca)
+[   7.69s] Dziecko 31 wchodzi do budynku
+[   7.71s] Dziecko 31 dołącza do kolejki rejestracji
+[   7.86s] Pacjent 30 przekazany do triażu, czeka na lekarza POZ
+[   7.88s] Pacjent 30 jest weryfikowany przez lekarza POZ
+[   7.90s] Pacjent 24 podchodzi do okienka rejestracji 1
+[   7.92s] Pacjent 30 uzyskuje status [zielony] — kierowany do lekarza: pediatra
+[   7.93s] Pacjent 30 czeka na lekarza: pediatra (kolor: zielony)
+[   7.95s] Lekarz pediatra rozpoczyna badanie - Pacjent 30
+[   7.96s] Lekarz pediatra kończy badanie - Pacjent 30 - wynik: wypis
+[   7.98s] Pacjent 32 pojawia się przed SOR (wiek 52)
+[   7.99s] Pacjent 32 wchodzi do budynku
+[   8.01s] Pacjent 32 dołącza do kolejki rejestracji
+[   8.12s] Pacjent 33 pojawia się przed SOR (wiek 53)
+[   8.13s] Pacjent 33 wchodzi do budynku
+[   8.14s] Pacjent 33 dołącza do kolejki rejestracji
+[   8.18s] Pacjent 24 przekazany do triażu, czeka na lekarza POZ
+[   8.19s] Pacjent 26 podchodzi do okienka rejestracji 1
+[   8.20s] Pacjent 24 jest weryfikowany przez lekarza POZ
+[   8.21s] Pacjent 24 uzyskuje status [czerwony] — kierowany do lekarza: laryngolog
+[   8.22s] Pacjent 24 czeka na lekarza: laryngolog (kolor: czerwony)
+[   8.23s] Lekarz laryngolog rozpoczyna badanie - Pacjent 24
+[   8.25s] Lekarz laryngolog kończy badanie - Pacjent 24 - wynik: wypis
+[   8.33s] Pacjent 34 pojawia się przed SOR (wiek 54)
+[   8.35s] Pacjent 34 wchodzi do budynku
+[   8.36s] Pacjent 34 dołącza do kolejki rejestracji
+[   8.42s] Pacjent 26 przekazany do triażu, czeka na lekarza POZ
+[   8.45s] Pacjent 26 jest weryfikowany przez lekarza POZ
+[   8.46s] Pacjent 27 podchodzi do okienka rejestracji 1
+[   8.49s] Pacjent 26 uzyskuje status [zielony] — kierowany do lekarza: okulista
+[   8.51s] Pacjent 26 czeka na lekarza: okulista (kolor: zielony)
+[   8.53s] Lekarz okulista rozpoczyna badanie - Pacjent 26
+[   8.56s] Lekarz okulista kończy badanie - Pacjent 26 - wynik: wypis
+[   8.58s] Pacjent 35 pojawia się przed SOR (wiek 55)
+[   8.60s] Pacjent 35 wchodzi do budynku
+[   8.61s] Pacjent 35 (VIP) omija kolejkę rejestracji
+[   8.64s] Pacjent 27 przekazany do triażu, czeka na lekarza POZ
+[   8.65s] Pacjent 35 podchodzi do okienka rejestracji 1
+[   8.67s] Pacjent 27 jest weryfikowany przez lekarza POZ
+[   8.70s] Pacjent 27 uzyskuje status [czerwony] — kierowany do lekarza: chirurg
+[   8.71s] Pacjent 27 czeka na lekarza: chirurg (kolor: czerwony)
+[   8.74s] Pacjent 36 pojawia się przed SOR (wiek 56)
+[   8.75s] Pacjent 36 wchodzi do budynku
+[   8.78s] Pacjent 36 dołącza do kolejki rejestracji
+[   8.90s] Pacjent 37 pojawia się przed SOR (wiek 57)
+[   8.93s] Pacjent 37 wchodzi do budynku
+[   8.94s] Pacjent 37 dołącza do kolejki rejestracji
+[   8.97s] Pacjent 35 przekazany do triażu, czeka na lekarza POZ
+[   8.99s] Dziecko 28 podchodzi do okienka rejestracji 1
+[   9.00s] Pacjent 35 jest weryfikowany przez lekarza POZ
+[   9.02s] Pacjent 35 uzyskuje status [zielony] — kierowany do lekarza: kardiolog
+[   9.04s] Pacjent 35 czeka na lekarza: kardiolog (kolor: zielony)
+[   9.05s] Lekarz kardiolog rozpoczyna badanie - Pacjent 35
+[   9.06s] Lekarz kardiolog kończy badanie - Pacjent 35 - wynik: wypis
+[   9.10s] Pacjent 38 pojawia się przed SOR (wiek 58)
+[   9.12s] Pacjent 38 wchodzi do budynku
+[   9.13s] Pacjent 38 dołącza do kolejki rejestracji
+[   9.22s] Dziecko 28 przekazany do triażu, czeka na lekarza POZ
+[   9.27s] Dziecko 29 podchodzi do okienka rejestracji 1
+[   9.29s] Dziecko 28 jest weryfikowany przez lekarza POZ
+[   9.32s] Dziecko 28 zostaje odesłany do domu po triażu
+[   9.35s] Pacjent 39 pojawia się przed SOR (wiek 59)
+[   9.37s] Pacjent 39 wchodzi do budynku
+[   9.38s] Pacjent 39 dołącza do kolejki rejestracji
+[   9.59s] Dziecko 29 przekazany do triażu, czeka na lekarza POZ
+[   9.61s] Dziecko 29 jest weryfikowany przez lekarza POZ
+[   9.65s] Dziecko 31 podchodzi do okienka rejestracji 1
+[   9.67s] Dziecko 29 uzyskuje status [czerwony] — kierowany do lekarza: pediatra
+[   9.68s] Dziecko 29 czeka na lekarza: pediatra (kolor: czerwony)
+[   9.70s] Pacjent 40 pojawia się przed SOR (wiek 20)
+[   9.72s] Pacjent 40 wchodzi do budynku
+[   9.74s] Pacjent 40 (VIP) omija kolejkę rejestracji
+[   9.76s] Lekarz pediatra rozpoczyna badanie - Dziecko 29
+[   9.77s] Lekarz pediatra kończy badanie - Dziecko 29 - wynik: wypis
+[   9.79s] Pacjent 41 pojawia się przed SOR (wiek 21)
+[   9.80s] Pacjent 41 wchodzi do budynku
+[   9.82s] Pacjent 41 dołącza do kolejki rejestracji
+[   9.90s] Dziecko 31 przekazany do triażu, czeka na lekarza POZ
+[   9.91s] Dziecko 31 jest weryfikowany przez lekarza POZ
+[   9.94s] Pacjent 40 podchodzi do okienka rejestracji 1
+[   9.95s] Dziecko 31 uzyskuje status [czerwony] — kierowany do lekarza: kardiolog
+[   9.97s] Dziecko 31 czeka na lekarza: kardiolog (kolor: czerwony)
+[   9.98s] Lekarz kardiolog rozpoczyna badanie - Dziecko 31
+[  10.00s] Lekarz kardiolog kończy badanie - Dziecko 31 - wynik: wypis
+[  10.01s] Pacjent 42 pojawia się przed SOR (wiek 22)
+[  10.02s] Pacjent 42 wchodzi do budynku
+[  10.04s] Pacjent 42 dołącza do kolejki rejestracji
+[  10.18s] Pacjent 43 pojawia się przed SOR (wiek 23)
+[  10.21s] Pacjent 43 wchodzi do budynku
+[  10.23s] Pacjent 43 dołącza do kolejki rejestracji
+[  10.26s] Pacjent 40 przekazany do triażu, czeka na lekarza POZ
+[  10.28s] Pacjent 40 jest weryfikowany przez lekarza POZ
+[  10.29s] Pacjent 40 uzyskuje status [zielony] — kierowany do lekarza: chirurg
+[  10.31s] Pacjent 40 czeka na lekarza: chirurg (kolor: zielony)
+[  10.32s] Pacjent 32 podchodzi do okienka rejestracji 1
+[  10.33s] Pacjent 44 pojawia się przed SOR (wiek 24)
+[  10.34s] Pacjent 44 wchodzi do budynku
+[  10.36s] Pacjent 44 dołącza do kolejki rejestracji
+[  10.43s] Pacjent 32 przekazany do triażu, czeka na lekarza POZ
+[  10.44s] Pacjent 33 podchodzi do okienka rejestracji 1
+[  10.46s] Pacjent 32 jest weryfikowany przez lekarza POZ
+[  10.47s] Pacjent 32 uzyskuje status [zielony] — kierowany do lekarza: laryngolog
+[  10.49s] Pacjent 32 czeka na lekarza: laryngolog (kolor: zielony)
+[  10.51s] Lekarz laryngolog rozpoczyna badanie - Pacjent 32
+[  10.52s] Lekarz laryngolog kończy badanie - Pacjent 32 - wynik: wypis
+[  10.54s] Pacjent 45 pojawia się przed SOR (wiek 25)
+[  10.56s] Pacjent 45 wchodzi do budynku
+[  10.58s] Pacjent 45 (VIP) omija kolejkę rejestracji
+[  10.66s] Pacjent 46 pojawia się przed SOR (wiek 26)
+[  10.68s] Pacjent 46 wchodzi do budynku
+[  10.69s] Pacjent 46 dołącza do kolejki rejestracji
+[  10.71s] Pacjent 33 przekazany do triażu, czeka na lekarza POZ
+[  10.73s] Pacjent 45 podchodzi do okienka rejestracji 1
+[  10.75s] Pacjent 33 jest weryfikowany przez lekarza POZ
+[  10.77s] Pacjent 33 uzyskuje status [żółty] — kierowany do lekarza: neurolog
+[  10.79s] Pacjent 33 czeka na lekarza: neurolog (kolor: żółty)
+[  10.81s] Lekarz neurolog rozpoczyna badanie - Pacjent 33
+[  10.82s] Lekarz neurolog kończy badanie - Pacjent 33 - wynik: wypis
+[  10.84s] Pacjent 47 pojawia się przed SOR (wiek 27)
+[  10.85s] Pacjent 47 wchodzi do budynku
+[  10.86s] Pacjent 47 dołącza do kolejki rejestracji
+[  10.88s] Pacjent 45 przekazany do triażu, czeka na lekarza POZ
+[  10.89s] Pacjent 34 podchodzi do okienka rejestracji 1
+[  10.90s] Pacjent 45 jest weryfikowany przez lekarza POZ
+[  10.91s] Pacjent 45 uzyskuje status [żółty] — kierowany do lekarza: chirurg
+[  10.92s] Pacjent 45 czeka na lekarza: chirurg (kolor: żółty)
+[  11.04s] Pacjent 48 pojawia się przed SOR (wiek 28)
+[  11.06s] Pacjent 48 wchodzi do budynku
+[  11.08s] Pacjent 48 dołącza do kolejki rejestracji
+[  11.18s] Pacjent 34 przekazany do triażu, czeka na lekarza POZ
+[  11.29s] Pacjent 34 jest weryfikowany przez lekarza POZ
+[  11.30s] Pacjent 36 podchodzi do okienka rejestracji 1
+[  11.32s] Pacjent 34 uzyskuje status [zielony] — kierowany do lekarza: neurolog
+[  11.33s] Pacjent 34 czeka na lekarza: neurolog (kolor: zielony)
+[  11.35s] Lekarz neurolog rozpoczyna badanie - Pacjent 34
+[  11.36s] Lekarz neurolog kończy badanie - Pacjent 34 - wynik: wypis
+[  11.38s] Pacjent 49 pojawia się przed SOR (wiek 29)
+[  11.39s] Pacjent 49 wchodzi do budynku
+[  11.40s] Pacjent 49 dołącza do kolejki rejestracji
+[  11.45s] [Manager] Czas symulacji skończył się — zarządzam normalne zamknięciem SOR
+[  11.46s] Okienko rejestracji 2 zostaje otwarte (PID=21446)
+[  11.47s] Lekarz chirurg wraca do SOR
+[  11.48s] Pacjent 36 przekazany do triażu, czeka na lekarza POZ
+[  11.49s] Okienko rejestracji 2 rozpoczyna pracę
+[  11.50s] Pacjent 37 podchodzi do okienka rejestracji 2
+[  11.66s] Pacjent 37 przekazany do triażu, czeka na lekarza POZ
