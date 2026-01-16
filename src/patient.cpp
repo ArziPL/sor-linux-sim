@@ -100,8 +100,10 @@ int run_patient(int patient_id, const Config& config) {
     
     if (p.has_guardian) {
         log_event("Dziecko %d przychodzi z opiekunem (zajmuje 2 miejsca)", patient_id);
+        log_event("Dziecko %d wchodzi do budynku", patient_id);
+    } else {
+        log_event("Pacjent %d wchodzi do budynku", patient_id);
     }
-    log_event("Pacjent %d wchodzi do budynku", patient_id);
 
     // Aktualizacja inside_count pod mutexem stanu
     if (sem_P(g_sem_id, SEM_STATE_MUTEX) == -1) {
@@ -127,10 +129,11 @@ int run_patient(int patient_id, const Config& config) {
         return 1;
     }
 
+    const char* patient_type = p.has_guardian ? "Dziecko" : "Pacjent";
     if (p.is_vip) {
-        log_event("Pacjent %d (VIP) omija kolejkę rejestracji", patient_id);
+        log_event("%s %d (VIP) omija kolejkę rejestracji", patient_type, patient_id);
     } else {
-        log_event("Pacjent %d dołącza do kolejki rejestracji", patient_id);
+        log_event("%s %d dołącza do kolejki rejestracji", patient_type, patient_id);
     }
 
     sem_V(g_sem_id, SEM_REG_MUTEX);   // wyjdź z sekcji krytycznej

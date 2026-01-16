@@ -61,7 +61,12 @@ int run_triage(const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d jest weryfikowany przez lekarza POZ", msg.patient_id);
+        const char* patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("%s %d jest weryfikowany przez lekarza POZ", patient_type, msg.patient_id);
+
+        // Symulacja czasu weryfikacji POZ: 0.10-0.25s * speed
+        int triage_time_ms = 100 + rand() % 150;  // 100-249 ms
+        usleep((useconds_t)(triage_time_ms * 1000 * config.speed));
 
         // Losuj kolor: 10% czerwony, 35% żółty, 50% zielony, 5% do domu
         int r = rand() % 100;
@@ -79,7 +84,8 @@ int run_triage(const Config& config) {
             color_name = "zielony";
         } else {
             // 5% do domu
-            log_event("Pacjent %d zostaje odesłany do domu po triażu", msg.patient_id);
+            const char* patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+            log_event("%s %d zostaje odesłany do domu po triażu", patient_type, msg.patient_id);
             
             // PROMPT 12: Jeśli dziecko z opiekunem, zwolnij 2 miejsca
             int slots_to_free = msg.has_guardian ? 2 : 1;
@@ -101,7 +107,8 @@ int run_triage(const Config& config) {
         int spec = rand() % 6;
         const char* spec_names[] = {"kardiolog", "neurolog", "okulista", "laryngolog", "chirurg", "pediatra"};
         
-        log_event("Pacjent %d uzyskuje status [%s] — kierowany do lekarza: %s", msg.patient_id, color_name, spec_names[spec]);
+        patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("%s %d uzyskuje status [%s] — kierowany do lekarza: %s", patient_type, msg.patient_id, color_name, spec_names[spec]);
 
         // Zbuduj wiadomość do lekarza
         TriageMessage tmsg{};
@@ -126,7 +133,8 @@ int run_triage(const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d czeka na lekarza: %s (kolor: %s)", msg.patient_id, spec_names[spec], color_name);
+        patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("%s %d czeka na lekarza: %s (kolor: %s)", patient_type, msg.patient_id, spec_names[spec], color_name);
     }
 
     return 0;

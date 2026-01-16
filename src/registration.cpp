@@ -26,7 +26,6 @@ static void signal_handler_term(int sig) {
 }
 
 int run_registration(int window_id, const Config& config) {
-    (void)config;
     
     struct sigaction sa{};
     sa.sa_handler = signal_handler_usr2;
@@ -66,10 +65,12 @@ int run_registration(int window_id, const Config& config) {
             continue;
         }
 
-        log_event("Pacjent %d podchodzi do okienka rejestracji %d", patient.patient_id, window_id);
+        const char* patient_type = patient.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("%s %d podchodzi do okienka rejestracji %d", patient_type, patient.patient_id, window_id);
 
-        // Symulacja czasu rejestracji: 0.5 sekundy
-        usleep(500000);  // 500ms
+        // Symulacja czasu rejestracji: 0.12-0.35s * speed (czasem szybciej niż pojawienia pacjentów, czasem minimalnie wolniej)
+        int reg_time_ms = (120 + rand() % 230);  // 120-349 ms
+        usleep((useconds_t)(reg_time_ms * 1000 * config.speed));
 
         // Zbuduj komunikat do triażu
         PatientMessage msg{};
@@ -82,7 +83,8 @@ int run_registration(int window_id, const Config& config) {
         strncpy(msg.symptoms, patient.symptoms, MAX_NAME_LEN - 1);
         msg.symptoms[MAX_NAME_LEN - 1] = '\0';
 
-        log_event("Pacjent %d przekazany do triażu, czeka na lekarza POZ", patient.patient_id);
+        patient_type = patient.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("%s %d przekazany do triażu, czeka na lekarza POZ", patient_type, patient.patient_id);
 
         if (msgsnd(g_msgq_triage, &msg, PATIENT_MSG_SIZE, 0) == -1) {
             perror("msgsnd (registration->triage)");

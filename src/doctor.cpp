@@ -115,8 +115,18 @@ int run_doctor(const char* specialization, const Config& config) {
                 ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 30 + my_spec, IPC_NOWAIT);
                 
                 if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
-                    // Brak pacjentów bez blokowania - czekaj z blokowaniem na pierwszego
-                    ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 10 + my_spec, 0);
+                    // Brak pacjentów bez blokowania - czekaj w pętli aż coś się pojawi
+                    // Próbuj po kolei: czerwony, żółty, zielony (bez blokowania, z sleep)
+                    while (ret == -1 && !doctor_interrupted && !sigusr2_received) {
+                        usleep(50000);  // 50ms
+                        ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 10 + my_spec, IPC_NOWAIT);
+                        if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
+                            ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 20 + my_spec, IPC_NOWAIT);
+                        }
+                        if (ret == -1 && (errno == EAGAIN || errno == ENOMSG)) {
+                            ret = msgrcv(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 30 + my_spec, IPC_NOWAIT);
+                        }
+                    }
                 }
             }
         }
@@ -145,10 +155,11 @@ int run_doctor(const char* specialization, const Config& config) {
             continue;
         }
 
-        log_event("Lekarz %s rozpoczyna badanie pacjenta %d", specialization, msg.patient_id);
+        const char* patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+        log_event("Lekarz %s rozpoczyna badanie - %s %d", specialization, patient_type, msg.patient_id);
 
-        // Symuluj badanie: czekaj losowy czas (0.5-2 sekundy * speed) z przerwaniem
-        int exam_time_ms = (500 + rand() % 1500) * config.speed;
+        // Symuluj badanie: 0.3-1.0 sekundy * speed (kolor niezależny)
+        int exam_time_ms = (300 + rand() % 700) * config.speed;  // 300-999 ms * speed
         int sleep_chunks = exam_time_ms / 100;  // Sleep w kawałkach po 100ms
         
         for (int chunk = 0; chunk < sleep_chunks && !doctor_interrupted && !sigusr2_received; chunk++) {
@@ -157,7 +168,8 @@ int run_doctor(const char* specialization, const Config& config) {
         
         // PROMPT 13: Jeśli SIGUSR1 przerwał badanie
         if (doctor_interrupted) {
-            log_event("Lekarz %s opuszcza SOR na rozkaz dyrektora (pacjent %d wraca do kolejki)", specialization, msg.patient_id);
+            patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
+            log_event("Lekarz %s opuszcza SOR na rozkaz dyrektora (%s %d wraca do kolejki)", specialization, patient_type, msg.patient_id);
             
             // PROMPT 13: Zwróć pacjenta do kolejki lekarzy
             if (msgsnd(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 0) == -1) {
@@ -192,7 +204,7 @@ int run_doctor(const char* specialization, const Config& config) {
             outcome = "inna placówka";
         }
 
-        log_event("Lekarz %s kończy badanie pacjenta %d - wynik: %s", specialization, msg.patient_id, outcome);
+        log_event("Lekarz %s kończy badanie - %s %d - wynik: %s", specialization, patient_type, msg.patient_id, outcome);
 
         // PROMPT 7/11: Pacjent opuszcza SOR: zwolnij WAITROOM i aktualizuj inside_count
         // PROMPT 12: Jeśli dziecko z opiekunem, zwolnij 2 miejsca
