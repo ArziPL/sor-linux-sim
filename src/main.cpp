@@ -21,8 +21,16 @@ int main(int argc, char* argv[]) {
         return run_manager(argc, argv);
     }
     else if (strcmp(role, "director") == 0) {
-        // TODO: parsowanie konfiguracji z argumentów
-        Config config = {}; // Tymczasowo pusty
+        Config config = {};
+        // argv: ./sor director N K duration speed seed interval
+        if (argc >= 8) {
+            config.N = atoi(argv[2]);
+            config.K = atoi(argv[3]);
+            config.duration = atoi(argv[4]);
+            config.speed = atof(argv[5]);
+            config.seed = (unsigned int)atoi(argv[6]);
+            config.interval = atof(argv[7]);
+        }
         return run_director(config);
     }
     else if (strcmp(role, "registration") == 0) {
@@ -50,18 +58,45 @@ int main(int argc, char* argv[]) {
     }
     else if (strcmp(role, "triage") == 0) {
         Config config = {};
+        // argv: ./sor triage N K duration speed seed interval
+        if (argc >= 8) {
+            config.N = atoi(argv[2]);
+            config.K = atoi(argv[3]);
+            config.duration = atoi(argv[4]);
+            config.speed = atof(argv[5]);
+            config.seed = (unsigned int)atoi(argv[6]);
+            config.interval = atof(argv[7]);
+        }
         return run_triage(config);
     }
     else if (strcmp(role, "doctor") == 0) {
         // TODO: parsowanie specjalizacji
         const char* spec = argc > 2 ? argv[2] : "kardiolog";
         Config config = {};
+        // argv: ./sor doctor <spec> N K duration speed seed interval
+        if (argc >= 9) {
+            config.N = atoi(argv[3]);
+            config.K = atoi(argv[4]);
+            config.duration = atoi(argv[5]);
+            config.speed = atof(argv[6]);
+            config.seed = (unsigned int)atoi(argv[7]);
+            config.interval = atof(argv[8]);
+        }
         return run_doctor(spec, config);
     }
     else if (strcmp(role, "patient") == 0) {
         // TODO: parsowanie patient_id
         int patient_id = argc > 2 ? atoi(argv[2]) : 0;
         Config config = {};
+        // opcjonalnie: ./sor patient <id> N K duration speed seed interval
+        if (argc >= 10) {
+            config.N = atoi(argv[3]);
+            config.K = atoi(argv[4]);
+            config.duration = atoi(argv[5]);
+            config.speed = atof(argv[6]);
+            config.seed = (unsigned int)atoi(argv[7]);
+            config.interval = atof(argv[8]);
+        }
         return run_patient(patient_id, config);
     }
     else if (strcmp(role, "patient_gen") == 0) {

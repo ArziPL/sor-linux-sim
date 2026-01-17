@@ -80,8 +80,8 @@ int run_doctor(const char* specialization, const Config& config) {
         if (doctor_interrupted) {
             log_event("Lekarz %s opuszcza SOR na rozkaz dyrektora (bez pacjenta)", specialization);
             
-            // PROMPT 13: Czekaj losowy czas na oddziale (5-10 sekund)
-            int ward_time_ms = (5000 + rand() % 5000);
+            // PROMPT 13: Czekaj losowy czas na oddziale (2-4 sekundy)
+            int ward_time_ms = (2000 + rand() % 2000) * config.speed;
             log_event("Lekarz %s pracuje na oddziale", specialization);
             usleep(ward_time_ms * 1000);
             
@@ -161,28 +161,8 @@ int run_doctor(const char* specialization, const Config& config) {
         int exam_time_ms = (300 + rand() % 700) * config.speed;  // 300-999 ms * speed
         int sleep_chunks = exam_time_ms / 100;  // Sleep w kawałkach po 100ms
         
-        for (int chunk = 0; chunk < sleep_chunks && !doctor_interrupted && !sigusr2_received; chunk++) {
+        for (int chunk = 0; chunk < sleep_chunks && !sigusr2_received; chunk++) {
             usleep(100000);  // 100ms
-        }
-        
-        // PROMPT 13: Jeśli SIGUSR1 przerwał badanie
-        if (doctor_interrupted) {
-            patient_type = msg.has_guardian ? "Dziecko" : "Pacjent";
-            log_event("Lekarz %s opuszcza SOR na rozkaz dyrektora (%s %d wraca do kolejki)", specialization, patient_type, msg.patient_id);
-            
-            // PROMPT 13: Zwróć pacjenta do kolejki lekarzy
-            if (msgsnd(g_msgq_doctors, &msg, sizeof(TriageMessage) - sizeof(long), 0) == -1) {
-                perror("msgsnd (return patient to queue)");
-            }
-            
-            // PROMPT 13: Czekaj losowy czas na oddziale (5-10 sekund)
-            int ward_time_ms = (5000 + rand() % 5000);
-            log_event("Lekarz %s pracuje na oddziale", specialization);
-            usleep(ward_time_ms * 1000);
-            
-            log_event("Lekarz %s wraca do SOR", specialization);
-            doctor_interrupted = 0;
-            continue;
         }
         
         // PROMPT 13: Sprawdzenie SIGUSR2 (graceful shutdown)
@@ -216,6 +196,16 @@ int run_doctor(const char* specialization, const Config& config) {
         // Zwolnij miejsca w poczekalni (WAITROOM)
         for (int i = 0; i < slots_to_free; i++) {
             sem_V(g_sem_id, SEM_WAITROOM);
+        }
+
+        // PROMPT 13: Jeśli przyszedł SIGUSR1 w trakcie lub przed badaniem, lekarz idzie na oddział po zakończeniu pacjenta
+        if (doctor_interrupted && !sigusr2_received) {
+            log_event("Lekarz %s opuszcza SOR na rozkaz dyrektora (po zakończeniu badania)", specialization);
+            int ward_time_ms = (2000 + rand() % 2000) * config.speed;  // 2-4s
+            log_event("Lekarz %s pracuje na oddziale", specialization);
+            usleep(ward_time_ms * 1000);
+            log_event("Lekarz %s wraca do SOR", specialization);
+            doctor_interrupted = 0;
         }
     }
 

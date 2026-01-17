@@ -53,9 +53,9 @@ int run_director(const Config& config) {
     
     srand(time(NULL) + getpid());
     
-    // PROMPT 13: Co 3-7 sekund wysyłaj SIGUSR1 do losowego lekarza
+    // PROMPT 13: Co 8-12 sekund wysyłaj SIGUSR1 do losowego lekarza
     while (!sigusr2_received) {
-        sleep(3 + rand() % 5);  // 3-7 sekund
+        sleep(8 + rand() % 5);  // 8-12 sekund
         
         if (sigusr2_received) break;
         
@@ -65,7 +65,7 @@ int run_director(const Config& config) {
         
         if (doctor_pid > 0) {
             const char* spec_names[] = {"kardiolog", "neurolog", "okulista", "laryngolog", "chirurg", "pediatra"};
-            log_event("[Director] Dyrektor wysyła SIGUSR1 do lekarza %s (PID=%d)", spec_names[spec], doctor_pid);
+            log_event("[Director] Dyrektor wysyła lekarza na oddział - %s", spec_names[spec], doctor_pid);
             
             if (kill(doctor_pid, SIGUSR1) == -1) {
                 perror("kill(SIGUSR1)");
