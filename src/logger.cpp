@@ -22,13 +22,14 @@
 // Flaga do graceful shutdown
 volatile sig_atomic_t logger_shutdown = 0;
 
-// Handler dla SIGUSR2 (IGNORUJ - pacjenty go dostaną, a logger czeka na SIGTERM)
+// Handler dla SIGUSR2 (evacuation signal)
 void logger_sigusr2_handler(int sig) {
     (void)sig;
-    // Logger ignoruje SIGUSR2 - czeka na SIGTERM zamiast tego
+    // Logger reaguje na SIGUSR2 - shutdown
+    logger_shutdown = 1;
 }
 
-// Handler dla SIGTERM (zamknięcie)
+// Handler dla SIGTERM (normal termination)
 void logger_sigterm_handler(int sig) {
     (void)sig;
     logger_shutdown = 1;

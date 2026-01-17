@@ -15,11 +15,18 @@
 
 static std::vector<pid_t>* g_children_ptr = nullptr;
 static volatile sig_atomic_t sigint_received = 0;
+static volatile sig_atomic_t sigusr2_received = 0;
 
-// PROMPT 13: Signal handler for graceful shutdown
+// PROMPT 13: Signal handler for SIGINT (Ctrl+C)
 static void signal_handler_sigint(int sig) {
     (void)sig;
     sigint_received = 1;
+}
+
+// PROMPT 13: Signal handler for SIGUSR2 (evacuation)
+static void signal_handler_sigusr2(int sig) {
+    (void)sig;
+    sigusr2_received = 1;
 }
 
 int run_manager(int argc, char* argv[]) {
@@ -42,13 +49,18 @@ int run_manager(int argc, char* argv[]) {
         return 1;
     }
     
-    printf("\n=== Symulacja SOR ===\n");
-    printf("Wciśnij Ctrl+C aby przerwać\n\n");
+    // PROMPT 13: Setup signal handlers
+    struct sigaction sa_int{}, sa_usr2{};
+    sa_int.sa_handler = signal_handler_sigint;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+    sigaction(SIGINT, &sa_int, nullptr);
     
-    printf("Konfiguracja:\n");
-    printf("  N (miejsca w poczekalni): %d\n", config.N);
-    printf("  K (próg drugiego okienka): %d\n", config.K);
-    printf("  Duration: %d sekund (0 = nieskończoność)\n", config.duration);
+    sa_usr2.sa_handler = signal_handler_sigusr2;
+    sigemptyset(&sa_usr2.sa_mask);
+    sa_usr2.sa_flags = 0;
+    sigaction(SIGUSR2, &sa_usr2, nullptr);
+
     printf("  Speed: %.1f\n", config.speed);
     printf("  Seed: %u\n", config.seed);
     printf("  Rozmiar kolejki rejestracji: %d (= N)\n", config.N);
@@ -178,7 +190,7 @@ int run_manager(int argc, char* argv[]) {
     if (config.duration > 0) {
         // Symulacja z określonym czasem trwania
         int elapsed = 0;
-        while (elapsed < config.duration && !sigint_received) {
+        while (elapsed < config.duration && !sigint_received && !sigusr2_received) {
             sleep(1);
             elapsed++;
             
@@ -189,8 +201,8 @@ int run_manager(int argc, char* argv[]) {
             }
         }
     } else {
-        // Symulacja nieskończona - czekaj na Ctrl+C
-        while (!sigint_received) {
+        // Symulacja nieskończona - czekaj na Ctrl+C lub SIGUSR2
+        while (!sigint_received && !sigusr2_received) {
             int status = 0;
             pid_t pid = waitpid(-1, &status, WNOHANG);
             if (pid == -1 && errno != ECHILD) {
