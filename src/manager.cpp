@@ -50,8 +50,10 @@ int run_manager(int argc, char* argv[]) {
     }
     
     // PROMPT 13: Setup signal handlers
+    // Manager IGNORUJE SIGINT - tylko Director reaguje na Ctrl+C
+    // Manager reaguje tylko na SIGUSR2 od Directora
     struct sigaction sa_int{}, sa_usr2{};
-    sa_int.sa_handler = signal_handler_sigint;
+    sa_int.sa_handler = SIG_IGN;  // Ignoruj SIGINT
     sigemptyset(&sa_int.sa_mask);
     sa_int.sa_flags = 0;
     sigaction(SIGINT, &sa_int, nullptr);
@@ -215,20 +217,25 @@ int run_manager(int argc, char* argv[]) {
 
     // Na Ctrl+C lub SIGUSR2 - czekaj na zakończenie procesów
     // UWAGA: Director wysyła SIGUSR2 do wszystkich (zgodnie z tematem - "polecenie Dyrektora")
-    if (sigint_received || sigusr2_received) {
-        const char* reason = sigint_received ? "Ctrl+C (ewakuacja przez Dyrektora)" : "SIGUSR2 (ewakuacja)";
-        log_event("[Manager] %s — czekam na zakończenie procesów", reason);
+    // Logger IGNORUJE SIGUSR2, więc nadal działa i odbiera logi
+    if (sigusr2_received) {
+        log_event("[Manager] SIGUSR2 (ewakuacja) — czekam na zakończenie procesów");
         
         // Czekaj aby procesy zdążyły się wyłączyć (Director wysłał SIGUSR2)
-        for (int i = 0; i < 50; i++) {
-            usleep(100000);  // 100ms x 50 = 5 sekund
+        // Skrócony czas bo Logger nadal działa i zbiera logi
+        for (int i = 0; i < 30; i++) {
+            usleep(100000);  // 100ms x 30 = 3 sekundy
             int status = 0;
             while (waitpid(-1, &status, WNOHANG) > 0) {
                 // Zbieraj zombie
             }
         }
         
-        // Wyślij SIGTERM do loggera aby się zamknął
+        // Loguj zakończenie PRZED zamknięciem Loggera
+        log_event("[Manager] Symulacja zakończona — zamykam Logger");
+        usleep(200000);  // 200ms aby log się zapisał
+        
+        // Wyślij SIGTERM do loggera aby się zamknął (Logger jest pierwszy w children)
         if (children.size() > 0 && children[0] > 0) {
             kill(children[0], SIGTERM);
         }

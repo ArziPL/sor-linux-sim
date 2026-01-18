@@ -94,15 +94,17 @@ int run_director(const Config& config) {
         log_event("[Director] EWAKUACJA! Dyrektor zarządza opuszczenie budynku");
         
         // KLUCZOWE: Czekaj aby logger zdążył odebrać i zapisać wiadomość PRZED wysłaniem SIGUSR2
-        usleep(300000);  // 300ms - ważne aby log się zapisał
+        // Logger IGNORUJE SIGUSR2, więc będzie działał dalej i odbierze kolejne logi
+        usleep(500000);  // 500ms - ważne aby log się zapisał
         
         // Wyślij SIGUSR2 do całej grupy procesów = ewakuacja
+        // Logger zignoruje SIGUSR2, zamknie się dopiero na SIGTERM od Managera
         if (killpg(0, SIGUSR2) == -1) {
             perror("killpg(SIGUSR2)");
         }
         
-        // Czekaj chwilę aby procesy zakończyły się
-        usleep(200000);  // 200ms dodatkowe
+        // Krótkie czekanie - Manager zajmie się resztą
+        usleep(100000);  // 100ms
     }
     
     exit(0);

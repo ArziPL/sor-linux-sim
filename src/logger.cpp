@@ -23,10 +23,12 @@
 volatile sig_atomic_t logger_shutdown = 0;
 
 // Handler dla SIGUSR2 (evacuation signal)
+// Logger IGNORUJE SIGUSR2 - zamyka się dopiero na SIGTERM od Managera
+// Dzięki temu zdąży zapisać wszystkie logi przed zamknięciem
 void logger_sigusr2_handler(int sig) {
     (void)sig;
-    // Logger reaguje na SIGUSR2 - shutdown
-    logger_shutdown = 1;
+    // Logger NIE reaguje na SIGUSR2 - czeka na SIGTERM
+    // logger_shutdown = 1;  // WYŁĄCZONE
 }
 
 // Handler dla SIGTERM (normal termination)
