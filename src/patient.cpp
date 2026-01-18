@@ -32,6 +32,11 @@ int run_patient(int patient_id, const Config& config) {
     (void)config;  // Parametr `config` może być użyty w przyszłości
     
     // PROMPT 13: Setup signal handler for graceful shutdown
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign{};
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
+    
     struct sigaction sa{};
     sa.sa_handler = signal_handler_usr2;
     sigemptyset(&sa.sa_mask);
@@ -153,6 +158,11 @@ int run_patient(int patient_id, const Config& config) {
 
 // Generator pacjentów - PROMPT 14: generowanie procesów pacjentów w pętli
 int run_patient_generator(const Config& config) {
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign{};
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
+    
     struct sigaction sa{};
     sa.sa_handler = signal_handler_usr2;
     sigemptyset(&sa.sa_mask);

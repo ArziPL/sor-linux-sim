@@ -49,6 +49,11 @@ int run_doctor(const char* specialization, const Config& config) {
     srand(config.seed + getpid());  // Losowość
     
     // PROMPT 13: Setup signal handlers using sigaction()
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign{};
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
+    
     struct sigaction sa_usr1{}, sa_usr2{};
     
     sa_usr1.sa_handler = signal_handler_usr1;

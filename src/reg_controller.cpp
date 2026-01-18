@@ -47,6 +47,11 @@ static pid_t spawn_registration_window(int window_id, const Config& config, cons
 }
 
 int run_reg_controller(const Config& config) {
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign{};
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
+    
     // Obsługa SIGTERM i SIGUSR2 do łagodnego zamknięcia
     struct sigaction sa{};
     sa.sa_handler = regctrl_sigterm;

@@ -40,6 +40,12 @@ void logger_sigterm_handler(int sig) {
 int run_logger(const Config& config) {
     (void)config;  // Aby uniknąć warningów
     
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign;
+    memset(&sa_ign, 0, sizeof(sa_ign));
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
+    
     // Ustawienie handlera sygnałów
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));

@@ -26,6 +26,10 @@ static void signal_handler_term(int sig) {
 }
 
 int run_registration(int window_id, const Config& config) {
+    // Ignoruj SIGINT - tylko Director reaguje na Ctrl+C
+    struct sigaction sa_ign{};
+    sa_ign.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa_ign, nullptr);
     
     struct sigaction sa{};
     sa.sa_handler = signal_handler_usr2;
