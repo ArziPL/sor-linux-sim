@@ -11,9 +11,16 @@
 #include "../include/util.h"
 
 // Director - wysyła sygnały SIGUSR1 do lekarzy (PROMPT 13)
-// PROMPT 13: Handle SIGUSR2 for graceful shutdown
+// Na Ctrl+C: Director wysyła SIGUSR2 do wszystkich = ewakuacja (zgodnie z tematem)
 
 static volatile sig_atomic_t sigusr2_received = 0;
+static volatile sig_atomic_t sigint_received = 0;
+
+// Handler SIGINT (Ctrl+C) - Director zarządza ewakuacją
+static void signal_handler_int(int sig) {
+    (void)sig;
+    sigint_received = 1;
+}
 
 static void signal_handler_usr2(int sig) {
     (void)sig;
@@ -31,13 +38,22 @@ extern SORState* g_sor_state;
 int run_director(const Config& config) {
     (void)config;  // Can be used for timing settings
     
-    // PROMPT 13: Use sigaction() instead of signal()
+    // PROMPT 13: Setup signal handlers
+    // SIGINT (Ctrl+C) - Director zarządza ewakuacją SOR
+    struct sigaction sa_int{};
+    sa_int.sa_handler = signal_handler_int;
+    sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = 0;
+    sigaction(SIGINT, &sa_int, nullptr);
+    
+    // SIGUSR2 - reaguj na ewakuację
     struct sigaction sa_usr2{};
     sa_usr2.sa_handler = signal_handler_usr2;
     sigemptyset(&sa_usr2.sa_mask);
     sa_usr2.sa_flags = 0;
     sigaction(SIGUSR2, &sa_usr2, nullptr);
     
+    // SIGTERM - normalne zakończenie
     struct sigaction sa_term{};
     sa_term.sa_handler = signal_handler_term;
     sigemptyset(&sa_term.sa_mask);
@@ -54,10 +70,10 @@ int run_director(const Config& config) {
     srand(time(NULL) + getpid());
     
     // PROMPT 13: Co 8-12 sekund wysyłaj SIGUSR1 do losowego lekarza
-    while (!sigusr2_received) {
+    while (!sigusr2_received && !sigint_received) {
         sleep(8 + rand() % 5);  // 8-12 sekund
         
-        if (sigusr2_received) break;
+        if (sigusr2_received || sigint_received) break;
         
         // Losuj specjalizację (0-5)
         int spec = rand() % 6;
@@ -71,6 +87,22 @@ int run_director(const Config& config) {
                 perror("kill(SIGUSR1)");
             }
         }
+    }
+    
+    // ZGODNIE Z TEMATEM: Na polecenie Dyrektora (sygnał 2) wszyscy opuszczają budynek
+    if (sigint_received) {
+        log_event("[Director] EWAKUACJA! Dyrektor zarządza opuszczenie budynku");
+        
+        // KLUCZOWE: Czekaj aby logger zdążył odebrać i zapisać wiadomość PRZED wysłaniem SIGUSR2
+        usleep(300000);  // 300ms - ważne aby log się zapisał
+        
+        // Wyślij SIGUSR2 do całej grupy procesów = ewakuacja
+        if (killpg(0, SIGUSR2) == -1) {
+            perror("killpg(SIGUSR2)");
+        }
+        
+        // Czekaj chwilę aby procesy zakończyły się
+        usleep(200000);  // 200ms dodatkowe
     }
     
     exit(0);

@@ -1,5 +1,0 @@
-1. Pacjent trafia do triażu po tym jak trafił do lekarza
-2. Pacjent nigdy nie wychodzi od lekarza
-3. Zatrzymanie programu Ctrl + C nie działa
-4. SIGUSR2 nie działa, zweryfikuj SIGUSR1
-5. Naucz się

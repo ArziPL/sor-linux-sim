@@ -213,30 +213,22 @@ int run_manager(int argc, char* argv[]) {
         }
     }
 
-    // PROMPT 13: Manager otrzymał Ctrl+C
-    if (sigint_received) {
-        log_event("[Manager] Ctrl+C — zarządzam ewakuację SOR");
-        printf("Manager: Ctrl+C — wysyłam SIGUSR2 do ewakuacji...\n");
+    // Na Ctrl+C lub SIGUSR2 - czekaj na zakończenie procesów
+    // UWAGA: Director wysyła SIGUSR2 do wszystkich (zgodnie z tematem - "polecenie Dyrektora")
+    if (sigint_received || sigusr2_received) {
+        const char* reason = sigint_received ? "Ctrl+C (ewakuacja przez Dyrektora)" : "SIGUSR2 (ewakuacja)";
+        log_event("[Manager] %s — czekam na zakończenie procesów", reason);
         
-        // Wysyłaj SIGUSR2 do bezpośrednich dzieci (pacjenci spawniowani przez generator zakończą się gdy generator umrze)
-        if (children.size() > 1) {
-            for (size_t i = 1; i < children.size(); i++) {  // Pomijaj logger (index 0)
-                if (children[i] > 0) {
-                    kill(children[i], SIGUSR2);
-                }
-            }
-        }
-        
-        // Czekaj aby procesy zdążyły się wyłączyć
-        for (int i = 0; i < 30; i++) {
-            usleep(100000);  // 100ms x 30 = 3 sekundy
+        // Czekaj aby procesy zdążyły się wyłączyć (Director wysłał SIGUSR2)
+        for (int i = 0; i < 50; i++) {
+            usleep(100000);  // 100ms x 50 = 5 sekund
             int status = 0;
             while (waitpid(-1, &status, WNOHANG) > 0) {
                 // Zbieraj zombie
             }
         }
         
-        // Wyślij SIGTERM do loggera aby się zamknął (ignoruje SIGUSR2)
+        // Wyślij SIGTERM do loggera aby się zamknął
         if (children.size() > 0 && children[0] > 0) {
             kill(children[0], SIGTERM);
         }
@@ -269,8 +261,6 @@ int run_manager(int argc, char* argv[]) {
             kill(children[0], SIGTERM);
         }
     }
-
-    printf("Manager: symulacja zakończona\n");
 
     // Czyszczenie zasobów IPC
     printf("\n=== Sprzątanie ===\n");

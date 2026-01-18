@@ -124,6 +124,45 @@ int run_logger(const Config& config) {
         emit_log(elapsed_sec, msg.text);
     }
     
+    // KLUCZOWE: Po dostaniu SIGUSR2 sprawdź MSGQ jeszcze raz (non-blocking)
+    // Director mógł wysłać ostatni log o ewakuacji
+    if (logger_shutdown) {
+        fprintf(stderr, "[Logger] Sprawdzam ostatnie wiadomości przed zamknięciem...\n");
+        
+        // Próbuj odczytać wszystkie pozostałe wiadomości (non-blocking)
+        for (int i = 0; i < 10; i++) {
+            LogMessage msg;
+            int ret = msgrcv(g_msgq_id, &msg, LOG_PAYLOAD_SIZE, 1, IPC_NOWAIT);
+            
+            if (ret == -1) {
+                if (errno == ENOMSG) {
+                    // Brak więcej wiadomości - OK
+                    break;
+                }
+                if (errno == EIDRM || errno == EINVAL) {
+                    // Kolejka usunięta - koniec
+                    break;
+                }
+                // Inny błąd - ignoruj i kontynuuj
+                break;
+            }
+            
+            // Mamy wiadomość - zapisz
+            double elapsed_sec = 0.0;
+            if (g_sor_state != nullptr) {
+                struct timespec now;
+                clock_gettime(CLOCK_REALTIME, &now);
+                time_t start = g_sor_state->sim_start_time;
+                elapsed_sec = difftime(now.tv_sec, start) + (now.tv_nsec / 1e9);
+                if (elapsed_sec < 0) {
+                    elapsed_sec = 0.0;
+                }
+            }
+            
+            emit_log(elapsed_sec, msg.text);
+        }
+    }
+    
     // Zamknij plik
     fprintf(stderr, "[Logger] Zamykam plik i wyłączam\n");
     close(log_fd);
