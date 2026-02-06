@@ -1,4 +1,5 @@
 ipcs -m -s -q - czy zostały jakieś kolejki MSGQ czy semafory
-ps -o pid,ppid,cmd -C sor - czy zostały jakieś procesy 
+ps - czy zostały jakieś procesy 
+htop - zużycie procesora
 
-ipcs -m -s -q & ps -o pid,ppid,cmd -C sor
+ipcs -m -s -q & ps -o pid,ppid,cmd -C sor & htop
