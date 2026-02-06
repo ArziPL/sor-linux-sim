@@ -1,0 +1,8 @@
+cd /home/areczek/sor-linux-sim
+rm -rf build
+mkdir build && cd build
+cmake ..
+make -j4
+cp sor lekarz pacjent rejestracja ..
+
+cd /home/areczek/sor-linux-sim && rm -rf build && mkdir build && cd build && cmake .. && make -j4 && cp sor lekarz pacjent rejestracja ..

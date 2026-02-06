@@ -198,8 +198,14 @@ void runPOZ() {
         // Mamy pacjenta do triażu
         g_treating = 1;
         
-        logMessage(g_state, g_semid, "Pacjent %d jest weryfikowany przez lekarza POZ", 
-                  msg.patient_id);
+        // [Dziecko] dla pacjentów < 18 lat
+        if (msg.age < 18) {
+            logMessage(g_state, g_semid, "Pacjent %d [Dziecko] jest weryfikowany przez lekarza POZ", 
+                      msg.patient_id);
+        } else {
+            logMessage(g_state, g_semid, "Pacjent %d jest weryfikowany przez lekarza POZ", 
+                      msg.patient_id);
+        }
         
         // Symulacja czasu triażu
         randomSleep(TRIAGE_MIN_MS, TRIAGE_MAX_MS);
@@ -210,8 +216,13 @@ void runPOZ() {
         
         if (color == COLOR_SENT_HOME) {
             // Pacjent odsyłany do domu bezpośrednio z triażu
-            logMessage(g_state, g_semid, "Pacjent %d odesłany do domu z triażu", 
-                      msg.patient_id);
+            if (msg.age < 18) {
+                logMessage(g_state, g_semid, "Pacjent %d [Dziecko] odesłany do domu z triażu", 
+                          msg.patient_id);
+            } else {
+                logMessage(g_state, g_semid, "Pacjent %d odesłany do domu z triażu", 
+                          msg.patient_id);
+            }
             
             // Wyślij odpowiedź do pacjenta - odesłany z triażu
             msg.mtype = MSG_TRIAGE_RESPONSE + msg.patient_id;
@@ -229,9 +240,16 @@ void runPOZ() {
             DoctorType specialist = randomSpecialist(msg.age);
             msg.assigned_doctor = specialist;
             
-            logMessage(g_state, g_semid, 
-                      "Pacjent %d uzyskuje status [%s] — kierowany do lekarza: %s",
-                      msg.patient_id, getColorName(color), getDoctorName(specialist));
+            // [Dziecko] dla pacjentów < 18 lat
+            if (msg.age < 18) {
+                logMessage(g_state, g_semid, 
+                          "Pacjent %d [Dziecko] uzyskuje status [%s] — kierowany do lekarza: %s",
+                          msg.patient_id, getColorName(color), getDoctorName(specialist));
+            } else {
+                logMessage(g_state, g_semid, 
+                          "Pacjent %d uzyskuje status [%s] — kierowany do lekarza: %s",
+                          msg.patient_id, getColorName(color), getDoctorName(specialist));
+            }
             
             // Wyślij odpowiedź do pacjenta - idzie do specjalisty
             // Pacjent sam wyśle się do kolejki specjalisty
@@ -332,8 +350,14 @@ void runSpecialist() {
         
         g_treating = 1;
         
-        logMessage(g_state, g_semid, "Pacjent %d jest badany przez lekarza %s (kolor: %s)",
-                  msg.patient_id, getDoctorName(g_doctor_type), getColorName(msg.color));
+        // [Dziecko] dla pacjentów < 18 lat
+        if (msg.age < 18) {
+            logMessage(g_state, g_semid, "Pacjent %d [Dziecko] jest badany przez lekarza %s (kolor: %s)",
+                      msg.patient_id, getDoctorName(g_doctor_type), getColorName(msg.color));
+        } else {
+            logMessage(g_state, g_semid, "Pacjent %d jest badany przez lekarza %s (kolor: %s)",
+                      msg.patient_id, getDoctorName(g_doctor_type), getColorName(msg.color));
+        }
         
         // Symulacja czasu leczenia
         randomSleep(TREATMENT_MIN_MS, TREATMENT_MAX_MS);
@@ -350,7 +374,12 @@ void runSpecialist() {
             default: outcome_str = "nieznany"; break;
         }
         
-        logMessage(g_state, g_semid, "Pacjent %d — %s", msg.patient_id, outcome_str);
+        // [Dziecko] dla pacjentów < 18 lat
+        if (msg.age < 18) {
+            logMessage(g_state, g_semid, "Pacjent %d [Dziecko] — %s", msg.patient_id, outcome_str);
+        } else {
+            logMessage(g_state, g_semid, "Pacjent %d — %s", msg.patient_id, outcome_str);
+        }
         
         // Wyślij odpowiedź do pacjenta
         msg.mtype = MSG_SPECIALIST_RESPONSE + msg.patient_id;

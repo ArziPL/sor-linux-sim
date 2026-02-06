@@ -1,5 +1,5 @@
 ipcs -m -s -q - czy zostały jakieś kolejki MSGQ czy semafory
-ps - czy zostały jakieś procesy 
+ps -o pid,ppid,stat,cmd --forest -C sor,lekarz,pacjent,rejestracja - czy zostały jakieś procesy 
 htop - zużycie procesora
 
-ipcs -m -s -q & ps -o pid,ppid,cmd -C sor & htop
+ipcs -m -s -q & ps -o pid,ppid,stat,cmd --forest -C sor,lekarz,pacjent,rejestracja & htop

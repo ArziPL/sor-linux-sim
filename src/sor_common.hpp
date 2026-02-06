@@ -46,7 +46,7 @@ constexpr int MSG_KEY_ID = 'M';          // Klucz kolejki komunikatów
 
 // Czasy operacji w milisekundach (skrócone dla dynamicznej symulacji)
 constexpr int PATIENT_GEN_MIN_MS = 500;  // Min czas między generowaniem pacjentów
-constexpr int PATIENT_GEN_MAX_MS = 1500; // Max czas między generowaniem pacjentów
+constexpr int PATIENT_GEN_MAX_MS = 1000; // Max czas między generowaniem pacjentów
 constexpr int REGISTRATION_MIN_MS = 500; // Min czas rejestracji
 constexpr int REGISTRATION_MAX_MS = 1000; // Max czas rejestracji
 constexpr int TRIAGE_MIN_MS = 500;       // Min czas triażu

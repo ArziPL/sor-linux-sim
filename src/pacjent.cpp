@@ -232,17 +232,33 @@ void setupSignals() {
 /**
  * @brief Wejście do poczekalni (blokuje jeśli pełna)
  * Semafor SEM_POCZEKALNIA kontroluje liczbę miejsc (inicjalnie N)
+ * Dziecko + opiekun zajmują 2 miejsca
  */
 void enterWaitingRoom(PatientData* data) {
-    // Czekaj na wolne miejsce (blokujące)
-    semWait(data->semid, SEM_POCZEKALNIA);
-    
-    // Aktualizuj licznik
-    semWait(data->semid, SEM_SHM_MUTEX);
-    data->state->patients_in_sor++;
-    semSignal(data->semid, SEM_SHM_MUTEX);
-    
-    logMessage(data->state, data->semid, "Pacjent %d wchodzi do budynku", data->id);
+    if (data->is_child) {
+        // Dziecko + opiekun = 2 miejsca
+        semWait(data->semid, SEM_POCZEKALNIA);
+        semWait(data->semid, SEM_POCZEKALNIA);
+        
+        semWait(data->semid, SEM_SHM_MUTEX);
+        data->state->patients_in_sor += 2;
+        int count = data->state->patients_in_sor;
+        semSignal(data->semid, SEM_SHM_MUTEX);
+        
+        logMessage(data->state, data->semid, "[Opiekun] Pacjent %d wchodzi do budynku (%d/%d)",
+                  data->id, count, N);
+    } else {
+        // Dorosły = 1 miejsce
+        semWait(data->semid, SEM_POCZEKALNIA);
+        
+        semWait(data->semid, SEM_SHM_MUTEX);
+        data->state->patients_in_sor++;
+        int count = data->state->patients_in_sor;
+        semSignal(data->semid, SEM_SHM_MUTEX);
+        
+        logMessage(data->state, data->semid, "Pacjent %d wchodzi do budynku (%d/%d)",
+                  data->id, count, N);
+    }
 }
 
 /**
@@ -250,8 +266,14 @@ void enterWaitingRoom(PatientData* data) {
  * Wysyła wiadomość do procesu rejestracji i czeka na odpowiedź
  */
 void doRegistration(PatientData* data) {
-    logMessage(data->state, data->semid, "Pacjent %d dołącza do kolejki rejestracji%s",
-              data->id, data->is_vip ? " [VIP]" : "");
+    // Dla dzieci: [Opiekun] (rodzic rejestruje)
+    if (data->is_child) {
+        logMessage(data->state, data->semid, "[Opiekun] Pacjent %d dołącza do kolejki rejestracji",
+                  data->id);
+    } else {
+        logMessage(data->state, data->semid, "Pacjent %d dołącza do kolejki rejestracji%s",
+                  data->id, data->is_vip ? " [VIP]" : "");
+    }
     
     // Zaktualizuj licznik kolejki
     semWait(data->semid, SEM_SHM_MUTEX);
@@ -348,10 +370,16 @@ void doTriage(PatientData* data) {
  * Wysyła wiadomość do kolejki specjalisty i czeka na odpowiedź
  */
 void doSpecialist(PatientData* data) {
-    // Loguj czekanie na specjalistę
-    logMessage(data->state, data->semid, "Pacjent %d czeka na lekarza: %s (kolor: %s)",
-              data->id, getDoctorName(data->assigned_doctor), 
-              getColorName(data->color));
+    // Loguj czekanie na specjalistę - [Dziecko] dla dzieci
+    if (data->is_child) {
+        logMessage(data->state, data->semid, "Pacjent %d [Dziecko] czeka na lekarza: %s (kolor: %s)",
+                  data->id, getDoctorName(data->assigned_doctor), 
+                  getColorName(data->color));
+    } else {
+        logMessage(data->state, data->semid, "Pacjent %d czeka na lekarza: %s (kolor: %s)",
+                  data->id, getDoctorName(data->assigned_doctor), 
+                  getColorName(data->color));
+    }
     
     // Przygotuj wiadomość do specjalisty
     SORMessage msg;
@@ -391,19 +419,36 @@ void doSpecialist(PatientData* data) {
 
 /**
  * @brief Wyjście z SOR (zwolnienie miejsca w poczekalni)
+ * Dziecko + opiekun zwalniają 2 miejsca
  */
 void exitSOR(PatientData* data) {
-    logMessage(data->state, data->semid, "Pacjent %d opuszcza SOR", data->id);
-    
-    // Aktualizuj licznik
-    semWait(data->semid, SEM_SHM_MUTEX);
-    if (data->state->patients_in_sor > 0) {
-        data->state->patients_in_sor--;
+    if (data->is_child) {
+        // Dziecko + opiekun = 2 miejsca
+        logMessage(data->state, data->semid, "Pacjent %d [Dziecko] opuszcza SOR", data->id);
+        
+        semWait(data->semid, SEM_SHM_MUTEX);
+        if (data->state->patients_in_sor >= 2) {
+            data->state->patients_in_sor -= 2;
+        } else {
+            data->state->patients_in_sor = 0;
+        }
+        semSignal(data->semid, SEM_SHM_MUTEX);
+        
+        // Zwolnij 2 miejsca
+        semSignal(data->semid, SEM_POCZEKALNIA);
+        semSignal(data->semid, SEM_POCZEKALNIA);
+    } else {
+        // Dorosły = 1 miejsce
+        logMessage(data->state, data->semid, "Pacjent %d opuszcza SOR", data->id);
+        
+        semWait(data->semid, SEM_SHM_MUTEX);
+        if (data->state->patients_in_sor > 0) {
+            data->state->patients_in_sor--;
+        }
+        semSignal(data->semid, SEM_SHM_MUTEX);
+        
+        semSignal(data->semid, SEM_POCZEKALNIA);
     }
-    semSignal(data->semid, SEM_SHM_MUTEX);
-    
-    // Zwolnij miejsce w poczekalni
-    semSignal(data->semid, SEM_POCZEKALNIA);
 }
 
 // ============================================================================

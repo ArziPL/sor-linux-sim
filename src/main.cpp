@@ -491,6 +491,8 @@ void handleKeyboard() {
                     if (doctor_pid > 0) {
                         printf("Wysyłam SIGUSR1 do lekarza: %s (PID %d)\n", 
                                getDoctorName(dtype), doctor_pid);
+                        logMessage(g_state, g_semid, "[SIGUSR1] Lekarz %s wysłany na oddział",
+                                  getDoctorName(dtype));
                         
                         // Wyślij sygnał SIGUSR1 do lekarza
                         if (kill(doctor_pid, SIGUSR1) == -1) {
@@ -501,6 +503,7 @@ void handleKeyboard() {
                 // Klawisz 7 - ewakuacja (SIGUSR2 do wszystkich)
                 else if (c == '7') {
                     printf("EWAKUACJA! Wysyłam SIGUSR2 do wszystkich...\n");
+                    logMessage(g_state, g_semid, "[SIGUSR2] EWAKUACJA - zakończenie symulacji");
                     
                     g_state->shutdown = 1;
                     
@@ -547,7 +550,7 @@ void handleKeyboard() {
  * @brief Handler sygnałów dla procesu głównego
  */
 void signalHandler(int sig) {
-    if (sig == SIGINT || sig == SIGTERM) {
+    if (sig == SIGINT || sig == SIGTERM || sig == SIGHUP) {
         g_shutdown = 1;
         if (g_state) {
             g_state->shutdown = 1;
@@ -567,7 +570,11 @@ void setupSignals() {
     
     sigaction(SIGINT, &sa, nullptr);
     sigaction(SIGTERM, &sa, nullptr);
+    sigaction(SIGHUP, &sa, nullptr);
     
     // Ignoruj SIGCHLD żeby zombie były automatycznie zbierane
     signal(SIGCHLD, SIG_IGN);
+    
+    // Sprzątaj IPC nawet przy awaryjnym zakończeniu
+    atexit(cleanupIPC);
 }
