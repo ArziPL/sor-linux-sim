@@ -1,0 +1,88 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-6196df5966d9ff0362b1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "sor",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "lekarz::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-lekarz-712d2060b4dd1500e26f.json",
+					"name" : "lekarz",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pacjent::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pacjent-ef9792d93338186d2fea.json",
+					"name" : "pacjent",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "rejestracja::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-rejestracja-912fabb9107bfc8a2ea8.json",
+					"name" : "rejestracja",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "sor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-sor-cabbe7f1b7ca8f0c09fd.json",
+					"name" : "sor",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/areczek/sor-linux-sim/build",
+		"source" : "/home/areczek/sor-linux-sim"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

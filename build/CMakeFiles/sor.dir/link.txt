@@ -1,1 +1,1 @@
-/usr/bin/c++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/sor.dir/link.d CMakeFiles/sor.dir/src/main.cpp.o -o sor
+/usr/bin/g++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/sor.dir/link.d CMakeFiles/sor.dir/src/main.cpp.o -o sor

@@ -49,12 +49,14 @@ constexpr int PATIENT_GEN_MIN_MS = 500;  // Min czas między generowaniem pacjen
 constexpr int PATIENT_GEN_MAX_MS = 1000; // Max czas między generowaniem pacjentów
 constexpr int REGISTRATION_MIN_MS = 500; // Min czas rejestracji
 constexpr int REGISTRATION_MAX_MS = 1000; // Max czas rejestracji
-constexpr int TRIAGE_MIN_MS = 500;       // Min czas triażu
-constexpr int TRIAGE_MAX_MS = 1000;      // Max czas triażu
-constexpr int TREATMENT_MIN_MS = 1000;   // Min czas leczenia u specjalisty
-constexpr int TREATMENT_MAX_MS = 2000;   // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 3000; // Min czas przerwy lekarza
-constexpr int DOCTOR_BREAK_MAX_MS = 5000; // Max czas przerwy lekarza
+constexpr int TRIAGE_MIN_MS = 1000;       // Min czas triażu
+constexpr int TRIAGE_MAX_MS = 2000;      // Max czas triażu
+constexpr int TREATMENT_MIN_MS = 3000;   // Min czas leczenia u specjalisty
+constexpr int TREATMENT_MAX_MS = 5000;   // Max czas leczenia u specjalisty
+constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MAX_MS = 0; // Max czas przerwy lekarza
+
+// 500 1000 500 1000 500 1000 1000 2000 3000 5000
 
 // ============================================================================
 // TYPY ENUMERACYJNE
