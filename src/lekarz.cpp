@@ -96,26 +96,26 @@ void initIPC() {
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
     if (shmid == -1) {
-        handleError("lekarz: shmget");
+        SOR_FATAL("lekarz %s: shmget", getDoctorName(g_doctor_type));
     }
     
     g_state = (SharedState*)shmat(shmid, nullptr, 0);
     if (g_state == (void*)-1) {
-        handleError("lekarz: shmat");
+        SOR_FATAL("lekarz %s: shmat", getDoctorName(g_doctor_type));
     }
     
     // Podłącz semafory
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     g_semid = semget(sem_key, SEM_COUNT, 0);
     if (g_semid == -1) {
-        handleError("lekarz: semget");
+        SOR_FATAL("lekarz %s: semget", getDoctorName(g_doctor_type));
     }
     
     // Podłącz kolejkę komunikatów
     key_t msg_key = getIPCKey(MSG_KEY_ID);
     g_msgid = msgget(msg_key, 0);
     if (g_msgid == -1) {
-        handleError("lekarz: msgget");
+        SOR_FATAL("lekarz %s: msgget", getDoctorName(g_doctor_type));
     }
 }
 
@@ -226,7 +226,7 @@ void runPOZ() {
             
             if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
                 if (errno != EINTR && errno != EIDRM) {
-                    printError("POZ msgsnd response");
+                    SOR_WARN("POZ msgsnd odpowiedź pacjent %d", msg.patient_id);
                 }
             }
             
@@ -252,7 +252,7 @@ void runPOZ() {
             
             if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
                 if (errno != EINTR && errno != EIDRM) {
-                    printError("POZ msgsnd triage response");
+                    SOR_WARN("POZ msgsnd triaż pacjent %d", msg.patient_id);
                 }
             }
         }
@@ -367,7 +367,7 @@ void runSpecialist() {
         
         if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
             if (errno != EINTR && errno != EIDRM) {
-                printError("specialist msgsnd response");
+                SOR_WARN("specjalista %s msgsnd pacjent %d", getDoctorName(g_doctor_type), msg.patient_id);
             }
         }
         

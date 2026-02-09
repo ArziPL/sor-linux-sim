@@ -212,13 +212,13 @@ void initIPC() {
     // Utwórz nową pamięć dzieloną (prawa: właściciel r/w)
     g_shmid = shmget(shm_key, sizeof(SharedState), IPC_CREAT | IPC_EXCL | 0600);
     if (g_shmid == -1) {
-        handleError("shmget");
+        SOR_FATAL("shmget — nie można utworzyć pamięci dzielonej");
     }
     
     // Podłącz pamięć dzieloną
     g_state = (SharedState*)shmat(g_shmid, nullptr, 0);
     if (g_state == (void*)-1) {
-        handleError("shmat");
+        SOR_FATAL("shmat — nie można podłączyć pamięci dzielonej");
     }
     
     // Wyzeruj stan
@@ -236,7 +236,7 @@ void initIPC() {
     // Utwórz nowe semafory (prawa: właściciel r/w)
     g_semid = semget(sem_key, SEM_COUNT, IPC_CREAT | IPC_EXCL | 0600);
     if (g_semid == -1) {
-        handleError("semget");
+        SOR_FATAL("semget — nie można utworzyć semaforów");
     }
     
     // Inicjalizacja wartości semaforów
@@ -265,7 +265,7 @@ void initIPC() {
     arg.array = sem_values;
     
     if (semctl(g_semid, 0, SETALL, arg) == -1) {
-        handleError("semctl SETALL");
+        SOR_FATAL("semctl SETALL — nie można ustawić wartości semaforów");
     }
     
     // --- KOLEJKA KOMUNIKATÓW ---
@@ -280,7 +280,7 @@ void initIPC() {
     // Utwórz nową kolejkę (prawa: właściciel r/w)
     g_msgid = msgget(msg_key, IPC_CREAT | IPC_EXCL | 0600);
     if (g_msgid == -1) {
-        handleError("msgget");
+        SOR_FATAL("msgget — nie można utworzyć kolejki komunikatów");
     }
     
     // --- KOLEJKI SPECJALISTÓW (osobna per specjalista) ---
@@ -297,7 +297,7 @@ void initIPC() {
         // Utwórz nową kolejkę
         int spec_msgid = msgget(spec_key, IPC_CREAT | IPC_EXCL | 0600);
         if (spec_msgid == -1) {
-            handleError("msgget specialist");
+            SOR_FATAL("msgget — nie można utworzyć kolejki specjalisty %d", i);
         }
         
         // Zapisz ID w pamięci dzielonej (procesy potomne użyją tego)
@@ -365,7 +365,7 @@ void startRegistration() {
         execl("./rejestracja", "rejestracja", nullptr);
         
         // Jeśli exec się nie udał
-        perror("execl rejestracja");
+        SOR_FATAL("execl rejestracja");
         exit(EXIT_FAILURE);
         
     } else if (pid > 0) {
@@ -375,7 +375,7 @@ void startRegistration() {
         
     } else {
         // Błąd fork
-        handleError("fork rejestracja");
+        SOR_FATAL("fork rejestracja");
     }
 }
 
@@ -400,7 +400,7 @@ void startDoctors() {
             execl("./lekarz", "lekarz", type_str, nullptr);
             
             // Jeśli exec się nie udał
-            perror("execl lekarz");
+            SOR_FATAL("execl lekarz typ=%d", i);
             exit(EXIT_FAILURE);
             
         } else if (pid > 0) {
@@ -410,7 +410,7 @@ void startDoctors() {
             
         } else {
             // Błąd fork
-            handleError("fork lekarz");
+            SOR_FATAL("fork lekarz typ=%d", i);
         }
     }
 }
@@ -428,20 +428,20 @@ void generatePatients() {
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
     if (shmid == -1) {
-        perror("Generator: shmget");
+        SOR_FATAL("Generator: shmget");
         return;
     }
     
     SharedState* state = (SharedState*)shmat(shmid, nullptr, 0);
     if (state == (void*)-1) {
-        perror("Generator: shmat");
+        SOR_FATAL("Generator: shmat");
         return;
     }
     
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     int semid = semget(sem_key, SEM_COUNT, 0);
     if (semid == -1) {
-        perror("Generator: semget");
+        SOR_FATAL("Generator: semget");
         return;
     }
     
@@ -505,11 +505,11 @@ void generatePatients() {
             
             execl("./pacjent", "pacjent", id_str, age_str, vip_str, nullptr);
             
-            perror("execl pacjent");
+            SOR_FATAL("execl pacjent id=%d", patient_id);
             exit(EXIT_FAILURE);
             
         } else if (pid < 0) {
-            perror("fork pacjent");
+            SOR_WARN("fork pacjenta %d", patient_id);
             // Cofnij licznik bo fork się nie udał
             semWait(semid, SEM_SHM_MUTEX);
             if (state->active_patient_count > 0) state->active_patient_count--;
@@ -606,7 +606,7 @@ void handleKeyboard() {
                         
                         // Wyślij sygnał SIGUSR1 do lekarza
                         if (kill(doctor_pid, SIGUSR1) == -1) {
-                            perror("kill SIGUSR1");
+                            SOR_WARN("kill SIGUSR1 do lekarza PID=%d", doctor_pid);
                         }
                     }
                 }

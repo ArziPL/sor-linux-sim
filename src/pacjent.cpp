@@ -110,12 +110,12 @@ int main(int argc, char* argv[]) {
         
         // Utwórz wątek Rodzica (rejestracja)
         if (pthread_create(&parent_tid, nullptr, parentThread, &data) != 0) {
-            handleError("pthread_create parent");
+            SOR_FATAL("pthread_create wątek rodzica pacjent %d", data.id);
         }
         
         // Utwórz wątek Dziecka (triaż + leczenie)
         if (pthread_create(&child_tid, nullptr, childThread, &data) != 0) {
-            handleError("pthread_create child");
+            SOR_FATAL("pthread_create wątek dziecka pacjent %d", data.id);
         }
         
         // Czekaj na zakończenie obu wątków
@@ -174,26 +174,26 @@ void initIPC(PatientData* data) {
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
     if (shmid == -1) {
-        handleError("pacjent: shmget");
+        SOR_FATAL("pacjent %d: shmget", data->id);
     }
     
     data->state = (SharedState*)shmat(shmid, nullptr, 0);
     if (data->state == (void*)-1) {
-        handleError("pacjent: shmat");
+        SOR_FATAL("pacjent %d: shmat", data->id);
     }
     
     // Podłącz semafory
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     data->semid = semget(sem_key, SEM_COUNT, 0);
     if (data->semid == -1) {
-        handleError("pacjent: semget");
+        SOR_FATAL("pacjent %d: semget", data->id);
     }
     
     // Podłącz kolejkę komunikatów
     key_t msg_key = getIPCKey(MSG_KEY_ID);
     data->msgid = msgget(msg_key, 0);
     if (data->msgid == -1) {
-        handleError("pacjent: msgget");
+        SOR_FATAL("pacjent %d: msgget", data->id);
     }
 }
 
@@ -244,7 +244,7 @@ void enterWaitingRoom(PatientData* data) {
         while (semop(data->semid, &op, 1) == -1) {
             if (errno != EINTR) {
                 if (errno != EIDRM && errno != EINVAL) {
-                    printError("semop enterWaitingRoom child");
+                    SOR_WARN("semop enterWaitingRoom dziecko %d", data->id);
                 }
                 return;
             }
@@ -306,7 +306,7 @@ void doRegistration(PatientData* data) {
     // Wyślij do kolejki rejestracji
     if (msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR) {
-            printError("pacjent: msgsnd registration");
+            SOR_WARN("pacjent %d: msgsnd rejestracja", data->id);
         }
         return;
     }
@@ -320,7 +320,7 @@ void doRegistration(PatientData* data) {
     
     if (ret == -1) {
         if (errno != EINTR && errno != EIDRM) {
-            printError("pacjent: msgrcv registration response");
+            SOR_WARN("pacjent %d: msgrcv odpowiedź rejestracji", data->id);
         }
         return;
     }
@@ -345,7 +345,7 @@ void doTriage(PatientData* data) {
     // Wyślij do kolejki triażu
     if (msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR) {
-            printError("pacjent: msgsnd triage");
+            SOR_WARN("pacjent %d: msgsnd triaż", data->id);
         }
         return;
     }
@@ -359,7 +359,7 @@ void doTriage(PatientData* data) {
     
     if (ret == -1) {
         if (errno != EINTR && errno != EIDRM) {
-            printError("pacjent: msgrcv triage response");
+            SOR_WARN("pacjent %d: msgrcv odpowiedź triażu", data->id);
         }
         return;
     }
@@ -406,7 +406,7 @@ void doSpecialist(PatientData* data) {
     int spec_msgid = data->state->specialist_msgids[data->assigned_doctor];
     if (msgsnd(spec_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR && errno != EIDRM) {
-            printError("pacjent: msgsnd specialist");
+            SOR_WARN("pacjent %d: msgsnd specjalista %s", data->id, getDoctorName(data->assigned_doctor));
         }
         return;
     }
@@ -420,7 +420,7 @@ void doSpecialist(PatientData* data) {
     
     if (ret == -1) {
         if (errno != EINTR && errno != EIDRM) {
-            printError("pacjent: msgrcv specialist response");
+            SOR_WARN("pacjent %d: msgrcv odpowiedź specjalisty", data->id);
         }
         return;
     }
@@ -454,7 +454,7 @@ void exitSOR(PatientData* data) {
         while (semop(data->semid, &op, 1) == -1) {
             if (errno != EINTR) {
                 if (errno != EIDRM && errno != EINVAL) {
-                    printError("semop exitSOR child");
+                    SOR_WARN("semop exitSOR dziecko %d", data->id);
                 }
                 return;
             }

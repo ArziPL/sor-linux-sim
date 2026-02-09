@@ -260,24 +260,82 @@ struct SharedState {
 };
 
 // ============================================================================
-// FUNKCJE POMOCNICZE - OBSŁUGA BŁĘDÓW
+// FUNKCJE POMOCNICZE - OBSŁUGA BŁĘDÓW (własna funkcja)
 // ============================================================================
 
 /**
- * @brief Wyświetla błąd i kończy program
- * Używa perror() do wyświetlenia opisu błędu systemowego
+ * @brief Poziomy błędów w symulacji SOR
  */
-inline void handleError(const char* msg) {
-    perror(msg);
-    exit(EXIT_FAILURE);
+enum SorErrorLevel {
+    ERR_FATAL,    // Błąd krytyczny - kończy program
+    ERR_WARNING,  // Ostrzeżenie - kontynuuje działanie
+    ERR_INFO      // Informacja - bez errno
+};
+
+/**
+ * @brief Centralna funkcja obsługi błędów symulacji SOR
+ * 
+ * Zapewnia jednolity format zgłaszania błędów w całym projekcie.
+ * Automatycznie dołącza informacje o pliku, linii, funkcji i errno.
+ * 
+ * @param level   Poziom błędu (FATAL/WARNING/INFO)
+ * @param file    Plik źródłowy (__FILE__)
+ * @param line    Numer linii (__LINE__)
+ * @param func    Nazwa funkcji (__func__)
+ * @param format  Format printf wiadomości
+ * 
+ * ERR_FATAL:   wypisuje "[FATAL] plik:linia (func): msg: errno_desc" + exit(1)
+ * ERR_WARNING: wypisuje "[WARN]  plik:linia (func): msg: errno_desc"
+ * ERR_INFO:    wypisuje "[INFO]  plik:linia (func): msg" (bez errno)
+ */
+inline void sorError(SorErrorLevel level, const char* file, int line,
+                     const char* func, const char* format, ...) {
+    int saved_errno = errno;
+    
+    const char* level_str;
+    switch (level) {
+        case ERR_FATAL:   level_str = "FATAL"; break;
+        case ERR_WARNING: level_str = "WARN";  break;
+        case ERR_INFO:    level_str = "INFO";  break;
+        default:          level_str = "???";   break;
+    }
+    
+    // Wyodrębnij nazwę pliku (bez ścieżki)
+    const char* basename = file;
+    for (const char* p = file; *p; p++) {
+        if (*p == '/') basename = p + 1;
+    }
+    
+    fprintf(stderr, "[%s] %s:%d (%s): ", level_str, basename, line, func);
+    
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    
+    // Dołącz opis errno dla FATAL i WARNING (jeśli errno ustawione)
+    if (level != ERR_INFO && saved_errno != 0) {
+        fprintf(stderr, ": %s (errno=%d)", strerror(saved_errno), saved_errno);
+    }
+    
+    fprintf(stderr, "\n");
+    fflush(stderr);
+    
+    if (level == ERR_FATAL) {
+        exit(EXIT_FAILURE);
+    }
 }
 
 /**
- * @brief Wyświetla błąd bez kończenia programu
+ * @brief Makra do zgłaszania błędów - automatycznie wstawiają plik/linię/funkcję
+ * 
+ * SOR_FATAL("msg", ...) - błąd krytyczny, kończy program
+ * SOR_WARN("msg", ...)  - ostrzeżenie, kontynuuje
+ * SOR_INFO("msg", ...)  - informacja, bez errno
  */
-inline void printError(const char* msg) {
-    perror(msg);
-}
+#define SOR_FATAL(fmt, ...) sorError(ERR_FATAL,   __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define SOR_WARN(fmt, ...)  sorError(ERR_WARNING,  __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
+#define SOR_INFO(fmt, ...)  sorError(ERR_INFO,     __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 
 // ============================================================================
 // FUNKCJE POMOCNICZE - SEMAFORY (System V)
@@ -300,7 +358,7 @@ inline void semWait(int semid, int sem_num) {
         if (errno != EINTR) {
             // Ignoruj błędy przy zamykaniu
             if (errno != EIDRM && errno != EINVAL) {
-                printError("semWait");
+                SOR_WARN("semWait sem_num=%d", sem_num);
             }
             return;
         }
@@ -322,7 +380,7 @@ inline void semSignal(int semid, int sem_num) {
     while (semop(semid, &op, 1) == -1) {
         if (errno != EINTR) {
             if (errno != EIDRM && errno != EINVAL) {
-                printError("semSignal");
+                SOR_WARN("semSignal sem_num=%d", sem_num);
             }
             return;
         }

@@ -59,13 +59,13 @@ int main() {
     // Utwórz wątek kontrolera kolejki (decyduje o otwarciu/zamknięciu okienka 2)
     pthread_t controller_thread;
     if (pthread_create(&controller_thread, nullptr, queueControllerThread, nullptr) != 0) {
-        handleError("pthread_create controller");
+        SOR_FATAL("pthread_create kontroler kolejki");
     }
     
     // Utwórz wątek okienka 2 (początkowo nieaktywny, czeka na sygnał)
     int window2_id = 2;
     if (pthread_create(&g_window2_thread, nullptr, windowThread, (void*)(intptr_t)window2_id) != 0) {
-        handleError("pthread_create window2");
+        SOR_FATAL("pthread_create okienko 2");
     }
     
     // Wątek główny = okienko 1
@@ -83,7 +83,7 @@ int main() {
         if (ret == -1) {
             if (errno == EINTR) continue;
             if (errno == EIDRM || errno == EINVAL) break;
-            printError("rejestracja okienko 1: msgrcv");
+            SOR_WARN("rejestracja okienko 1: msgrcv");
             continue;
         }
         
@@ -125,26 +125,26 @@ void initIPC() {
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
     if (shmid == -1) {
-        handleError("rejestracja: shmget");
+        SOR_FATAL("rejestracja: shmget");
     }
     
     g_state = (SharedState*)shmat(shmid, nullptr, 0);
     if (g_state == (void*)-1) {
-        handleError("rejestracja: shmat");
+        SOR_FATAL("rejestracja: shmat");
     }
     
     // Podłącz semafory
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     g_semid = semget(sem_key, SEM_COUNT, 0);
     if (g_semid == -1) {
-        handleError("rejestracja: semget");
+        SOR_FATAL("rejestracja: semget");
     }
     
     // Podłącz kolejkę komunikatów
     key_t msg_key = getIPCKey(MSG_KEY_ID);
     g_msgid = msgget(msg_key, 0);
     if (g_msgid == -1) {
-        handleError("rejestracja: msgget");
+        SOR_FATAL("rejestracja: msgget");
     }
 }
 
@@ -209,7 +209,7 @@ void processPatient(int window_id, SORMessage& msg) {
     
     if (msgsnd(g_msgid, &response, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR && errno != EIDRM) {
-            printError("rejestracja: msgsnd response");
+            SOR_WARN("rejestracja: msgsnd odpowiedź pacjent %d", msg.patient_id);
         }
     }
     
@@ -256,7 +256,7 @@ void* windowThread(void* arg) {
             if (ret == -1) {
                 if (errno == EINTR) continue;
                 if (errno == EIDRM || errno == EINVAL) break;
-                printError("rejestracja okienko 2: msgrcv");
+                SOR_WARN("rejestracja okienko 2: msgrcv");
                 continue;
             }
             
