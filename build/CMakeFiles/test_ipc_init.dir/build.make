@@ -76,15 +76,15 @@ CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o: CMakeFiles/test_ipc_init
 CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o: /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp
 CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o: CMakeFiles/test_ipc_init.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o -MF CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o.d -o CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o -c /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o -MF CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o.d -o CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o -c /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp
 
 CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp > CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp > CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i
 
 CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp -o CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/tests/test_ipc_init.cpp -o CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s
 
 # Object files for target test_ipc_init
 test_ipc_init_OBJECTS = \

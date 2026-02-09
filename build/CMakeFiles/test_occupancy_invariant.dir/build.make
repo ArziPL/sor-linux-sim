@@ -76,15 +76,15 @@ CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o: CM
 CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o: /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp
 CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o: CMakeFiles/test_occupancy_invariant.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o -MF CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o.d -o CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o -c /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o -MF CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o.d -o CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o -c /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp
 
 CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp > CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp > CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i
 
 CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp -o CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/tests/test_occupancy_invariant.cpp -o CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s
 
 # Object files for target test_occupancy_invariant
 test_occupancy_invariant_OBJECTS = \

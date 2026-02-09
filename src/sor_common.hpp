@@ -56,6 +56,9 @@ constexpr int TREATMENT_MAX_MS = 5000;   // Max czas leczenia u specjalisty
 constexpr int DOCTOR_BREAK_MIN_MS = 500; // Min czas przerwy lekarza
 constexpr int DOCTOR_BREAK_MAX_MS = 1000; // Max czas przerwy lekarza
 
+// Stałe procesy: dyrektor + generator + rejestracja + DOCTOR_COUNT lekarzy
+constexpr int FIXED_PROCESS_COUNT = 3 + 7;  // = 10
+
 // ============================================================================
 // TYPY ENUMERACYJNE
 // ============================================================================
@@ -245,6 +248,12 @@ struct SharedState {
     
     // ID kolejek komunikatów specjalistów (osobna kolejka per specjalista)
     int specialist_msgids[DOCTOR_COUNT];
+    
+    // Limit jednoczesnych procesów pacjentów (0 = bez limitu)
+    int max_patients;
+    
+    // Licznik aktywnych procesów pacjentów
+    int active_patient_count;
     
     // Ścieżka do pliku logu
     char log_file[256];

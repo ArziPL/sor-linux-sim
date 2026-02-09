@@ -76,15 +76,15 @@ CMakeFiles/dyrektor.dir/src/main.cpp.o: CMakeFiles/dyrektor.dir/flags.make
 CMakeFiles/dyrektor.dir/src/main.cpp.o: /home/areczek/sor-linux-sim/src/main.cpp
 CMakeFiles/dyrektor.dir/src/main.cpp.o: CMakeFiles/dyrektor.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/dyrektor.dir/src/main.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/dyrektor.dir/src/main.cpp.o -MF CMakeFiles/dyrektor.dir/src/main.cpp.o.d -o CMakeFiles/dyrektor.dir/src/main.cpp.o -c /home/areczek/sor-linux-sim/src/main.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/dyrektor.dir/src/main.cpp.o -MF CMakeFiles/dyrektor.dir/src/main.cpp.o.d -o CMakeFiles/dyrektor.dir/src/main.cpp.o -c /home/areczek/sor-linux-sim/src/main.cpp
 
 CMakeFiles/dyrektor.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/dyrektor.dir/src/main.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/main.cpp > CMakeFiles/dyrektor.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/main.cpp > CMakeFiles/dyrektor.dir/src/main.cpp.i
 
 CMakeFiles/dyrektor.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/dyrektor.dir/src/main.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/main.cpp -o CMakeFiles/dyrektor.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/main.cpp -o CMakeFiles/dyrektor.dir/src/main.cpp.s
 
 # Object files for target dyrektor
 dyrektor_OBJECTS = \

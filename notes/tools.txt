@@ -1,13 +1,6 @@
 ipcs -m -s -q
-ps -o pid,ppid,stat,cmd --forest -C dyrektor,lekarz,pacjent,rejestracja
+ps -o pid,ppid,stat,cmd --forest -C dyrektor,lekarz,pacjent,rejestracja | grep Z
+ps -C dyrektor,lekarz,pacjent,rejestracja --no-headers | wc -l
 htop
-
-
-cd /home/areczek/sor-linux-sim
-rm -rf build
-mkdir build && cd build
-cmake ..
-make -j4
-cp dyrektor lekarz pacjent rejestracja ..
 
 cd /home/areczek/sor-linux-sim && rm -rf build && mkdir build && cd build && cmake .. && make -j4 && cp dyrektor lekarz pacjent rejestracja ..

@@ -1,1 +1,0 @@
-/usr/bin/g++  -Wall -Wextra -g -g -Wl,--dependency-file=CMakeFiles/test_shm_mutex.dir/link.d CMakeFiles/test_shm_mutex.dir/tests/test_shm_mutex.cpp.o -o test_shm_mutex

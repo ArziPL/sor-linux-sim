@@ -443,6 +443,7 @@ void exitSOR(PatientData* data) {
         } else {
             data->state->patients_in_sor = 0;
         }
+        if (data->state->active_patient_count > 0) data->state->active_patient_count--;
         semSignal(data->semid, SEM_SHM_MUTEX);
         
         // Zwolnij 2 miejsca (atomowo)
@@ -466,6 +467,7 @@ void exitSOR(PatientData* data) {
         if (data->state->patients_in_sor > 0) {
             data->state->patients_in_sor--;
         }
+        if (data->state->active_patient_count > 0) data->state->active_patient_count--;
         semSignal(data->semid, SEM_SHM_MUTEX);
         
         semSignal(data->semid, SEM_POCZEKALNIA);

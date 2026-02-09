@@ -15,6 +15,7 @@
 #include <termios.h>
 #include <sys/select.h>
 #include <stdarg.h>
+#include <getopt.h>
 
 // ============================================================================
 // ZMIENNE GLOBALNE
@@ -25,6 +26,10 @@ static int g_semid = -1;          // ID semaforów
 static int g_msgid = -1;          // ID kolejki komunikatów
 static SharedState* g_state = nullptr;  // Wskaźnik do pamięci dzielonej
 static volatile sig_atomic_t g_shutdown = 0;  // Flaga zakończenia
+
+// Parametry z linii komend
+static int g_max_time = 0;        // Maks czas symulacji w sekundach (0 = bez limitu)
+static int g_max_patients = 0;    // Maks liczba pacjentów (0 = bez limitu)
 
 // Lista PIDów procesów potomnych do sprzątania
 static pid_t g_child_pids[1000];
@@ -53,13 +58,55 @@ void setRawTerminal();
 // FUNKCJA GŁÓWNA
 // ============================================================================
 
-int main() {
+/**
+ * @brief Wyświetla sposób użycia programu i kończy z błędem
+ */
+void printUsage(const char* prog) {
+    fprintf(stderr, "Użycie: %s [-t sekundy] [-p maks_pacjentów]\n", prog);
+    fprintf(stderr, "  -t <s>  Czas trwania symulacji w sekundach (domyślnie: bez limitu)\n");
+    fprintf(stderr, "  -p <n>  Maks jednoczesnych procesów pacjentów (domyślnie: bez limitu)\n");
+    exit(EXIT_FAILURE);
+}
+
+int main(int argc, char* argv[]) {
+    // --- Parsowanie argumentów linii komend ---
+    int opt;
+    while ((opt = getopt(argc, argv, "t:p:")) != -1) {
+        switch (opt) {
+            case 't': {
+                g_max_time = atoi(optarg);
+                if (g_max_time <= 0) {
+                    fprintf(stderr, "Błąd: czas symulacji musi być liczbą > 0 (podano: '%s')\n", optarg);
+                    printUsage(argv[0]);
+                }
+                break;
+            }
+            case 'p': {
+                g_max_patients = atoi(optarg);
+                if (g_max_patients <= FIXED_PROCESS_COUNT) {
+                    fprintf(stderr, "Błąd: limit procesów musi być > %d (stałe procesy: dyrektor+generator+rejestracja+%d lekarzy)\n",
+                            FIXED_PROCESS_COUNT, DOCTOR_COUNT);
+                    fprintf(stderr, "Podano: '%s', minimalnie: %d\n", optarg, FIXED_PROCESS_COUNT + 1);
+                    printUsage(argv[0]);
+                }
+                break;
+            }
+            default:
+                printUsage(argv[0]);
+        }
+    }
+    
     printf("=== SYMULATOR SOR ===\n");
     printf("Sterowanie:\n");
     printf("  1-6: Wyślij lekarza na oddział (1=kardiolog, 2=neurolog, 3=okulista,\n");
     printf("       4=laryngolog, 5=chirurg, 6=pediatra)\n");
     printf("  7:   Ewakuacja - zakończ symulację (SIGUSR2)\n");
     printf("  q:   Wyjście\n");
+    if (g_max_time > 0)
+        printf("  Limit czasu: %d s\n", g_max_time);
+    if (g_max_patients > 0)
+        printf("  Limit procesów: %d (łącznie, w tym %d pacjentów)\n", 
+               g_max_patients, g_max_patients - FIXED_PROCESS_COUNT);
     printf("=====================\n\n");
     
     // Ustaw handlery sygnałów
@@ -75,6 +122,7 @@ int main() {
     g_state->start_time_nsec = start.tv_nsec;
     g_state->director_pid = getpid();
     g_state->shutdown = 0;
+    g_state->max_patients = g_max_patients;
     
     // Ustaw ścieżkę do logu
     snprintf(g_state->log_file, sizeof(g_state->log_file), 
@@ -407,6 +455,21 @@ void generatePatients() {
         
         if (state->shutdown) break;
         
+        // Czekaj jeśli osiągnięto limit jednoczesnych procesów pacjentów
+        // max_patients to całkowity limit, odejmujemy stałe procesy
+        int patient_limit = state->max_patients - FIXED_PROCESS_COUNT;
+        if (state->max_patients > 0 && patient_limit > 0) {
+            while (!state->shutdown) {
+                semWait(semid, SEM_SHM_MUTEX);
+                int active = state->active_patient_count;
+                semSignal(semid, SEM_SHM_MUTEX);
+                
+                if (active < patient_limit) break;
+                usleep(100000);  // 100ms polling
+            }
+            if (state->shutdown) break;
+        }
+        
         patient_id++;
         int age = randomAge();
         int is_vip = randomVIP() ? 1 : 0;
@@ -423,6 +486,11 @@ void generatePatients() {
         // Zapamiętaj ile pacjentów
         semWait(semid, SEM_SHM_MUTEX);
         state->total_patients = patient_id;
+        semSignal(semid, SEM_SHM_MUTEX);
+        
+        // Inkrementuj licznik aktywnych procesów PRZED forkiem
+        semWait(semid, SEM_SHM_MUTEX);
+        state->active_patient_count++;
         semSignal(semid, SEM_SHM_MUTEX);
         
         // Fork dla nowego pacjenta
@@ -442,6 +510,10 @@ void generatePatients() {
             
         } else if (pid < 0) {
             perror("fork pacjent");
+            // Cofnij licznik bo fork się nie udał
+            semWait(semid, SEM_SHM_MUTEX);
+            if (state->active_patient_count > 0) state->active_patient_count--;
+            semSignal(semid, SEM_SHM_MUTEX);
         }
         
         // Zbierz zakończone procesy pacjentów (unikamy zombie)
@@ -451,6 +523,10 @@ void generatePatients() {
             // Proces pacjenta zakończony - zombie usunięty
         }
     }
+    
+    // Zbierz pozostałe zombie
+    int status;
+    while (waitpid(-1, &status, WNOHANG) > 0) {}
     
     shmdt(state);
 }
@@ -566,6 +642,15 @@ void handleKeyboard() {
                     break;
                 }
             }
+        }
+        
+        // Sprawdź timeout symulacji
+        if (g_max_time > 0 && getElapsedTime(g_state) >= g_max_time) {
+            printf("\nCzas symulacji (%d s) upłynął — zamykanie...\n", g_max_time);
+            logMessage(g_state, g_semid, "[Dyrektor] Timeout %d s — zamykanie symulacji", g_max_time);
+            g_state->shutdown = 1;
+            g_shutdown = 1;
+            break;
         }
         
         // Sprawdź flagę shutdown

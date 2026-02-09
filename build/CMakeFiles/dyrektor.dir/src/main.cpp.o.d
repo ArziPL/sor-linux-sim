@@ -240,4 +240,5 @@ CMakeFiles/dyrektor.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/termios-c_lflag.h \
  /usr/include/x86_64-linux-gnu/bits/termios-tcflow.h \
  /usr/include/x86_64-linux-gnu/bits/termios-misc.h \
- /usr/include/x86_64-linux-gnu/sys/ttydefaults.h
+ /usr/include/x86_64-linux-gnu/sys/ttydefaults.h /usr/include/getopt.h \
+ /usr/include/x86_64-linux-gnu/bits/getopt_ext.h
