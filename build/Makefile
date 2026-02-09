@@ -214,6 +214,19 @@ pacjent/fast:
 .PHONY : pacjent/fast
 
 #=============================================================================
+# Target rules for targets named generator
+
+# Build rule for target.
+generator: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 generator
+.PHONY : generator
+
+# fast build rule for target.
+generator/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/build
+.PHONY : generator/fast
+
+#=============================================================================
 # Target rules for targets named test_ipc_init
 
 # Build rule for target.
@@ -251,6 +264,30 @@ test_doctor_signal: cmake_check_build_system
 test_doctor_signal/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/build
 .PHONY : test_doctor_signal/fast
+
+src/generator.o: src/generator.cpp.o
+.PHONY : src/generator.o
+
+# target to build an object file
+src/generator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/src/generator.cpp.o
+.PHONY : src/generator.cpp.o
+
+src/generator.i: src/generator.cpp.i
+.PHONY : src/generator.i
+
+# target to preprocess a source file
+src/generator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/src/generator.cpp.i
+.PHONY : src/generator.cpp.i
+
+src/generator.s: src/generator.cpp.s
+.PHONY : src/generator.s
+
+# target to generate assembly for a file
+src/generator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/src/generator.cpp.s
+.PHONY : src/generator.cpp.s
 
 src/lekarz.o: src/lekarz.cpp.o
 .PHONY : src/lekarz.o
@@ -433,12 +470,16 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... dyrektor"
+	@echo "... generator"
 	@echo "... lekarz"
 	@echo "... pacjent"
 	@echo "... rejestracja"
 	@echo "... test_doctor_signal"
 	@echo "... test_ipc_init"
 	@echo "... test_occupancy_invariant"
+	@echo "... src/generator.o"
+	@echo "... src/generator.i"
+	@echo "... src/generator.s"
 	@echo "... src/lekarz.o"
 	@echo "... src/lekarz.i"
 	@echo "... src/lekarz.s"

@@ -121,6 +121,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/rejestracja.dir/DependInfo.cmake"
   "CMakeFiles/lekarz.dir/DependInfo.cmake"
   "CMakeFiles/pacjent.dir/DependInfo.cmake"
+  "CMakeFiles/generator.dir/DependInfo.cmake"
   "CMakeFiles/test_ipc_init.dir/DependInfo.cmake"
   "CMakeFiles/test_occupancy_invariant.dir/DependInfo.cmake"
   "CMakeFiles/test_doctor_signal.dir/DependInfo.cmake"

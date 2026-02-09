@@ -67,6 +67,7 @@ all: CMakeFiles/dyrektor.dir/all
 all: CMakeFiles/rejestracja.dir/all
 all: CMakeFiles/lekarz.dir/all
 all: CMakeFiles/pacjent.dir/all
+all: CMakeFiles/generator.dir/all
 all: CMakeFiles/test_ipc_init.dir/all
 all: CMakeFiles/test_occupancy_invariant.dir/all
 all: CMakeFiles/test_doctor_signal.dir/all
@@ -77,6 +78,7 @@ codegen: CMakeFiles/dyrektor.dir/codegen
 codegen: CMakeFiles/rejestracja.dir/codegen
 codegen: CMakeFiles/lekarz.dir/codegen
 codegen: CMakeFiles/pacjent.dir/codegen
+codegen: CMakeFiles/generator.dir/codegen
 codegen: CMakeFiles/test_ipc_init.dir/codegen
 codegen: CMakeFiles/test_occupancy_invariant.dir/codegen
 codegen: CMakeFiles/test_doctor_signal.dir/codegen
@@ -91,6 +93,7 @@ clean: CMakeFiles/dyrektor.dir/clean
 clean: CMakeFiles/rejestracja.dir/clean
 clean: CMakeFiles/lekarz.dir/clean
 clean: CMakeFiles/pacjent.dir/clean
+clean: CMakeFiles/generator.dir/clean
 clean: CMakeFiles/test_ipc_init.dir/clean
 clean: CMakeFiles/test_occupancy_invariant.dir/clean
 clean: CMakeFiles/test_doctor_signal.dir/clean
@@ -135,7 +138,7 @@ CMakeFiles/dyrektor.dir/clean:
 CMakeFiles/rejestracja.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rejestracja.dir/build.make CMakeFiles/rejestracja.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rejestracja.dir/build.make CMakeFiles/rejestracja.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=7,8 "Built target rejestracja"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=9,10 "Built target rejestracja"
 .PHONY : CMakeFiles/rejestracja.dir/all
 
 # Build rule for subdir invocation for target.
@@ -152,7 +155,7 @@ rejestracja: CMakeFiles/rejestracja.dir/rule
 # codegen rule for target.
 CMakeFiles/rejestracja.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rejestracja.dir/build.make CMakeFiles/rejestracja.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=7,8 "Finished codegen for target rejestracja"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=9,10 "Finished codegen for target rejestracja"
 .PHONY : CMakeFiles/rejestracja.dir/codegen
 
 # clean rule for target.
@@ -167,7 +170,7 @@ CMakeFiles/rejestracja.dir/clean:
 CMakeFiles/lekarz.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lekarz.dir/build.make CMakeFiles/lekarz.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lekarz.dir/build.make CMakeFiles/lekarz.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=3,4 "Built target lekarz"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=5,6 "Built target lekarz"
 .PHONY : CMakeFiles/lekarz.dir/all
 
 # Build rule for subdir invocation for target.
@@ -184,7 +187,7 @@ lekarz: CMakeFiles/lekarz.dir/rule
 # codegen rule for target.
 CMakeFiles/lekarz.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/lekarz.dir/build.make CMakeFiles/lekarz.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=3,4 "Finished codegen for target lekarz"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=5,6 "Finished codegen for target lekarz"
 .PHONY : CMakeFiles/lekarz.dir/codegen
 
 # clean rule for target.
@@ -199,7 +202,7 @@ CMakeFiles/lekarz.dir/clean:
 CMakeFiles/pacjent.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacjent.dir/build.make CMakeFiles/pacjent.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacjent.dir/build.make CMakeFiles/pacjent.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=5,6 "Built target pacjent"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=7,8 "Built target pacjent"
 .PHONY : CMakeFiles/pacjent.dir/all
 
 # Build rule for subdir invocation for target.
@@ -216,7 +219,7 @@ pacjent: CMakeFiles/pacjent.dir/rule
 # codegen rule for target.
 CMakeFiles/pacjent.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacjent.dir/build.make CMakeFiles/pacjent.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=5,6 "Finished codegen for target pacjent"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=7,8 "Finished codegen for target pacjent"
 .PHONY : CMakeFiles/pacjent.dir/codegen
 
 # clean rule for target.
@@ -225,13 +228,45 @@ CMakeFiles/pacjent.dir/clean:
 .PHONY : CMakeFiles/pacjent.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/generator.dir
+
+# All Build rule for target.
+CMakeFiles/generator.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=3,4 "Built target generator"
+.PHONY : CMakeFiles/generator.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/generator.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/generator.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
+.PHONY : CMakeFiles/generator.dir/rule
+
+# Convenience name for target.
+generator: CMakeFiles/generator.dir/rule
+.PHONY : generator
+
+# codegen rule for target.
+CMakeFiles/generator.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=3,4 "Finished codegen for target generator"
+.PHONY : CMakeFiles/generator.dir/codegen
+
+# clean rule for target.
+CMakeFiles/generator.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/clean
+.PHONY : CMakeFiles/generator.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/test_ipc_init.dir
 
 # All Build rule for target.
 CMakeFiles/test_ipc_init.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Built target test_ipc_init"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Built target test_ipc_init"
 .PHONY : CMakeFiles/test_ipc_init.dir/all
 
 # Build rule for subdir invocation for target.
@@ -248,7 +283,7 @@ test_ipc_init: CMakeFiles/test_ipc_init.dir/rule
 # codegen rule for target.
 CMakeFiles/test_ipc_init.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Finished codegen for target test_ipc_init"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Finished codegen for target test_ipc_init"
 .PHONY : CMakeFiles/test_ipc_init.dir/codegen
 
 # clean rule for target.
@@ -263,7 +298,7 @@ CMakeFiles/test_ipc_init.dir/clean:
 CMakeFiles/test_occupancy_invariant.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Built target test_occupancy_invariant"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=15,16 "Built target test_occupancy_invariant"
 .PHONY : CMakeFiles/test_occupancy_invariant.dir/all
 
 # Build rule for subdir invocation for target.
@@ -280,7 +315,7 @@ test_occupancy_invariant: CMakeFiles/test_occupancy_invariant.dir/rule
 # codegen rule for target.
 CMakeFiles/test_occupancy_invariant.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Finished codegen for target test_occupancy_invariant"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=15,16 "Finished codegen for target test_occupancy_invariant"
 .PHONY : CMakeFiles/test_occupancy_invariant.dir/codegen
 
 # clean rule for target.
@@ -295,7 +330,7 @@ CMakeFiles/test_occupancy_invariant.dir/clean:
 CMakeFiles/test_doctor_signal.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=9,10 "Built target test_doctor_signal"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Built target test_doctor_signal"
 .PHONY : CMakeFiles/test_doctor_signal.dir/all
 
 # Build rule for subdir invocation for target.
@@ -312,7 +347,7 @@ test_doctor_signal: CMakeFiles/test_doctor_signal.dir/rule
 # codegen rule for target.
 CMakeFiles/test_doctor_signal.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=9,10 "Finished codegen for target test_doctor_signal"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Finished codegen for target test_doctor_signal"
 .PHONY : CMakeFiles/test_doctor_signal.dir/codegen
 
 # clean rule for target.

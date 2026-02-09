@@ -27,8 +27,12 @@ target_link_libraries(lekarz PRIVATE Threads::Threads)
 add_executable(pacjent src/pacjent.cpp)
 target_link_libraries(pacjent PRIVATE Threads::Threads)
 
+# Generator pacjentów (uruchamiany przez dyrektora via execl)
+add_executable(generator src/generator.cpp)
+target_link_libraries(generator PRIVATE Threads::Threads)
+
 # Instalacja (opcjonalna)
-install(TARGETS dyrektor rejestracja lekarz pacjent RUNTIME DESTINATION bin)
+install(TARGETS dyrektor rejestracja lekarz pacjent generator RUNTIME DESTINATION bin)
 
 # ============================================================================
 # TESTY
