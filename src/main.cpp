@@ -120,20 +120,22 @@ int main() {
         g_state->shutdown = 1;
     }
     
-    // Czekaj na procesy potomne
+    // Wyślij SIGTERM do procesów potomnych i czekaj na zakończenie
     for (int i = 0; i < g_child_count; i++) {
         if (g_child_pids[i] > 0) {
             kill(g_child_pids[i], SIGTERM);
-            waitpid(g_child_pids[i], nullptr, WNOHANG);
         }
     }
     
-    // Poczekaj chwilę i zabij pozostałe
+    // Daj czas na graceful shutdown
     usleep(500000);
+    
+    // Zabij pozostałe procesy i zbierz zombie (blokujący wait)
     for (int i = 0; i < g_child_count; i++) {
         if (g_child_pids[i] > 0) {
             kill(g_child_pids[i], SIGKILL);
-            waitpid(g_child_pids[i], nullptr, WNOHANG);
+            int status;
+            waitpid(g_child_pids[i], &status, 0);
         }
     }
     
@@ -415,7 +417,13 @@ void generatePatients() {
         } else if (pid < 0) {
             perror("fork pacjent");
         }
-        // Rodzic kontynuuje generowanie (nie czeka na dzieci)
+        
+        // Zbierz zakończone procesy pacjentów (unikamy zombie)
+        int status;
+        pid_t finished;
+        while ((finished = waitpid(-1, &status, WNOHANG)) > 0) {
+            // Proces pacjenta zakończony - zombie usunięty
+        }
     }
     
     shmdt(state);
@@ -571,9 +579,6 @@ void setupSignals() {
     sigaction(SIGINT, &sa, nullptr);
     sigaction(SIGTERM, &sa, nullptr);
     sigaction(SIGHUP, &sa, nullptr);
-    
-    // Ignoruj SIGCHLD żeby zombie były automatycznie zbierane
-    signal(SIGCHLD, SIG_IGN);
     
     // Sprzątaj IPC nawet przy awaryjnym zakończeniu
     atexit(cleanupIPC);

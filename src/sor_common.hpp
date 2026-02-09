@@ -53,8 +53,19 @@ constexpr int TRIAGE_MIN_MS = 1000;       // Min czas triażu
 constexpr int TRIAGE_MAX_MS = 2000;      // Max czas triażu
 constexpr int TREATMENT_MIN_MS = 3000;   // Min czas leczenia u specjalisty
 constexpr int TREATMENT_MAX_MS = 5000;   // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
-constexpr int DOCTOR_BREAK_MAX_MS = 0; // Max czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MIN_MS = 500; // Min czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MAX_MS = 1000; // Max czas przerwy lekarza
+
+// constexpr int PATIENT_GEN_MIN_MS = 0;  // Min czas między generowaniem pacjentów
+// constexpr int PATIENT_GEN_MAX_MS = 0; // Max czas między generowaniem pacjentów
+// constexpr int REGISTRATION_MIN_MS = 0; // Min czas rejestracji
+// constexpr int REGISTRATION_MAX_MS = 0; // Max czas rejestracji
+// constexpr int TRIAGE_MIN_MS = 0;       // Min czas triażu
+// constexpr int TRIAGE_MAX_MS = 0;      // Max czas triażu
+// constexpr int TREATMENT_MIN_MS = 0;   // Min czas leczenia u specjalisty
+// constexpr int TREATMENT_MAX_MS = 0;   // Max czas leczenia u specjalisty
+// constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
+// constexpr int DOCTOR_BREAK_MAX_MS = 0; // Max czas przerwy lekarza
 
 // 500 1000 500 1000 500 1000 1000 2000 3000 5000
 
@@ -164,14 +175,43 @@ inline int getSpecialistSemIndex(DoctorType type) {
  * @brief Typy wiadomości w kolejce komunikatów
  */
 enum MessageType {
-    MSG_PATIENT_TO_REGISTRATION = 1,      // Pacjent zgłasza się do rejestracji (zwykły)
-    MSG_PATIENT_TO_REGISTRATION_VIP = 2,  // Pacjent VIP zgłasza się do rejestracji
-    MSG_REGISTRATION_RESPONSE = 100,      // Odpowiedź rejestracji (bazowy + patient_id)
+    MSG_PATIENT_TO_REGISTRATION_VIP = 1,  // VIP - niższy mtype = wyższy priorytet w msgrcv
+    MSG_PATIENT_TO_REGISTRATION = 2,      // Pacjent zwykły
     MSG_PATIENT_TO_TRIAGE = 3,            // Pacjent po rejestracji idzie na triaż
+    MSG_REGISTRATION_RESPONSE = 100,      // Odpowiedź rejestracji (bazowy + patient_id)
     MSG_TRIAGE_RESPONSE = 150,            // Odpowiedź POZ (bazowy + patient_id) - kolor i specjalista
-    MSG_PATIENT_TO_SPECIALIST = 4,        // Pacjent po triażu idzie do specjalisty
     MSG_SPECIALIST_RESPONSE = 200,        // Odpowiedź specjalisty (bazowy + patient_id)
 };
+
+/**
+ * @brief Baza mtype dla wiadomości do specjalistów
+ * 
+ * Schemat: SPECIALIST_MSG_BASE + (doctor_index - 1) * 3 + color_offset
+ *   color_offset: RED=0, YELLOW=1, GREEN=2
+ * 
+ * Kardiolog(1): RED=20, YELLOW=21, GREEN=22
+ * Neurolog (2): RED=23, YELLOW=24, GREEN=25
+ * Okulista (3): RED=26, YELLOW=27, GREEN=28
+ * Laryngolog(4):RED=29, YELLOW=30, GREEN=31
+ * Chirurg  (5): RED=32, YELLOW=33, GREEN=34
+ * Pediatra (6): RED=35, YELLOW=36, GREEN=37
+ */
+constexpr long SPECIALIST_MSG_BASE = 20;
+
+/**
+ * @brief Oblicza mtype wiadomości do specjalisty na podstawie typu lekarza i koloru triażu
+ * Niższy color_offset = wyższy priorytet (RED=0 < YELLOW=1 < GREEN=2)
+ */
+inline long getSpecialistMtype(DoctorType doctor, TriageColor color) {
+    int color_offset;
+    switch (color) {
+        case COLOR_RED:    color_offset = 0; break;
+        case COLOR_YELLOW: color_offset = 1; break;
+        case COLOR_GREEN:  color_offset = 2; break;
+        default:           color_offset = 2; break; // Domyślnie najniższy priorytet
+    }
+    return SPECIALIST_MSG_BASE + (doctor - 1) * 3 + color_offset;
+}
 
 /**
  * @brief Struktura wiadomości w kolejce komunikatów

@@ -74,22 +74,18 @@ int main() {
     
     while (!g_shutdown && !g_state->shutdown) {
         SORMessage msg;
-        ssize_t ret;
         
-        // Najpierw próbuj odebrać VIP (nieblokująco)
-        ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                     MSG_PATIENT_TO_REGISTRATION_VIP, IPC_NOWAIT);
+        // Blokujące odbieranie z priorytetem VIP:
+        // Ujemny mtype oznacza: odbierz wiadomość z mtype <= |wartość|,
+        // najniższy mtype pierwszy. VIP (mtype=1) przed zwykłym (mtype=2).
+        ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
+                             -MSG_PATIENT_TO_REGISTRATION, 0);
         
         if (ret == -1) {
-            // Brak VIP - spróbuj zwykłego pacjenta (nieblokująco dla responsywności)
-            ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                        MSG_PATIENT_TO_REGISTRATION, IPC_NOWAIT);
-            
-            if (ret == -1) {
-                // Brak pacjentów - krótka pauza
-                usleep(50000);  // 50ms
-                continue;
-            }
+            if (errno == EINTR) continue;
+            if (errno == EIDRM || errno == EINVAL) break;
+            printError("rejestracja okienko 1: msgrcv");
+            continue;
         }
         
         // Mamy pacjenta do obsługi
@@ -176,6 +172,7 @@ void setupSignals() {
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     
+    sigaction(SIGUSR1, &sa, nullptr);  // Do budzenia wątku okienka 2 (EINTR)
     sigaction(SIGUSR2, &sa, nullptr);
     sigaction(SIGTERM, &sa, nullptr);
     sigaction(SIGINT, &sa, nullptr);
@@ -252,22 +249,16 @@ void* windowThread(void* arg) {
         // Obsługuj pacjentów dopóki okienko jest aktywne
         while (g_window2_should_run && !g_shutdown && !g_state->shutdown) {
             SORMessage msg;
-            ssize_t ret;
             
-            // Najpierw próbuj VIP
-            ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                        MSG_PATIENT_TO_REGISTRATION_VIP, IPC_NOWAIT);
+            // Blokujące odbieranie z priorytetem VIP (ujemny mtype)
+            ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
+                                 -MSG_PATIENT_TO_REGISTRATION, 0);
             
             if (ret == -1) {
-                // Próbuj zwykłego pacjenta
-                ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                            MSG_PATIENT_TO_REGISTRATION, IPC_NOWAIT);
-                
-                if (ret == -1) {
-                    // Brak pacjentów - krótka pauza
-                    usleep(50000);  // 50ms
-                    continue;
-                }
+                if (errno == EINTR) continue;
+                if (errno == EIDRM || errno == EINVAL) break;
+                printError("rejestracja okienko 2: msgrcv");
+                continue;
             }
             
             // Obsłuż pacjenta
@@ -335,6 +326,9 @@ void* queueControllerThread(void* arg) {
             pthread_mutex_lock(&g_window2_mutex);
             g_window2_should_run = false;
             pthread_mutex_unlock(&g_window2_mutex);
+            
+            // Wybudź wątek okienka 2 z blokującego msgrcv (EINTR)
+            pthread_kill(g_window2_thread, SIGUSR1);
         }
         
         // Krótka pauza przed kolejnym sprawdzeniem

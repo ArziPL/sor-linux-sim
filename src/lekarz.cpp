@@ -307,43 +307,31 @@ void goToWard() {
 void runSpecialist() {
     int sem_idx = getSpecialistSemIndex(g_doctor_type);
     
+    // Oblicz mtype dla każdego koloru triażu (unikalne per specjalista)
+    long mtype_red    = getSpecialistMtype(g_doctor_type, COLOR_RED);
+    long mtype_yellow = getSpecialistMtype(g_doctor_type, COLOR_YELLOW);
+    long mtype_green  = getSpecialistMtype(g_doctor_type, COLOR_GREEN);
+    
     while (!g_shutdown && !g_state->shutdown) {
-        // Czekaj na pacjenta z kolejki komunikatów
         SORMessage msg;
+        size_t msg_size = sizeof(SORMessage) - sizeof(long);
         
-        // Odbierz wiadomość od pacjenta który czeka na tego specjalistę
-        ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                             MSG_PATIENT_TO_SPECIALIST, 0);
+        // Priorytetowe skanowanie: RED → YELLOW → GREEN (nieblokujące)
+        ssize_t ret = msgrcv(g_msgid, &msg, msg_size, mtype_red, IPC_NOWAIT);
+        if (ret == -1)
+            ret = msgrcv(g_msgid, &msg, msg_size, mtype_yellow, IPC_NOWAIT);
+        if (ret == -1)
+            ret = msgrcv(g_msgid, &msg, msg_size, mtype_green, IPC_NOWAIT);
         
         if (ret == -1) {
-            if (errno == EINTR) {
-                // Przerwane przez sygnał
-                if (g_go_to_ward && !g_treating) {
-                    goToWard();
-                }
-                continue;
+            // Brak pacjentów — sprawdź sygnały i czekaj
+            if (g_go_to_ward && !g_treating) {
+                goToWard();
             }
-            if (errno == EIDRM || errno == EINVAL) {
-                break;
-            }
+            if (g_shutdown || g_state->shutdown) break;
+            usleep(50000);  // 50ms pauza przed ponownym skanowaniem
             continue;
         }
-        
-        // Sprawdź czy ta wiadomość jest dla nas
-        if (msg.assigned_doctor != g_doctor_type) {
-            // Nie dla nas - odłóż z powrotem do kolejki
-            if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
-                if (errno != EINTR && errno != EIDRM) {
-                    printError("specialist msgsnd return");
-                }
-            }
-            // Mała pauza żeby nie zajmować CPU
-            usleep(10000);  // 10ms
-            continue;
-        }
-        
-        // To dla nas - czekaj na dostęp (semafor specjalisty)
-        // Najpierw zwolnijmy wiadomość żeby inni mogli ją odebrać jesli to nie dla nas
         
         // Zajmij semafor specjalisty (czekaj na wolne miejsce u lekarza)
         semWait(g_semid, sem_idx);

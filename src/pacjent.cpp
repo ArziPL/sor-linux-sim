@@ -245,7 +245,7 @@ void enterWaitingRoom(PatientData* data) {
         int count = data->state->patients_in_sor;
         semSignal(data->semid, SEM_SHM_MUTEX);
         
-        logMessage(data->state, data->semid, "[Opiekun] Pacjent %d wchodzi do budynku (%d/%d)",
+        logMessage(data->state, data->semid, "Pacjent %d [Opiekun] wchodzi do budynku (%d/%d)",
                   data->id, count, N);
     } else {
         // Dorosły = 1 miejsce
@@ -268,7 +268,7 @@ void enterWaitingRoom(PatientData* data) {
 void doRegistration(PatientData* data) {
     // Dla dzieci: [Opiekun] (rodzic rejestruje)
     if (data->is_child) {
-        logMessage(data->state, data->semid, "[Opiekun] Pacjent %d dołącza do kolejki rejestracji",
+        logMessage(data->state, data->semid, "Pacjent %d [Opiekun] dołącza do kolejki rejestracji",
                   data->id);
     } else {
         logMessage(data->state, data->semid, "Pacjent %d dołącza do kolejki rejestracji%s",
@@ -381,10 +381,10 @@ void doSpecialist(PatientData* data) {
                   getColorName(data->color));
     }
     
-    // Przygotuj wiadomość do specjalisty
+    // Przygotuj wiadomość do specjalisty (mtype koduje lekarza + kolor triażu)
     SORMessage msg;
     memset(&msg, 0, sizeof(msg));
-    msg.mtype = MSG_PATIENT_TO_SPECIALIST;
+    msg.mtype = getSpecialistMtype(data->assigned_doctor, data->color);
     msg.patient_id = data->id;
     msg.patient_pid = getpid();
     msg.age = data->age;
@@ -474,7 +474,7 @@ void* parentThread(void* arg) {
     }
     
     // Rodzic rejestruje dziecko
-    logMessage(data->state, data->semid, "[Opiekun] Rodzic pacjenta %d rozpoczyna rejestrację",
+    logMessage(data->state, data->semid, "Pacjent %d [Opiekun] rozpoczyna rejestrację",
               data->id);
     
     doRegistration(data);
@@ -485,7 +485,7 @@ void* parentThread(void* arg) {
     pthread_cond_signal(&data->reg_done_cond);
     pthread_mutex_unlock(&data->reg_mutex);
     
-    logMessage(data->state, data->semid, "[Opiekun] Rodzic pacjenta %d zakończył rejestrację",
+    logMessage(data->state, data->semid, "Pacjent %d [Opiekun] zakończył rejestrację",
               data->id);
     
     return nullptr;
