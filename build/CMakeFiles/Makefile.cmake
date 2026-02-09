@@ -117,7 +117,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/sor.dir/DependInfo.cmake"
+  "CMakeFiles/dyrektor.dir/DependInfo.cmake"
   "CMakeFiles/rejestracja.dir/DependInfo.cmake"
   "CMakeFiles/lekarz.dir/DependInfo.cmake"
   "CMakeFiles/pacjent.dir/DependInfo.cmake"

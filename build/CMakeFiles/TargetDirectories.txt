@@ -1,4 +1,4 @@
-/home/areczek/sor-linux-sim/build/CMakeFiles/sor.dir
+/home/areczek/sor-linux-sim/build/CMakeFiles/dyrektor.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/rejestracja.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/lekarz.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/pacjent.dir

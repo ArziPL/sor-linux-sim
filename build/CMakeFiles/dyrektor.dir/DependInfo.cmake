@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/areczek/sor-linux-sim/src/main.cpp" "CMakeFiles/sor.dir/src/main.cpp.o" "gcc" "CMakeFiles/sor.dir/src/main.cpp.o.d"
-  "" "sor" "gcc" "CMakeFiles/sor.dir/link.d"
+  "/home/areczek/sor-linux-sim/src/main.cpp" "CMakeFiles/dyrektor.dir/src/main.cpp.o" "gcc" "CMakeFiles/dyrektor.dir/src/main.cpp.o.d"
+  "" "dyrektor" "gcc" "CMakeFiles/dyrektor.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

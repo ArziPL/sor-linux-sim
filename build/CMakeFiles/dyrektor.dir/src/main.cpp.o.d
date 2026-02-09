@@ -1,4 +1,4 @@
-CMakeFiles/sor.dir/src/main.cpp.o: \
+CMakeFiles/dyrektor.dir/src/main.cpp.o: \
  /home/areczek/sor-linux-sim/src/main.cpp /usr/include/stdc-predef.h \
  /home/areczek/sor-linux-sim/src/sor_common.hpp \
  /usr/include/c++/14/cstdio \

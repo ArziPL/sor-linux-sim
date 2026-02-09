@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/dyrektor.dir/link.d CMakeFiles/dyrektor.dir/src/main.cpp.o -o dyrektor

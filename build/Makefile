@@ -162,17 +162,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named sor
+# Target rules for targets named dyrektor
 
 # Build rule for target.
-sor: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sor
-.PHONY : sor
+dyrektor: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 dyrektor
+.PHONY : dyrektor
 
 # fast build rule for target.
-sor/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sor.dir/build.make CMakeFiles/sor.dir/build
-.PHONY : sor/fast
+dyrektor/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dyrektor.dir/build.make CMakeFiles/dyrektor.dir/build
+.PHONY : dyrektor/fast
 
 #=============================================================================
 # Target rules for targets named rejestracja
@@ -242,7 +242,7 @@ src/main.o: src/main.cpp.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sor.dir/build.make CMakeFiles/sor.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dyrektor.dir/build.make CMakeFiles/dyrektor.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -250,7 +250,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sor.dir/build.make CMakeFiles/sor.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dyrektor.dir/build.make CMakeFiles/dyrektor.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -258,7 +258,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/sor.dir/build.make CMakeFiles/sor.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/dyrektor.dir/build.make CMakeFiles/dyrektor.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 src/pacjent.o: src/pacjent.cpp.o
@@ -321,10 +321,10 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... dyrektor"
 	@echo "... lekarz"
 	@echo "... pacjent"
 	@echo "... rejestracja"
-	@echo "... sor"
 	@echo "... src/lekarz.o"
 	@echo "... src/lekarz.i"
 	@echo "... src/lekarz.s"
