@@ -76,15 +76,15 @@ CMakeFiles/pacjent.dir/src/pacjent.cpp.o: CMakeFiles/pacjent.dir/flags.make
 CMakeFiles/pacjent.dir/src/pacjent.cpp.o: /home/areczek/sor-linux-sim/src/pacjent.cpp
 CMakeFiles/pacjent.dir/src/pacjent.cpp.o: CMakeFiles/pacjent.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/pacjent.dir/src/pacjent.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pacjent.dir/src/pacjent.cpp.o -MF CMakeFiles/pacjent.dir/src/pacjent.cpp.o.d -o CMakeFiles/pacjent.dir/src/pacjent.cpp.o -c /home/areczek/sor-linux-sim/src/pacjent.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/pacjent.dir/src/pacjent.cpp.o -MF CMakeFiles/pacjent.dir/src/pacjent.cpp.o.d -o CMakeFiles/pacjent.dir/src/pacjent.cpp.o -c /home/areczek/sor-linux-sim/src/pacjent.cpp
 
 CMakeFiles/pacjent.dir/src/pacjent.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/pacjent.dir/src/pacjent.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/pacjent.cpp > CMakeFiles/pacjent.dir/src/pacjent.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/pacjent.cpp > CMakeFiles/pacjent.dir/src/pacjent.cpp.i
 
 CMakeFiles/pacjent.dir/src/pacjent.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/pacjent.dir/src/pacjent.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/pacjent.cpp -o CMakeFiles/pacjent.dir/src/pacjent.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/pacjent.cpp -o CMakeFiles/pacjent.dir/src/pacjent.cpp.s
 
 # Object files for target pacjent
 pacjent_OBJECTS = \

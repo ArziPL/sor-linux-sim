@@ -1,5 +1,5 @@
 ipcs -m -s -q
-ps -o pid,ppid,stat,cmd --forest -C sor,lekarz,pacjent,rejestracja
+ps -o pid,ppid,stat,cmd --forest -C dyrektor,lekarz,pacjent,rejestracja
 htop
 
 
@@ -8,6 +8,6 @@ rm -rf build
 mkdir build && cd build
 cmake ..
 make -j4
-cp sor lekarz pacjent rejestracja ..
+cp dyrektor lekarz pacjent rejestracja ..
 
-cd /home/areczek/sor-linux-sim && rm -rf build && mkdir build && cd build && cmake .. && make -j4 && cp sor lekarz pacjent rejestracja ..
+cd /home/areczek/sor-linux-sim && rm -rf build && mkdir build && cd build && cmake .. && make -j4 && cp dyrektor lekarz pacjent rejestracja ..

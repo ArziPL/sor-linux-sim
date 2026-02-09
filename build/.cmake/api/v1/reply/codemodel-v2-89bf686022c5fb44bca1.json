@@ -1,0 +1,115 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-61bf5cd74dd3fd49a116.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "sor",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "dyrektor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-dyrektor-Debug-4d0122299f984feb8252.json",
+					"name" : "dyrektor",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "lekarz::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-lekarz-Debug-5921473a1beaa27dcdc3.json",
+					"name" : "lekarz",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pacjent::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pacjent-Debug-09992187f2ed85c5f554.json",
+					"name" : "pacjent",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "rejestracja::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-rejestracja-Debug-b77e4e1607239c643f64.json",
+					"name" : "rejestracja",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_doctor_signal::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_doctor_signal-Debug-32359aaa706914bd8085.json",
+					"name" : "test_doctor_signal",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ipc_init::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ipc_init-Debug-e46f64570a5dd90ca5d0.json",
+					"name" : "test_ipc_init",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_occupancy_invariant::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_occupancy_invariant-Debug-69f0b58edd90df57568d.json",
+					"name" : "test_occupancy_invariant",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/areczek/sor-linux-sim/build",
+		"source" : "/home/areczek/sor-linux-sim"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

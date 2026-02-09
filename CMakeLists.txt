@@ -12,8 +12,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g")
 find_package(Threads REQUIRED)
 
 # Główny program - Dyrektor SOR
-add_executable(sor src/main.cpp)
-target_link_libraries(sor PRIVATE Threads::Threads)
+add_executable(dyrektor src/main.cpp)
+target_link_libraries(dyrektor PRIVATE Threads::Threads)
 
 # Proces rejestracji
 add_executable(rejestracja src/rejestracja.cpp)
@@ -28,4 +28,13 @@ add_executable(pacjent src/pacjent.cpp)
 target_link_libraries(pacjent PRIVATE Threads::Threads)
 
 # Instalacja (opcjonalna)
-install(TARGETS sor rejestracja lekarz pacjent RUNTIME DESTINATION bin)
+install(TARGETS dyrektor rejestracja lekarz pacjent RUNTIME DESTINATION bin)
+
+# ============================================================================
+# TESTY
+# ============================================================================
+
+# Testy C++ (podłączają się do działającej symulacji)
+add_executable(test_ipc_init tests/test_ipc_init.cpp)
+add_executable(test_occupancy_invariant tests/test_occupancy_invariant.cpp)
+add_executable(test_doctor_signal tests/test_doctor_signal.cpp)

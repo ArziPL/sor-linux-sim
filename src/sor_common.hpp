@@ -56,19 +56,6 @@ constexpr int TREATMENT_MAX_MS = 5000;   // Max czas leczenia u specjalisty
 constexpr int DOCTOR_BREAK_MIN_MS = 500; // Min czas przerwy lekarza
 constexpr int DOCTOR_BREAK_MAX_MS = 1000; // Max czas przerwy lekarza
 
-// constexpr int PATIENT_GEN_MIN_MS = 0;  // Min czas między generowaniem pacjentów
-// constexpr int PATIENT_GEN_MAX_MS = 0; // Max czas między generowaniem pacjentów
-// constexpr int REGISTRATION_MIN_MS = 0; // Min czas rejestracji
-// constexpr int REGISTRATION_MAX_MS = 0; // Max czas rejestracji
-// constexpr int TRIAGE_MIN_MS = 0;       // Min czas triażu
-// constexpr int TRIAGE_MAX_MS = 0;      // Max czas triażu
-// constexpr int TREATMENT_MIN_MS = 0;   // Min czas leczenia u specjalisty
-// constexpr int TREATMENT_MAX_MS = 0;   // Max czas leczenia u specjalisty
-// constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
-// constexpr int DOCTOR_BREAK_MAX_MS = 0; // Max czas przerwy lekarza
-
-// 500 1000 500 1000 500 1000 1000 2000 3000 5000
-
 // ============================================================================
 // TYPY ENUMERACYJNE
 // ============================================================================
@@ -128,8 +115,6 @@ inline const char* getColorName(TriageColor color) {
  * - SEM_POCZEKALNIA: kontroluje wejście do poczekalni (inicjalizacja: N)
  * - SEM_REG_QUEUE: mutex dla kolejki rejestracji
  * - SEM_REG_WINDOW_1/2: semafory okienek rejestracji
- * - SEM_TRIAGE_QUEUE: mutex dla kolejki triażu
- * - SEM_TRIAGE_READY: semafor gotowości lekarza POZ
  * - SEM_SPECIALIST_*: semafory poszczególnych specjalistów
  * - SEM_SHM_MUTEX: mutex dla dostępu do pamięci dzielonej
  * - SEM_LOG_MUTEX: mutex dla logowania
@@ -139,8 +124,6 @@ enum SemIndex {
     SEM_REG_QUEUE_MUTEX,     // Mutex kolejki rejestracji
     SEM_REG_WINDOW_1,        // Okienko rejestracji 1 (0=zajęte, 1=wolne)
     SEM_REG_WINDOW_2,        // Okienko rejestracji 2
-    SEM_TRIAGE_QUEUE_MUTEX,  // Mutex kolejki do triażu
-    SEM_TRIAGE_READY,        // Lekarz POZ gotowy do przyjęcia
     SEM_SPECIALIST_KARDIOLOG,
     SEM_SPECIALIST_NEUROLOG,
     SEM_SPECIALIST_OKULISTA,
@@ -238,7 +221,7 @@ struct SharedState {
     long start_time_nsec;
     
     // Flaga zakończenia symulacji
-    volatile int shutdown;
+    volatile sig_atomic_t shutdown;
     
     // PID dyrektora (głównego procesu)
     pid_t director_pid;
@@ -252,18 +235,13 @@ struct SharedState {
     // Stan okienek rejestracji
     int reg_window_2_open;           // Czy okienko 2 jest otwarte
     int reg_queue_count;             // Liczba osób w kolejce do rejestracji
-    int reg_queue_vip_count;         // Liczba VIPów w kolejce
     
     // Liczniki do statystyk
     int total_patients;              // Całkowita liczba pacjentów
     int patients_in_sor;             // Aktualnie w SOR
-    int patients_waiting_outside;    // Czekający przed wejściem
     
     // Stan lekarzy (czy są na oddziale)
-    volatile int doctor_on_break[DOCTOR_COUNT];
-    
-    // Licznik pacjentów w kolejkach do specjalistów (wg koloru i typu)
-    int specialist_queue_count[DOCTOR_COUNT];
+    volatile sig_atomic_t doctor_on_break[DOCTOR_COUNT];
     
     // ID kolejek komunikatów specjalistów (osobna kolejka per specjalista)
     int specialist_msgids[DOCTOR_COUNT];
@@ -340,22 +318,6 @@ inline void semSignal(int semid, int sem_num) {
             return;
         }
     }
-}
-
-/**
- * @brief Próbuje wykonać operację P bez blokowania
- * @return true jeśli udało się zająć semafor, false w przeciwnym razie
- */
-inline bool semTryWait(int semid, int sem_num) {
-    struct sembuf op;
-    op.sem_num = sem_num;
-    op.sem_op = -1;
-    op.sem_flg = IPC_NOWAIT; // Nieblokujące (tylko tutaj!)
-    
-    if (semop(semid, &op, 1) == -1) {
-        return false;
-    }
-    return true;
 }
 
 /**

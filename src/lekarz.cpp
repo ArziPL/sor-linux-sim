@@ -22,7 +22,6 @@ static DoctorType g_doctor_type;           // Typ tego lekarza
 static SharedState* g_state = nullptr;     // Pamięć dzielona
 static int g_semid = -1;                   // ID semaforów
 static int g_msgid = -1;                   // ID kolejki komunikatów
-static int g_shmid = -1;                   // ID pamięci dzielonej
 
 // Flagi sterujące zachowaniem lekarza
 static volatile sig_atomic_t g_shutdown = 0;      // Zakończenie pracy
@@ -95,12 +94,12 @@ int main(int argc, char* argv[]) {
 void initIPC() {
     // Podłącz pamięć dzieloną
     key_t shm_key = getIPCKey(SHM_KEY_ID);
-    g_shmid = shmget(shm_key, sizeof(SharedState), 0);
-    if (g_shmid == -1) {
+    int shmid = shmget(shm_key, sizeof(SharedState), 0);
+    if (shmid == -1) {
         handleError("lekarz: shmget");
     }
     
-    g_state = (SharedState*)shmat(g_shmid, nullptr, 0);
+    g_state = (SharedState*)shmat(shmid, nullptr, 0);
     if (g_state == (void*)-1) {
         handleError("lekarz: shmat");
     }
@@ -172,9 +171,6 @@ void setupSignals() {
  * Lekarz POZ nie reaguje na SIGUSR1 (nie idzie na oddział)
  */
 void runPOZ() {
-    // Sygnalizuj gotowość do pracy
-    semSignal(g_semid, SEM_TRIAGE_READY);
-    
     while (!g_shutdown && !g_state->shutdown) {
         // Czekaj na wiadomość od pacjenta (blokująco)
         SORMessage msg;
@@ -196,7 +192,6 @@ void runPOZ() {
         }
         
         // Mamy pacjenta do triażu
-        g_treating = 1;
         
         // [Dziecko] dla pacjentów < 18 lat
         if (msg.age < 18) {
@@ -261,8 +256,6 @@ void runPOZ() {
                 }
             }
         }
-        
-        g_treating = 0;
         
         // POZ nie reaguje na SIGUSR1, więc nie sprawdzamy g_go_to_ward
     }

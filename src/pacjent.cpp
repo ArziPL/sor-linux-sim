@@ -288,9 +288,6 @@ void doRegistration(PatientData* data) {
     // Zaktualizuj licznik kolejki
     semWait(data->semid, SEM_SHM_MUTEX);
     data->state->reg_queue_count++;
-    if (data->is_vip) {
-        data->state->reg_queue_vip_count++;
-    }
     semSignal(data->semid, SEM_SHM_MUTEX);
     
     // Powiadom kontroler kolejki o zmianie (budzi z blokującego semWait)

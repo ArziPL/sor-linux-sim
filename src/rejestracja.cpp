@@ -21,7 +21,6 @@
 static SharedState* g_state = nullptr;     // Pamięć dzielona
 static int g_semid = -1;                   // ID semaforów
 static int g_msgid = -1;                   // ID kolejki komunikatów
-static int g_shmid = -1;                   // ID pamięci dzielonej
 
 static volatile sig_atomic_t g_shutdown = 0;  // Flaga zakończenia
 
@@ -124,12 +123,12 @@ int main() {
 void initIPC() {
     // Podłącz pamięć dzieloną
     key_t shm_key = getIPCKey(SHM_KEY_ID);
-    g_shmid = shmget(shm_key, sizeof(SharedState), 0);
-    if (g_shmid == -1) {
+    int shmid = shmget(shm_key, sizeof(SharedState), 0);
+    if (shmid == -1) {
         handleError("rejestracja: shmget");
     }
     
-    g_state = (SharedState*)shmat(g_shmid, nullptr, 0);
+    g_state = (SharedState*)shmat(shmid, nullptr, 0);
     if (g_state == (void*)-1) {
         handleError("rejestracja: shmat");
     }
@@ -195,9 +194,6 @@ void processPatient(int window_id, SORMessage& msg) {
     semWait(g_semid, SEM_SHM_MUTEX);
     if (g_state->reg_queue_count > 0) {
         g_state->reg_queue_count--;
-    }
-    if (msg.is_vip && g_state->reg_queue_vip_count > 0) {
-        g_state->reg_queue_vip_count--;
     }
     semSignal(g_semid, SEM_SHM_MUTEX);
     

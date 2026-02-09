@@ -93,9 +93,6 @@ int main() {
     // Uruchom lekarzy
     startDoctors();
     
-    // Daj procesom czas na start
-    usleep(100000);  // 100ms
-    
     // Ustaw terminal w tryb raw dla obsługi klawiszy
     setRawTerminal();
     
@@ -200,8 +197,6 @@ void initIPC() {
     sem_values[SEM_REG_QUEUE_MUTEX] = 1;       // Mutex wolny
     sem_values[SEM_REG_WINDOW_1] = 1;          // Okienko 1 wolne
     sem_values[SEM_REG_WINDOW_2] = 0;          // Okienko 2 zamknięte
-    sem_values[SEM_TRIAGE_QUEUE_MUTEX] = 1;    // Mutex wolny
-    sem_values[SEM_TRIAGE_READY] = 0;          // Lekarz POZ jeszcze nie gotowy
     // Semafory specjalistów - każdy zaczyna jako wolny (1)
     sem_values[SEM_SPECIALIST_KARDIOLOG] = 1;
     sem_values[SEM_SPECIALIST_NEUROLOG] = 1;

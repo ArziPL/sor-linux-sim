@@ -1,0 +1,1 @@
+/usr/bin/g++  -Wall -Wextra -g -g -Wl,--dependency-file=CMakeFiles/test_ipc_init.dir/link.d CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o -o test_ipc_init

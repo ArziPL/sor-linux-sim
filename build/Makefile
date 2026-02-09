@@ -213,6 +213,45 @@ pacjent/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pacjent.dir/build.make CMakeFiles/pacjent.dir/build
 .PHONY : pacjent/fast
 
+#=============================================================================
+# Target rules for targets named test_ipc_init
+
+# Build rule for target.
+test_ipc_init: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_ipc_init
+.PHONY : test_ipc_init
+
+# fast build rule for target.
+test_ipc_init/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/build
+.PHONY : test_ipc_init/fast
+
+#=============================================================================
+# Target rules for targets named test_occupancy_invariant
+
+# Build rule for target.
+test_occupancy_invariant: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_occupancy_invariant
+.PHONY : test_occupancy_invariant
+
+# fast build rule for target.
+test_occupancy_invariant/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/build
+.PHONY : test_occupancy_invariant/fast
+
+#=============================================================================
+# Target rules for targets named test_doctor_signal
+
+# Build rule for target.
+test_doctor_signal: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_doctor_signal
+.PHONY : test_doctor_signal
+
+# fast build rule for target.
+test_doctor_signal/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/build
+.PHONY : test_doctor_signal/fast
+
 src/lekarz.o: src/lekarz.cpp.o
 .PHONY : src/lekarz.o
 
@@ -309,6 +348,78 @@ src/rejestracja.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rejestracja.dir/build.make CMakeFiles/rejestracja.dir/src/rejestracja.cpp.s
 .PHONY : src/rejestracja.cpp.s
 
+tests/test_doctor_signal.o: tests/test_doctor_signal.cpp.o
+.PHONY : tests/test_doctor_signal.o
+
+# target to build an object file
+tests/test_doctor_signal.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/tests/test_doctor_signal.cpp.o
+.PHONY : tests/test_doctor_signal.cpp.o
+
+tests/test_doctor_signal.i: tests/test_doctor_signal.cpp.i
+.PHONY : tests/test_doctor_signal.i
+
+# target to preprocess a source file
+tests/test_doctor_signal.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/tests/test_doctor_signal.cpp.i
+.PHONY : tests/test_doctor_signal.cpp.i
+
+tests/test_doctor_signal.s: tests/test_doctor_signal.cpp.s
+.PHONY : tests/test_doctor_signal.s
+
+# target to generate assembly for a file
+tests/test_doctor_signal.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/tests/test_doctor_signal.cpp.s
+.PHONY : tests/test_doctor_signal.cpp.s
+
+tests/test_ipc_init.o: tests/test_ipc_init.cpp.o
+.PHONY : tests/test_ipc_init.o
+
+# target to build an object file
+tests/test_ipc_init.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o
+.PHONY : tests/test_ipc_init.cpp.o
+
+tests/test_ipc_init.i: tests/test_ipc_init.cpp.i
+.PHONY : tests/test_ipc_init.i
+
+# target to preprocess a source file
+tests/test_ipc_init.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i
+.PHONY : tests/test_ipc_init.cpp.i
+
+tests/test_ipc_init.s: tests/test_ipc_init.cpp.s
+.PHONY : tests/test_ipc_init.s
+
+# target to generate assembly for a file
+tests/test_ipc_init.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s
+.PHONY : tests/test_ipc_init.cpp.s
+
+tests/test_occupancy_invariant.o: tests/test_occupancy_invariant.cpp.o
+.PHONY : tests/test_occupancy_invariant.o
+
+# target to build an object file
+tests/test_occupancy_invariant.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o
+.PHONY : tests/test_occupancy_invariant.cpp.o
+
+tests/test_occupancy_invariant.i: tests/test_occupancy_invariant.cpp.i
+.PHONY : tests/test_occupancy_invariant.i
+
+# target to preprocess a source file
+tests/test_occupancy_invariant.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i
+.PHONY : tests/test_occupancy_invariant.cpp.i
+
+tests/test_occupancy_invariant.s: tests/test_occupancy_invariant.cpp.s
+.PHONY : tests/test_occupancy_invariant.s
+
+# target to generate assembly for a file
+tests/test_occupancy_invariant.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s
+.PHONY : tests/test_occupancy_invariant.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -325,6 +436,9 @@ help:
 	@echo "... lekarz"
 	@echo "... pacjent"
 	@echo "... rejestracja"
+	@echo "... test_doctor_signal"
+	@echo "... test_ipc_init"
+	@echo "... test_occupancy_invariant"
 	@echo "... src/lekarz.o"
 	@echo "... src/lekarz.i"
 	@echo "... src/lekarz.s"
@@ -337,6 +451,15 @@ help:
 	@echo "... src/rejestracja.o"
 	@echo "... src/rejestracja.i"
 	@echo "... src/rejestracja.s"
+	@echo "... tests/test_doctor_signal.o"
+	@echo "... tests/test_doctor_signal.i"
+	@echo "... tests/test_doctor_signal.s"
+	@echo "... tests/test_ipc_init.o"
+	@echo "... tests/test_ipc_init.i"
+	@echo "... tests/test_ipc_init.s"
+	@echo "... tests/test_occupancy_invariant.o"
+	@echo "... tests/test_occupancy_invariant.i"
+	@echo "... tests/test_occupancy_invariant.s"
 .PHONY : help
 
 
