@@ -149,6 +149,7 @@ enum SemIndex {
     SEM_SPECIALIST_PEDIATRA,
     SEM_SHM_MUTEX,           // Mutex pamięci dzielonej
     SEM_LOG_MUTEX,           // Mutex logowania do pliku
+    SEM_REG_QUEUE_CHANGED,   // Sygnał zmiany kolejki rejestracji (budzi kontroler)
     SEM_COUNT                // Liczba semaforów
 };
 
@@ -184,33 +185,28 @@ enum MessageType {
 };
 
 /**
- * @brief Baza mtype dla wiadomości do specjalistów
+ * @brief Mtype w kolejkach specjalistów — koduje priorytet koloru triażu
  * 
- * Schemat: SPECIALIST_MSG_BASE + (doctor_index - 1) * 3 + color_offset
- *   color_offset: RED=0, YELLOW=1, GREEN=2
+ * Każdy specjalista ma osobną kolejkę komunikatów.
+ * W kolejce specjalisty mtype oznacza kolor triażu:
+ *   COLOR_RED=1, COLOR_YELLOW=2, COLOR_GREEN=3
  * 
- * Kardiolog(1): RED=20, YELLOW=21, GREEN=22
- * Neurolog (2): RED=23, YELLOW=24, GREEN=25
- * Okulista (3): RED=26, YELLOW=27, GREEN=28
- * Laryngolog(4):RED=29, YELLOW=30, GREEN=31
- * Chirurg  (5): RED=32, YELLOW=33, GREEN=34
- * Pediatra (6): RED=35, YELLOW=36, GREEN=37
+ * Blokujący msgrcv(-3, 0) automatycznie wybiera najniższy mtype (RED) pierwszy.
  */
-constexpr long SPECIALIST_MSG_BASE = 20;
+constexpr long SPECIALIST_MTYPE_RED    = 1;  // Czerwony — najwyższy priorytet
+constexpr long SPECIALIST_MTYPE_YELLOW = 2;  // Żółty
+constexpr long SPECIALIST_MTYPE_GREEN  = 3;  // Zielony — najniższy priorytet
 
 /**
- * @brief Oblicza mtype wiadomości do specjalisty na podstawie typu lekarza i koloru triażu
- * Niższy color_offset = wyższy priorytet (RED=0 < YELLOW=1 < GREEN=2)
+ * @brief Konwertuje kolor triażu na mtype do kolejki specjalisty
  */
-inline long getSpecialistMtype(DoctorType doctor, TriageColor color) {
-    int color_offset;
+inline long colorToMtype(TriageColor color) {
     switch (color) {
-        case COLOR_RED:    color_offset = 0; break;
-        case COLOR_YELLOW: color_offset = 1; break;
-        case COLOR_GREEN:  color_offset = 2; break;
-        default:           color_offset = 2; break; // Domyślnie najniższy priorytet
+        case COLOR_RED:    return SPECIALIST_MTYPE_RED;
+        case COLOR_YELLOW: return SPECIALIST_MTYPE_YELLOW;
+        case COLOR_GREEN:  return SPECIALIST_MTYPE_GREEN;
+        default:           return SPECIALIST_MTYPE_GREEN; // Domyślnie najniższy priorytet
     }
-    return SPECIALIST_MSG_BASE + (doctor - 1) * 3 + color_offset;
 }
 
 /**
@@ -268,6 +264,9 @@ struct SharedState {
     
     // Licznik pacjentów w kolejkach do specjalistów (wg koloru i typu)
     int specialist_queue_count[DOCTOR_COUNT];
+    
+    // ID kolejek komunikatów specjalistów (osobna kolejka per specjalista)
+    int specialist_msgids[DOCTOR_COUNT];
     
     // Ścieżka do pliku logu
     char log_file[256];
@@ -520,6 +519,15 @@ inline key_t getIPCKey(int id) {
         key = 0x50520000 + id;
     }
     return key;
+}
+
+/**
+ * @brief Klucze IPC kolejek specjalistów
+ * Każdy specjalista dostaje osobną kolejkę z unikalnym kluczem
+ * Klucze: 'a' + (doctor_type - 1), tj. kardiolog='a', neurolog='b', ..., pediatra='f'
+ */
+inline key_t getSpecialistQueueKey(DoctorType doctor) {
+    return getIPCKey('a' + (doctor - 1));
 }
 
 #endif // SOR_COMMON_HPP

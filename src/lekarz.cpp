@@ -307,29 +307,29 @@ void goToWard() {
 void runSpecialist() {
     int sem_idx = getSpecialistSemIndex(g_doctor_type);
     
-    // Oblicz mtype dla każdego koloru triażu (unikalne per specjalista)
-    long mtype_red    = getSpecialistMtype(g_doctor_type, COLOR_RED);
-    long mtype_yellow = getSpecialistMtype(g_doctor_type, COLOR_YELLOW);
-    long mtype_green  = getSpecialistMtype(g_doctor_type, COLOR_GREEN);
+    // Otwórz dedykowaną kolejkę tego specjalisty
+    int spec_msgid = g_state->specialist_msgids[g_doctor_type];
     
     while (!g_shutdown && !g_state->shutdown) {
         SORMessage msg;
         size_t msg_size = sizeof(SORMessage) - sizeof(long);
         
-        // Priorytetowe skanowanie: RED → YELLOW → GREEN (nieblokujące)
-        ssize_t ret = msgrcv(g_msgid, &msg, msg_size, mtype_red, IPC_NOWAIT);
-        if (ret == -1)
-            ret = msgrcv(g_msgid, &msg, msg_size, mtype_yellow, IPC_NOWAIT);
-        if (ret == -1)
-            ret = msgrcv(g_msgid, &msg, msg_size, mtype_green, IPC_NOWAIT);
+        // Blokujący odbiór z priorytetem koloru: ujemny mtype (-3) oznacza
+        // "odbierz wiadomość z mtype <= 3, najniższy mtype pierwszy"
+        // RED(1) przed YELLOW(2) przed GREEN(3)
+        ssize_t ret = msgrcv(spec_msgid, &msg, msg_size, -SPECIALIST_MTYPE_GREEN, 0);
         
         if (ret == -1) {
-            // Brak pacjentów — sprawdź sygnały i czekaj
-            if (g_go_to_ward && !g_treating) {
-                goToWard();
+            if (errno == EINTR) {
+                // Przerwane przez sygnał — sprawdź czy kończymy lub idziemy na oddział
+                if (g_go_to_ward && !g_treating) {
+                    goToWard();
+                }
+                continue;
             }
-            if (g_shutdown || g_state->shutdown) break;
-            usleep(50000);  // 50ms pauza przed ponownym skanowaniem
+            if (errno == EIDRM || errno == EINVAL) {
+                break;
+            }
             continue;
         }
         

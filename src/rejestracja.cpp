@@ -201,6 +201,9 @@ void processPatient(int window_id, SORMessage& msg) {
     }
     semSignal(g_semid, SEM_SHM_MUTEX);
     
+    // Powiadom kontroler kolejki o zmianie
+    semSignal(g_semid, SEM_REG_QUEUE_CHANGED);
+    
     // Symulacja czasu rejestracji
     randomSleep(REGISTRATION_MIN_MS, REGISTRATION_MAX_MS);
     
@@ -290,6 +293,11 @@ void* queueControllerThread(void* arg) {
               K_OPEN, K_CLOSE);
     
     while (!g_shutdown && !g_state->shutdown) {
+        // Blokujące czekanie na zmianę kolejki (zero CPU w idle)
+        semWait(g_semid, SEM_REG_QUEUE_CHANGED);
+        
+        if (g_shutdown || g_state->shutdown) break;
+        
         // Sprawdź długość kolejki
         semWait(g_semid, SEM_SHM_MUTEX);
         int queue_count = g_state->reg_queue_count;
@@ -330,9 +338,6 @@ void* queueControllerThread(void* arg) {
             // Wybudź wątek okienka 2 z blokującego msgrcv (EINTR)
             pthread_kill(g_window2_thread, SIGUSR1);
         }
-        
-        // Krótka pauza przed kolejnym sprawdzeniem
-        usleep(100000);  // 100ms
     }
     
     return nullptr;

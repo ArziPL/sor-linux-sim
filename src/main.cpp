@@ -211,6 +211,7 @@ void initIPC() {
     sem_values[SEM_SPECIALIST_PEDIATRA] = 1;
     sem_values[SEM_SHM_MUTEX] = 1;             // Mutex wolny
     sem_values[SEM_LOG_MUTEX] = 1;             // Mutex wolny
+    sem_values[SEM_REG_QUEUE_CHANGED] = 0;     // Kontroler czeka na sygnał
     
     // Ustaw wszystkie wartości
     union semun {
@@ -239,7 +240,28 @@ void initIPC() {
         handleError("msgget");
     }
     
-    printf("IPC zainicjalizowane: SHM=%d, SEM=%d, MSG=%d\n", g_shmid, g_semid, g_msgid);
+    // --- KOLEJKI SPECJALISTÓW (osobna per specjalista) ---
+    for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
+        DoctorType dtype = (DoctorType)i;
+        key_t spec_key = getSpecialistQueueKey(dtype);
+        
+        // Usuń istniejącą kolejkę
+        int old_spec_msgid = msgget(spec_key, 0);
+        if (old_spec_msgid != -1) {
+            msgctl(old_spec_msgid, IPC_RMID, nullptr);
+        }
+        
+        // Utwórz nową kolejkę
+        int spec_msgid = msgget(spec_key, IPC_CREAT | IPC_EXCL | 0600);
+        if (spec_msgid == -1) {
+            handleError("msgget specialist");
+        }
+        
+        // Zapisz ID w pamięci dzielonej (procesy potomne użyją tego)
+        g_state->specialist_msgids[dtype] = spec_msgid;
+    }
+    
+    printf("IPC zainicjalizowane: SHM=%d, SEM=%d, MSG=%d + 6 kolejek specjalistów\n", g_shmid, g_semid, g_msgid);
 }
 
 /**
@@ -271,6 +293,15 @@ void cleanupIPC() {
     if (g_msgid != -1) {
         msgctl(g_msgid, IPC_RMID, nullptr);
         g_msgid = -1;
+    }
+    
+    // Usuń kolejki specjalistów
+    for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
+        key_t spec_key = getSpecialistQueueKey((DoctorType)i);
+        int spec_msgid = msgget(spec_key, 0);
+        if (spec_msgid != -1) {
+            msgctl(spec_msgid, IPC_RMID, nullptr);
+        }
     }
     
     printf("Zasoby IPC usunięte\n");

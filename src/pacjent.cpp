@@ -236,9 +236,19 @@ void setupSignals() {
  */
 void enterWaitingRoom(PatientData* data) {
     if (data->is_child) {
-        // Dziecko + opiekun = 2 miejsca
-        semWait(data->semid, SEM_POCZEKALNIA);
-        semWait(data->semid, SEM_POCZEKALNIA);
+        // Dziecko + opiekun = 2 miejsca (atomowo, unika deadlocku)
+        struct sembuf op;
+        op.sem_num = SEM_POCZEKALNIA;
+        op.sem_op = -2;      // Czekaj aż >=2 i zajmij oba naraz
+        op.sem_flg = 0;
+        while (semop(data->semid, &op, 1) == -1) {
+            if (errno != EINTR) {
+                if (errno != EIDRM && errno != EINVAL) {
+                    printError("semop enterWaitingRoom child");
+                }
+                return;
+            }
+        }
         
         semWait(data->semid, SEM_SHM_MUTEX);
         data->state->patients_in_sor += 2;
@@ -282,6 +292,9 @@ void doRegistration(PatientData* data) {
         data->state->reg_queue_vip_count++;
     }
     semSignal(data->semid, SEM_SHM_MUTEX);
+    
+    // Powiadom kontroler kolejki o zmianie (budzi z blokującego semWait)
+    semSignal(data->semid, SEM_REG_QUEUE_CHANGED);
     
     // Przygotuj wiadomość do rejestracji
     SORMessage msg;
@@ -381,10 +394,10 @@ void doSpecialist(PatientData* data) {
                   getColorName(data->color));
     }
     
-    // Przygotuj wiadomość do specjalisty (mtype koduje lekarza + kolor triażu)
+    // Przygotuj wiadomość do specjalisty (mtype = kolor triażu = priorytet)
     SORMessage msg;
     memset(&msg, 0, sizeof(msg));
-    msg.mtype = getSpecialistMtype(data->assigned_doctor, data->color);
+    msg.mtype = colorToMtype(data->color);  // RED=1, YELLOW=2, GREEN=3
     msg.patient_id = data->id;
     msg.patient_pid = getpid();
     msg.age = data->age;
@@ -392,8 +405,9 @@ void doSpecialist(PatientData* data) {
     msg.color = data->color;
     msg.assigned_doctor = data->assigned_doctor;
     
-    // Wyślij do kolejki specjalistów
-    if (msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
+    // Wyślij do dedykowanej kolejki specjalisty
+    int spec_msgid = data->state->specialist_msgids[data->assigned_doctor];
+    if (msgsnd(spec_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR && errno != EIDRM) {
             printError("pacjent: msgsnd specialist");
         }
@@ -434,9 +448,19 @@ void exitSOR(PatientData* data) {
         }
         semSignal(data->semid, SEM_SHM_MUTEX);
         
-        // Zwolnij 2 miejsca
-        semSignal(data->semid, SEM_POCZEKALNIA);
-        semSignal(data->semid, SEM_POCZEKALNIA);
+        // Zwolnij 2 miejsca (atomowo)
+        struct sembuf op;
+        op.sem_num = SEM_POCZEKALNIA;
+        op.sem_op = 2;       // Zwolnij oba naraz
+        op.sem_flg = 0;
+        while (semop(data->semid, &op, 1) == -1) {
+            if (errno != EINTR) {
+                if (errno != EIDRM && errno != EINVAL) {
+                    printError("semop exitSOR child");
+                }
+                return;
+            }
+        }
     } else {
         // Dorosły = 1 miejsce
         logMessage(data->state, data->semid, "Pacjent %d opuszcza SOR", data->id);
