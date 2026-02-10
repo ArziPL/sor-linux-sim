@@ -122,9 +122,4 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/lekarz.dir/DependInfo.cmake"
   "CMakeFiles/pacjent.dir/DependInfo.cmake"
   "CMakeFiles/generator.dir/DependInfo.cmake"
-  "CMakeFiles/test_queues.dir/DependInfo.cmake"
-  "CMakeFiles/test_semaphores.dir/DependInfo.cmake"
-  "CMakeFiles/test_shared_memory.dir/DependInfo.cmake"
-  "CMakeFiles/test_doctor_signal.dir/DependInfo.cmake"
-  "CMakeFiles/test_startup_cleanup.dir/DependInfo.cmake"
   )

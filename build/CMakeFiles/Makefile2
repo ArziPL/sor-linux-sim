@@ -68,11 +68,6 @@ all: CMakeFiles/rejestracja.dir/all
 all: CMakeFiles/lekarz.dir/all
 all: CMakeFiles/pacjent.dir/all
 all: CMakeFiles/generator.dir/all
-all: CMakeFiles/test_queues.dir/all
-all: CMakeFiles/test_semaphores.dir/all
-all: CMakeFiles/test_shared_memory.dir/all
-all: CMakeFiles/test_doctor_signal.dir/all
-all: CMakeFiles/test_startup_cleanup.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
@@ -81,11 +76,6 @@ codegen: CMakeFiles/rejestracja.dir/codegen
 codegen: CMakeFiles/lekarz.dir/codegen
 codegen: CMakeFiles/pacjent.dir/codegen
 codegen: CMakeFiles/generator.dir/codegen
-codegen: CMakeFiles/test_queues.dir/codegen
-codegen: CMakeFiles/test_semaphores.dir/codegen
-codegen: CMakeFiles/test_shared_memory.dir/codegen
-codegen: CMakeFiles/test_doctor_signal.dir/codegen
-codegen: CMakeFiles/test_startup_cleanup.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -98,11 +88,6 @@ clean: CMakeFiles/rejestracja.dir/clean
 clean: CMakeFiles/lekarz.dir/clean
 clean: CMakeFiles/pacjent.dir/clean
 clean: CMakeFiles/generator.dir/clean
-clean: CMakeFiles/test_queues.dir/clean
-clean: CMakeFiles/test_semaphores.dir/clean
-clean: CMakeFiles/test_shared_memory.dir/clean
-clean: CMakeFiles/test_doctor_signal.dir/clean
-clean: CMakeFiles/test_startup_cleanup.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -264,166 +249,6 @@ CMakeFiles/generator.dir/codegen:
 CMakeFiles/generator.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/generator.dir/build.make CMakeFiles/generator.dir/clean
 .PHONY : CMakeFiles/generator.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_queues.dir
-
-# All Build rule for target.
-CMakeFiles/test_queues.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Built target test_queues"
-.PHONY : CMakeFiles/test_queues.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_queues.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_queues.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_queues.dir/rule
-
-# Convenience name for target.
-test_queues: CMakeFiles/test_queues.dir/rule
-.PHONY : test_queues
-
-# codegen rule for target.
-CMakeFiles/test_queues.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=13,14 "Finished codegen for target test_queues"
-.PHONY : CMakeFiles/test_queues.dir/codegen
-
-# clean rule for target.
-CMakeFiles/test_queues.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/clean
-.PHONY : CMakeFiles/test_queues.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_semaphores.dir
-
-# All Build rule for target.
-CMakeFiles/test_semaphores.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=15,16 "Built target test_semaphores"
-.PHONY : CMakeFiles/test_semaphores.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_semaphores.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_semaphores.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_semaphores.dir/rule
-
-# Convenience name for target.
-test_semaphores: CMakeFiles/test_semaphores.dir/rule
-.PHONY : test_semaphores
-
-# codegen rule for target.
-CMakeFiles/test_semaphores.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=15,16 "Finished codegen for target test_semaphores"
-.PHONY : CMakeFiles/test_semaphores.dir/codegen
-
-# clean rule for target.
-CMakeFiles/test_semaphores.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/clean
-.PHONY : CMakeFiles/test_semaphores.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_shared_memory.dir
-
-# All Build rule for target.
-CMakeFiles/test_shared_memory.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=17,18 "Built target test_shared_memory"
-.PHONY : CMakeFiles/test_shared_memory.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_shared_memory.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_shared_memory.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_shared_memory.dir/rule
-
-# Convenience name for target.
-test_shared_memory: CMakeFiles/test_shared_memory.dir/rule
-.PHONY : test_shared_memory
-
-# codegen rule for target.
-CMakeFiles/test_shared_memory.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=17,18 "Finished codegen for target test_shared_memory"
-.PHONY : CMakeFiles/test_shared_memory.dir/codegen
-
-# clean rule for target.
-CMakeFiles/test_shared_memory.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/clean
-.PHONY : CMakeFiles/test_shared_memory.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_doctor_signal.dir
-
-# All Build rule for target.
-CMakeFiles/test_doctor_signal.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Built target test_doctor_signal"
-.PHONY : CMakeFiles/test_doctor_signal.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_doctor_signal.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_doctor_signal.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_doctor_signal.dir/rule
-
-# Convenience name for target.
-test_doctor_signal: CMakeFiles/test_doctor_signal.dir/rule
-.PHONY : test_doctor_signal
-
-# codegen rule for target.
-CMakeFiles/test_doctor_signal.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=11,12 "Finished codegen for target test_doctor_signal"
-.PHONY : CMakeFiles/test_doctor_signal.dir/codegen
-
-# clean rule for target.
-CMakeFiles/test_doctor_signal.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/clean
-.PHONY : CMakeFiles/test_doctor_signal.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/test_startup_cleanup.dir
-
-# All Build rule for target.
-CMakeFiles/test_startup_cleanup.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=19,20 "Built target test_startup_cleanup"
-.PHONY : CMakeFiles/test_startup_cleanup.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/test_startup_cleanup.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/test_startup_cleanup.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/areczek/sor-linux-sim/build/CMakeFiles 0
-.PHONY : CMakeFiles/test_startup_cleanup.dir/rule
-
-# Convenience name for target.
-test_startup_cleanup: CMakeFiles/test_startup_cleanup.dir/rule
-.PHONY : test_startup_cleanup
-
-# codegen rule for target.
-CMakeFiles/test_startup_cleanup.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=19,20 "Finished codegen for target test_startup_cleanup"
-.PHONY : CMakeFiles/test_startup_cleanup.dir/codegen
-
-# clean rule for target.
-CMakeFiles/test_startup_cleanup.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/clean
-.PHONY : CMakeFiles/test_startup_cleanup.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

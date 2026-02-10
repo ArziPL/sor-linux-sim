@@ -33,7 +33,21 @@ static void genSigHandler(int sig) {
 // MAIN
 // ============================================================================
 
-int main() {
+int main(int argc, char* argv[]) {
+    // Parsowanie opcjonalnych argumentów: generator [min_ms] [max_ms]
+    int gen_min_ms = PATIENT_GEN_MIN_MS;
+    int gen_max_ms = PATIENT_GEN_MAX_MS;
+    if (argc >= 3) {
+        gen_min_ms = atoi(argv[1]);
+        gen_max_ms = atoi(argv[2]);
+        if (gen_min_ms <= 0 || gen_max_ms <= 0 || gen_max_ms < gen_min_ms) {
+            fprintf(stderr, "Generator: nieprawidłowe argumenty (%d, %d), używam domyślnych\n",
+                    gen_min_ms, gen_max_ms);
+            gen_min_ms = PATIENT_GEN_MIN_MS;
+            gen_max_ms = PATIENT_GEN_MAX_MS;
+        }
+    }
+
     // Ustaw handler SIGTERM/SIGINT (bez SA_RESTART — usleep/semop przerywalne)
     struct sigaction sa{};
     sa.sa_handler = genSigHandler;
@@ -61,13 +75,14 @@ int main() {
         SOR_FATAL("Generator: semget");
     }
 
-    logMessage(state, semid, "[Generator] Generator pacjentów startuje (PID %d)", getpid());
+    logMessage(state, semid, "[Generator] Generator pacjentów startuje (PID %d, interwał %d-%d ms)",
+               getpid(), gen_min_ms, gen_max_ms);
 
     int patient_id = 0;
 
     while (!state->shutdown && !g_gen_shutdown) {
         // Losowy czas do następnego pacjenta
-        randomSleep(PATIENT_GEN_MIN_MS, PATIENT_GEN_MAX_MS);
+        randomSleep(gen_min_ms, gen_max_ms);
 
         if (state->shutdown || g_gen_shutdown) break;
 

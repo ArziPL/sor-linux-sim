@@ -1,1 +1,0 @@
-/usr/bin/g++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/test_semaphores.dir/link.d CMakeFiles/test_semaphores.dir/tests/test_semaphores.cpp.o -o test_semaphores

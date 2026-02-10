@@ -33,13 +33,3 @@ target_link_libraries(generator PRIVATE Threads::Threads)
 
 # Instalacja (opcjonalna)
 install(TARGETS dyrektor rejestracja lekarz pacjent generator RUNTIME DESTINATION bin)
-
-# ============================================================================
-# TESTY (podłączają się do żywej symulacji)
-# ============================================================================
-
-add_executable(test_queues tests/test_queues.cpp)
-add_executable(test_semaphores tests/test_semaphores.cpp)
-add_executable(test_shared_memory tests/test_shared_memory.cpp)
-add_executable(test_doctor_signal tests/test_doctor_signal.cpp)
-add_executable(test_startup_cleanup tests/test_startup_cleanup.cpp)

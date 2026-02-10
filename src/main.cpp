@@ -27,6 +27,8 @@ static volatile sig_atomic_t g_shutdown = 0;  // Flaga zakończenia
 // Parametry z linii komend
 static int g_max_time = 0;        // Maks czas symulacji w sekundach (0 = bez limitu)
 static int g_max_patients = 0;    // Maks liczba pacjentów (0 = bez limitu)
+static int g_gen_min_ms = 0;      // Min czas generowania pacjenta (0 = domyślny z sor_common.hpp)
+static int g_gen_max_ms = 0;      // Max czas generowania pacjenta (0 = domyślny)
 
 // Lista PIDów procesów potomnych do sprzątania
 static pid_t g_child_pids[5000];
@@ -59,16 +61,18 @@ void setRawTerminal();
  * @brief Wyświetla sposób użycia programu i kończy z błędem
  */
 void printUsage(const char* prog) {
-    fprintf(stderr, "Użycie: %s [-t sekundy] [-p maks_procesów]\n", prog);
-    fprintf(stderr, "  -t <s>  Czas trwania symulacji w sekundach (domyślnie: bez limitu)\n");
-    fprintf(stderr, "  -p <n>  Maks jednoczesnych procesów łącznie (domyślnie: bez limitu)\n");
+    fprintf(stderr, "Użycie: %s [-t sekundy] [-p maks_procesów] [-g min_ms max_ms]\n", prog);
+    fprintf(stderr, "  -t <s>        Czas trwania symulacji w sekundach (domyślnie: bez limitu)\n");
+    fprintf(stderr, "  -p <n>        Maks jednoczesnych procesów łącznie (domyślnie: bez limitu)\n");
+    fprintf(stderr, "  -g <min> <max> Czas między generowaniem pacjentów w ms (domyślnie: %d-%d)\n",
+            PATIENT_GEN_MIN_MS, PATIENT_GEN_MAX_MS);
     exit(EXIT_FAILURE);
 }
 
 int main(int argc, char* argv[]) {
     // --- Parsowanie argumentów linii komend ---
     int opt;
-    while ((opt = getopt(argc, argv, "t:p:")) != -1) {
+    while ((opt = getopt(argc, argv, "t:p:g:")) != -1) {
         switch (opt) {
             case 't': {
                 g_max_time = atoi(optarg);
@@ -84,6 +88,26 @@ int main(int argc, char* argv[]) {
                     fprintf(stderr, "Błąd: limit procesów musi być > %d (stałe procesy: dyrektor+generator+rejestracja+%d lekarzy)\n",
                             FIXED_PROCESS_COUNT, DOCTOR_COUNT);
                     fprintf(stderr, "Podano: '%s', minimalnie: %d\n", optarg, FIXED_PROCESS_COUNT + 1);
+                    printUsage(argv[0]);
+                }
+                break;
+            }
+            case 'g': {
+                g_gen_min_ms = atoi(optarg);
+                // Drugi argument: musi być dostępny w argv[optind]
+                if (optind >= argc || argv[optind][0] == '-') {
+                    fprintf(stderr, "Błąd: -g wymaga dwóch argumentów: min_ms max_ms\n");
+                    printUsage(argv[0]);
+                }
+                g_gen_max_ms = atoi(argv[optind++]);
+                if (g_gen_min_ms <= 0 || g_gen_max_ms <= 0) {
+                    fprintf(stderr, "Błąd: wartości -g muszą być > 0 (podano: %d %d)\n",
+                            g_gen_min_ms, g_gen_max_ms);
+                    printUsage(argv[0]);
+                }
+                if (g_gen_max_ms < g_gen_min_ms) {
+                    fprintf(stderr, "Błąd: max_ms (%d) musi być >= min_ms (%d)\n",
+                            g_gen_max_ms, g_gen_min_ms);
                     printUsage(argv[0]);
                 }
                 break;
@@ -104,6 +128,8 @@ int main(int argc, char* argv[]) {
     if (g_max_patients > 0)
         printf("  Limit procesów: %d (łącznie, w tym %d pacjentów)\n", 
                g_max_patients, g_max_patients - FIXED_PROCESS_COUNT);
+    if (g_gen_min_ms > 0)
+        printf("  Generowanie pacjentów: %d-%d ms\n", g_gen_min_ms, g_gen_max_ms);
     printf("=====================\n\n");
     
     // Ustaw handlery sygnałów
@@ -145,7 +171,14 @@ int main(int argc, char* argv[]) {
     if (gen_pid == 0) {
         // Gdy dyrektor umrze, kernel wyśle SIGTERM do generatora
         prctl(PR_SET_PDEATHSIG, SIGTERM);
-        execl("./generator", "generator", nullptr);
+        if (g_gen_min_ms > 0) {
+            char min_str[16], max_str[16];
+            snprintf(min_str, sizeof(min_str), "%d", g_gen_min_ms);
+            snprintf(max_str, sizeof(max_str), "%d", g_gen_max_ms);
+            execl("./generator", "generator", min_str, max_str, nullptr);
+        } else {
+            execl("./generator", "generator", nullptr);
+        }
         SOR_FATAL("execl generator");
         exit(EXIT_FAILURE);
     } else if (gen_pid > 0) {

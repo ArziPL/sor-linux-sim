@@ -1,0 +1,16 @@
+=== LOG SYMULACJI SOR ===
+[   0.01s] Lekarz POZ (triaż) rozpoczyna pracę
+[   0.02s] Lekarz okulista rozpoczyna pracę
+[   0.02s] Okienko rejestracji 1 rozpoczyna pracę
+[   0.02s] Lekarz laryngolog rozpoczyna pracę
+[   0.02s] [RegCtrl] Kontroler rejestracji startuje (K_OPEN=10, K_CLOSE=6)
+[   0.02s] Lekarz pediatra rozpoczyna pracę
+[   0.02s] Lekarz kardiolog rozpoczyna pracę
+[   0.03s] Lekarz chirurg rozpoczyna pracę
+[   0.03s] Lekarz neurolog rozpoczyna pracę
+[   0.03s] [Generator] Generator pacjentów startuje (PID 20758, interwał 200-400 ms)
+[  11.13s] Pacjent 1 pojawia się przed SOR (wiek 42)
+[  11.15s] Pacjent 1 wchodzi do budynku (1/20)
+[  11.15s] Pacjent 1 dołącza do kolejki rejestracji
+[  11.15s] Pacjent 1 podchodzi do okienka rejestracji 1
+[  12.00s] [Dyrektor] Timeout 12 s — zamykanie symulacji
