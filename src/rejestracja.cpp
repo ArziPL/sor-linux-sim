@@ -12,7 +12,6 @@
  */
 
 #include "sor_common.hpp"
-#include <stdarg.h>
 
 // ============================================================================
 // ZMIENNE GLOBALNE
@@ -94,20 +93,52 @@ int main() {
     // Zakończenie - poczekaj na wątki
     g_shutdown = 1;
     
-    // Obudź wątek okienka 2 jeśli czeka
+    // Obudź wątek okienka 2 jeśli czeka na cond lub blokuje na msgrcv
     pthread_mutex_lock(&g_window2_mutex);
     g_window2_should_run = false;
     pthread_cond_signal(&g_window2_cond);
     pthread_mutex_unlock(&g_window2_mutex);
+    pthread_kill(g_window2_thread, SIGUSR1);  // Przerwij msgrcv (EINTR)
+    
+    // Obudź kontroler kolejki — blokuje na semWait(SEM_REG_QUEUE_CHANGED)
+    semSignal(g_semid, SEM_REG_QUEUE_CHANGED);
     
     pthread_join(g_window2_thread, nullptr);
     pthread_join(controller_thread, nullptr);
     
     logMessage(g_state, g_semid, "Rejestracja kończy pracę");
     
+    // Jeśli dyrektor nie żyje (kill -9), posprzątaj IPC jako ostatni żywy proces
+    pid_t director_pid = g_state->director_pid;
+    bool director_dead = (director_pid <= 0 || kill(director_pid, 0) == -1);
+    
     // Odłącz pamięć dzieloną
     if (g_state) {
         shmdt(g_state);
+        g_state = nullptr;
+    }
+    
+    if (director_dead) {
+        // Dyrektor nie posprzątał — robimy to za niego
+        fprintf(stderr, "[Rejestracja] Dyrektor martwy — sprzątam IPC\n");
+        
+        key_t shm_key = getIPCKey(SHM_KEY_ID);
+        int shmid = shmget(shm_key, sizeof(SharedState), 0);
+        if (shmid != -1) shmctl(shmid, IPC_RMID, nullptr);
+        
+        key_t sem_key = getIPCKey(SEM_KEY_ID);
+        int semid = semget(sem_key, SEM_COUNT, 0);
+        if (semid != -1) semctl(semid, 0, IPC_RMID);
+        
+        key_t msg_key = getIPCKey(MSG_KEY_ID);
+        int msgid = msgget(msg_key, 0);
+        if (msgid != -1) msgctl(msgid, IPC_RMID, nullptr);
+        
+        for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
+            key_t spec_key = getSpecialistQueueKey((DoctorType)i);
+            int spec_msgid = msgget(spec_key, 0);
+            if (spec_msgid != -1) msgctl(spec_msgid, IPC_RMID, nullptr);
+        }
     }
     
     return 0;
@@ -331,8 +362,12 @@ void* queueControllerThread(void* arg) {
             g_window2_should_run = false;
             pthread_mutex_unlock(&g_window2_mutex);
             
-            // Wybudź wątek okienka 2 z blokującego msgrcv (EINTR)
-            pthread_kill(g_window2_thread, SIGUSR1);
+            // Powtarzaj SIGUSR1 aż wątek potwierdzi wyjście z pętli msgrcv
+            // (jednorazowy sygnał mógłby trafić poza msgrcv i zostać zignorowany)
+            while (g_window2_active && !g_shutdown && !g_state->shutdown) {
+                pthread_kill(g_window2_thread, SIGUSR1);
+                usleep(50000);  // 50ms
+            }
         }
     }
     

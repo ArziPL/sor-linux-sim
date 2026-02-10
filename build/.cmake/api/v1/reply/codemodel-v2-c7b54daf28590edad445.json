@@ -1,0 +1,142 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-5b66e2f93d5d84f092f9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "sor",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "dyrektor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-dyrektor-9a3da2eeea02a8e20675.json",
+					"name" : "dyrektor",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "generator::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-generator-21183ffdbf112e44f62b.json",
+					"name" : "generator",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "lekarz::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-lekarz-b956bffaf0329968f976.json",
+					"name" : "lekarz",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pacjent::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pacjent-20ad20d3542111fec4ad.json",
+					"name" : "pacjent",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "rejestracja::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-rejestracja-f5ac6a3a8571c95a8539.json",
+					"name" : "rejestracja",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_doctor_signal::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_doctor_signal-859fc16b168ff5d06dc4.json",
+					"name" : "test_doctor_signal",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_queues::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_queues-583506a424c05437ea86.json",
+					"name" : "test_queues",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_semaphores::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_semaphores-73ef399d4c2390156904.json",
+					"name" : "test_semaphores",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_shared_memory::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_shared_memory-4bd0572d54dff5f23284.json",
+					"name" : "test_shared_memory",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_startup_cleanup::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_startup_cleanup-d569494e4c7b7fb0007f.json",
+					"name" : "test_startup_cleanup",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/areczek/sor-linux-sim/build",
+		"source" : "/home/areczek/sor-linux-sim"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

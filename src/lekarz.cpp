@@ -12,7 +12,6 @@
  */
 
 #include "sor_common.hpp"
-#include <stdarg.h>
 
 // ============================================================================
 // ZMIENNE GLOBALNE

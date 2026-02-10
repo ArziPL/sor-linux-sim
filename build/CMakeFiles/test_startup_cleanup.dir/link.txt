@@ -1,0 +1,1 @@
+/usr/bin/g++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/test_startup_cleanup.dir/link.d CMakeFiles/test_startup_cleanup.dir/tests/test_startup_cleanup.cpp.o -o test_startup_cleanup

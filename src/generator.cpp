@@ -99,13 +99,9 @@ int main() {
                       patient_id, age, is_vip ? " [VIP]" : "");
         }
 
-        // Zapamiętaj ile pacjentów
+        // Zapamiętaj ile pacjentów + inkrementuj licznik aktywnych PRZED forkiem
         semWait(semid, SEM_SHM_MUTEX);
         state->total_patients = patient_id;
-        semSignal(semid, SEM_SHM_MUTEX);
-
-        // Inkrementuj licznik aktywnych procesów PRZED forkiem
-        semWait(semid, SEM_SHM_MUTEX);
         state->active_patient_count++;
         semSignal(semid, SEM_SHM_MUTEX);
 
@@ -113,6 +109,9 @@ int main() {
         pid_t pid = fork();
 
         if (pid == 0) {
+            // Gdy generator umrze, kernel wyśle SIGTERM do pacjenta
+            prctl(PR_SET_PDEATHSIG, SIGTERM);
+            
             // Proces pacjenta
             char id_str[16], age_str[16], vip_str[16];
             snprintf(id_str, sizeof(id_str), "%d", patient_id);

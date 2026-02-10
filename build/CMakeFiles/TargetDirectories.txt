@@ -3,9 +3,11 @@
 /home/areczek/sor-linux-sim/build/CMakeFiles/lekarz.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/pacjent.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/generator.dir
-/home/areczek/sor-linux-sim/build/CMakeFiles/test_ipc_init.dir
-/home/areczek/sor-linux-sim/build/CMakeFiles/test_occupancy_invariant.dir
+/home/areczek/sor-linux-sim/build/CMakeFiles/test_queues.dir
+/home/areczek/sor-linux-sim/build/CMakeFiles/test_semaphores.dir
+/home/areczek/sor-linux-sim/build/CMakeFiles/test_shared_memory.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/test_doctor_signal.dir
+/home/areczek/sor-linux-sim/build/CMakeFiles/test_startup_cleanup.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/edit_cache.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/rebuild_cache.dir
 /home/areczek/sor-linux-sim/build/CMakeFiles/list_install_components.dir

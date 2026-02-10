@@ -19,6 +19,7 @@
 #include <cstdarg>
 #include <unistd.h>
 #include <signal.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
@@ -44,17 +45,17 @@ constexpr int SHM_KEY_ID = 'S';          // Klucz pamięci dzielonej
 constexpr int SEM_KEY_ID = 'E';          // Klucz semaforów
 constexpr int MSG_KEY_ID = 'M';          // Klucz kolejki komunikatów
 
-// Czasy operacji w milisekundach (skrócone dla dynamicznej symulacji)
+// // Czasy operacji w milisekundach
 constexpr int PATIENT_GEN_MIN_MS = 500;  // Min czas między generowaniem pacjentów
 constexpr int PATIENT_GEN_MAX_MS = 1000; // Max czas między generowaniem pacjentów
-constexpr int REGISTRATION_MIN_MS = 500; // Min czas rejestracji
-constexpr int REGISTRATION_MAX_MS = 1000; // Max czas rejestracji
+constexpr int REGISTRATION_MIN_MS = 250; // Min czas rejestracji
+constexpr int REGISTRATION_MAX_MS = 500; // Max czas rejestracji
 constexpr int TRIAGE_MIN_MS = 1000;       // Min czas triażu
 constexpr int TRIAGE_MAX_MS = 2000;      // Max czas triażu
-constexpr int TREATMENT_MIN_MS = 3000;   // Min czas leczenia u specjalisty
-constexpr int TREATMENT_MAX_MS = 5000;   // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 500; // Min czas przerwy lekarza
-constexpr int DOCTOR_BREAK_MAX_MS = 1000; // Max czas przerwy lekarza
+constexpr int TREATMENT_MIN_MS = 2000;   // Min czas leczenia u specjalisty
+constexpr int TREATMENT_MAX_MS = 3000;   // Max czas leczenia u specjalisty
+constexpr int DOCTOR_BREAK_MIN_MS = 250; // Min czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MAX_MS = 500; // Max czas przerwy lekarza
 
 // Stałe procesy: dyrektor + generator + rejestracja + DOCTOR_COUNT lekarzy
 constexpr int FIXED_PROCESS_COUNT = 3 + 7;  // = 10
@@ -117,7 +118,6 @@ inline const char* getColorName(TriageColor color) {
  * Semafory używane w symulacji:
  * - SEM_POCZEKALNIA: kontroluje wejście do poczekalni (inicjalizacja: N)
  * - SEM_REG_QUEUE: mutex dla kolejki rejestracji
- * - SEM_REG_WINDOW_1/2: semafory okienek rejestracji
  * - SEM_SPECIALIST_*: semafory poszczególnych specjalistów
  * - SEM_SHM_MUTEX: mutex dla dostępu do pamięci dzielonej
  * - SEM_LOG_MUTEX: mutex dla logowania
@@ -125,8 +125,6 @@ inline const char* getColorName(TriageColor color) {
 enum SemIndex {
     SEM_POCZEKALNIA = 0,     // Licznik wolnych miejsc w poczekalni
     SEM_REG_QUEUE_MUTEX,     // Mutex kolejki rejestracji
-    SEM_REG_WINDOW_1,        // Okienko rejestracji 1 (0=zajęte, 1=wolne)
-    SEM_REG_WINDOW_2,        // Okienko rejestracji 2
     SEM_SPECIALIST_KARDIOLOG,
     SEM_SPECIALIST_NEUROLOG,
     SEM_SPECIALIST_OKULISTA,
@@ -165,9 +163,9 @@ enum MessageType {
     MSG_PATIENT_TO_REGISTRATION_VIP = 1,  // VIP - niższy mtype = wyższy priorytet w msgrcv
     MSG_PATIENT_TO_REGISTRATION = 2,      // Pacjent zwykły
     MSG_PATIENT_TO_TRIAGE = 3,            // Pacjent po rejestracji idzie na triaż
-    MSG_REGISTRATION_RESPONSE = 100,      // Odpowiedź rejestracji (bazowy + patient_id)
-    MSG_TRIAGE_RESPONSE = 150,            // Odpowiedź POZ (bazowy + patient_id) - kolor i specjalista
-    MSG_SPECIALIST_RESPONSE = 200,        // Odpowiedź specjalisty (bazowy + patient_id)
+    MSG_REGISTRATION_RESPONSE = 10000,    // Odpowiedź rejestracji (bazowy + patient_id)
+    MSG_TRIAGE_RESPONSE = 20000,          // Odpowiedź POZ (bazowy + patient_id) - kolor i specjalista
+    MSG_SPECIALIST_RESPONSE = 30000,      // Odpowiedź specjalisty (bazowy + patient_id)
 };
 
 /**
@@ -240,19 +238,19 @@ struct SharedState {
     int reg_queue_count;             // Liczba osób w kolejce do rejestracji
     
     // Liczniki do statystyk
-    int total_patients;              // Całkowita liczba pacjentów
-    int patients_in_sor;             // Aktualnie w SOR
+    int total_patients;              // Całkowita liczba wygenerowanych pacjentów
+    int patients_in_sor;             // Osób aktualnie w budynku SOR (dziecko+opiekun = 2)
     
     // Stan lekarzy (czy są na oddziale)
     volatile sig_atomic_t doctor_on_break[DOCTOR_COUNT];
     
-    // ID kolejek komunikatów specjalistów (osobna kolejka per specjalista)
+    // ID kolejek komunikatów specjalistów (indeks = DoctorType; slot [0]=POZ nieużywany=-1)
     int specialist_msgids[DOCTOR_COUNT];
     
-    // Limit jednoczesnych procesów pacjentów (0 = bez limitu)
+    // Limit jednoczesnych procesów (łącznie ze stałymi; 0 = bez limitu)
     int max_patients;
     
-    // Licznik aktywnych procesów pacjentów
+    // Licznik aktywnych PROCESÓW pacjentów (1 proces = 1, niezależnie od wątków/opiekunów)
     int active_patient_count;
     
     // Ścieżka do pliku logu

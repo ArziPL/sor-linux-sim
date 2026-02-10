@@ -76,15 +76,15 @@ CMakeFiles/generator.dir/src/generator.cpp.o: CMakeFiles/generator.dir/flags.mak
 CMakeFiles/generator.dir/src/generator.cpp.o: /home/areczek/sor-linux-sim/src/generator.cpp
 CMakeFiles/generator.dir/src/generator.cpp.o: CMakeFiles/generator.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/generator.dir/src/generator.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/generator.dir/src/generator.cpp.o -MF CMakeFiles/generator.dir/src/generator.cpp.o.d -o CMakeFiles/generator.dir/src/generator.cpp.o -c /home/areczek/sor-linux-sim/src/generator.cpp
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/generator.dir/src/generator.cpp.o -MF CMakeFiles/generator.dir/src/generator.cpp.o.d -o CMakeFiles/generator.dir/src/generator.cpp.o -c /home/areczek/sor-linux-sim/src/generator.cpp
 
 CMakeFiles/generator.dir/src/generator.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/generator.dir/src/generator.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/generator.cpp > CMakeFiles/generator.dir/src/generator.cpp.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/generator.cpp > CMakeFiles/generator.dir/src/generator.cpp.i
 
 CMakeFiles/generator.dir/src/generator.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/generator.dir/src/generator.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/generator.cpp -o CMakeFiles/generator.dir/src/generator.cpp.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/generator.cpp -o CMakeFiles/generator.dir/src/generator.cpp.s
 
 # Object files for target generator
 generator_OBJECTS = \

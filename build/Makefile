@@ -227,30 +227,43 @@ generator/fast:
 .PHONY : generator/fast
 
 #=============================================================================
-# Target rules for targets named test_ipc_init
+# Target rules for targets named test_queues
 
 # Build rule for target.
-test_ipc_init: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_ipc_init
-.PHONY : test_ipc_init
+test_queues: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_queues
+.PHONY : test_queues
 
 # fast build rule for target.
-test_ipc_init/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/build
-.PHONY : test_ipc_init/fast
+test_queues/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/build
+.PHONY : test_queues/fast
 
 #=============================================================================
-# Target rules for targets named test_occupancy_invariant
+# Target rules for targets named test_semaphores
 
 # Build rule for target.
-test_occupancy_invariant: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_occupancy_invariant
-.PHONY : test_occupancy_invariant
+test_semaphores: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_semaphores
+.PHONY : test_semaphores
 
 # fast build rule for target.
-test_occupancy_invariant/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/build
-.PHONY : test_occupancy_invariant/fast
+test_semaphores/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/build
+.PHONY : test_semaphores/fast
+
+#=============================================================================
+# Target rules for targets named test_shared_memory
+
+# Build rule for target.
+test_shared_memory: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_shared_memory
+.PHONY : test_shared_memory
+
+# fast build rule for target.
+test_shared_memory/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/build
+.PHONY : test_shared_memory/fast
 
 #=============================================================================
 # Target rules for targets named test_doctor_signal
@@ -264,6 +277,19 @@ test_doctor_signal: cmake_check_build_system
 test_doctor_signal/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/build
 .PHONY : test_doctor_signal/fast
+
+#=============================================================================
+# Target rules for targets named test_startup_cleanup
+
+# Build rule for target.
+test_startup_cleanup: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_startup_cleanup
+.PHONY : test_startup_cleanup
+
+# fast build rule for target.
+test_startup_cleanup/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/build
+.PHONY : test_startup_cleanup/fast
 
 src/generator.o: src/generator.cpp.o
 .PHONY : src/generator.o
@@ -409,53 +435,101 @@ tests/test_doctor_signal.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_doctor_signal.dir/build.make CMakeFiles/test_doctor_signal.dir/tests/test_doctor_signal.cpp.s
 .PHONY : tests/test_doctor_signal.cpp.s
 
-tests/test_ipc_init.o: tests/test_ipc_init.cpp.o
-.PHONY : tests/test_ipc_init.o
+tests/test_queues.o: tests/test_queues.cpp.o
+.PHONY : tests/test_queues.o
 
 # target to build an object file
-tests/test_ipc_init.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.o
-.PHONY : tests/test_ipc_init.cpp.o
+tests/test_queues.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/tests/test_queues.cpp.o
+.PHONY : tests/test_queues.cpp.o
 
-tests/test_ipc_init.i: tests/test_ipc_init.cpp.i
-.PHONY : tests/test_ipc_init.i
+tests/test_queues.i: tests/test_queues.cpp.i
+.PHONY : tests/test_queues.i
 
 # target to preprocess a source file
-tests/test_ipc_init.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.i
-.PHONY : tests/test_ipc_init.cpp.i
+tests/test_queues.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/tests/test_queues.cpp.i
+.PHONY : tests/test_queues.cpp.i
 
-tests/test_ipc_init.s: tests/test_ipc_init.cpp.s
-.PHONY : tests/test_ipc_init.s
+tests/test_queues.s: tests/test_queues.cpp.s
+.PHONY : tests/test_queues.s
 
 # target to generate assembly for a file
-tests/test_ipc_init.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ipc_init.dir/build.make CMakeFiles/test_ipc_init.dir/tests/test_ipc_init.cpp.s
-.PHONY : tests/test_ipc_init.cpp.s
+tests/test_queues.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_queues.dir/build.make CMakeFiles/test_queues.dir/tests/test_queues.cpp.s
+.PHONY : tests/test_queues.cpp.s
 
-tests/test_occupancy_invariant.o: tests/test_occupancy_invariant.cpp.o
-.PHONY : tests/test_occupancy_invariant.o
+tests/test_semaphores.o: tests/test_semaphores.cpp.o
+.PHONY : tests/test_semaphores.o
 
 # target to build an object file
-tests/test_occupancy_invariant.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.o
-.PHONY : tests/test_occupancy_invariant.cpp.o
+tests/test_semaphores.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/tests/test_semaphores.cpp.o
+.PHONY : tests/test_semaphores.cpp.o
 
-tests/test_occupancy_invariant.i: tests/test_occupancy_invariant.cpp.i
-.PHONY : tests/test_occupancy_invariant.i
+tests/test_semaphores.i: tests/test_semaphores.cpp.i
+.PHONY : tests/test_semaphores.i
 
 # target to preprocess a source file
-tests/test_occupancy_invariant.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.i
-.PHONY : tests/test_occupancy_invariant.cpp.i
+tests/test_semaphores.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/tests/test_semaphores.cpp.i
+.PHONY : tests/test_semaphores.cpp.i
 
-tests/test_occupancy_invariant.s: tests/test_occupancy_invariant.cpp.s
-.PHONY : tests/test_occupancy_invariant.s
+tests/test_semaphores.s: tests/test_semaphores.cpp.s
+.PHONY : tests/test_semaphores.s
 
 # target to generate assembly for a file
-tests/test_occupancy_invariant.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_occupancy_invariant.dir/build.make CMakeFiles/test_occupancy_invariant.dir/tests/test_occupancy_invariant.cpp.s
-.PHONY : tests/test_occupancy_invariant.cpp.s
+tests/test_semaphores.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_semaphores.dir/build.make CMakeFiles/test_semaphores.dir/tests/test_semaphores.cpp.s
+.PHONY : tests/test_semaphores.cpp.s
+
+tests/test_shared_memory.o: tests/test_shared_memory.cpp.o
+.PHONY : tests/test_shared_memory.o
+
+# target to build an object file
+tests/test_shared_memory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/tests/test_shared_memory.cpp.o
+.PHONY : tests/test_shared_memory.cpp.o
+
+tests/test_shared_memory.i: tests/test_shared_memory.cpp.i
+.PHONY : tests/test_shared_memory.i
+
+# target to preprocess a source file
+tests/test_shared_memory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/tests/test_shared_memory.cpp.i
+.PHONY : tests/test_shared_memory.cpp.i
+
+tests/test_shared_memory.s: tests/test_shared_memory.cpp.s
+.PHONY : tests/test_shared_memory.s
+
+# target to generate assembly for a file
+tests/test_shared_memory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_shared_memory.dir/build.make CMakeFiles/test_shared_memory.dir/tests/test_shared_memory.cpp.s
+.PHONY : tests/test_shared_memory.cpp.s
+
+tests/test_startup_cleanup.o: tests/test_startup_cleanup.cpp.o
+.PHONY : tests/test_startup_cleanup.o
+
+# target to build an object file
+tests/test_startup_cleanup.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/tests/test_startup_cleanup.cpp.o
+.PHONY : tests/test_startup_cleanup.cpp.o
+
+tests/test_startup_cleanup.i: tests/test_startup_cleanup.cpp.i
+.PHONY : tests/test_startup_cleanup.i
+
+# target to preprocess a source file
+tests/test_startup_cleanup.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/tests/test_startup_cleanup.cpp.i
+.PHONY : tests/test_startup_cleanup.cpp.i
+
+tests/test_startup_cleanup.s: tests/test_startup_cleanup.cpp.s
+.PHONY : tests/test_startup_cleanup.s
+
+# target to generate assembly for a file
+tests/test_startup_cleanup.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_startup_cleanup.dir/build.make CMakeFiles/test_startup_cleanup.dir/tests/test_startup_cleanup.cpp.s
+.PHONY : tests/test_startup_cleanup.cpp.s
 
 # Help Target
 help:
@@ -475,8 +549,10 @@ help:
 	@echo "... pacjent"
 	@echo "... rejestracja"
 	@echo "... test_doctor_signal"
-	@echo "... test_ipc_init"
-	@echo "... test_occupancy_invariant"
+	@echo "... test_queues"
+	@echo "... test_semaphores"
+	@echo "... test_shared_memory"
+	@echo "... test_startup_cleanup"
 	@echo "... src/generator.o"
 	@echo "... src/generator.i"
 	@echo "... src/generator.s"
@@ -495,12 +571,18 @@ help:
 	@echo "... tests/test_doctor_signal.o"
 	@echo "... tests/test_doctor_signal.i"
 	@echo "... tests/test_doctor_signal.s"
-	@echo "... tests/test_ipc_init.o"
-	@echo "... tests/test_ipc_init.i"
-	@echo "... tests/test_ipc_init.s"
-	@echo "... tests/test_occupancy_invariant.o"
-	@echo "... tests/test_occupancy_invariant.i"
-	@echo "... tests/test_occupancy_invariant.s"
+	@echo "... tests/test_queues.o"
+	@echo "... tests/test_queues.i"
+	@echo "... tests/test_queues.s"
+	@echo "... tests/test_semaphores.o"
+	@echo "... tests/test_semaphores.i"
+	@echo "... tests/test_semaphores.s"
+	@echo "... tests/test_shared_memory.o"
+	@echo "... tests/test_shared_memory.i"
+	@echo "... tests/test_shared_memory.s"
+	@echo "... tests/test_startup_cleanup.o"
+	@echo "... tests/test_startup_cleanup.i"
+	@echo "... tests/test_startup_cleanup.s"
 .PHONY : help
 
 

@@ -15,7 +15,6 @@
  */
 
 #include "sor_common.hpp"
-#include <stdarg.h>
 
 // ============================================================================
 // STRUKTURA DANYCH PACJENTA

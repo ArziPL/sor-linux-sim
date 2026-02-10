@@ -1,0 +1,1 @@
+/usr/bin/g++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/test_shared_memory.dir/link.d CMakeFiles/test_shared_memory.dir/tests/test_shared_memory.cpp.o -o test_shared_memory

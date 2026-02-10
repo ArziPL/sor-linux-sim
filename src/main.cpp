@@ -4,8 +4,7 @@
  * 
  * Odpowiedzialności:
  * - Inicjalizacja zasobów IPC (pamięć dzielona, semafory, kolejki)
- * - Uruchamianie procesów lekarzy
- * - Generowanie pacjentów
+ * - Uruchamianie procesów (rejestracja, lekarze, generator)
  * - Obsługa klawiatury (sygnały do lekarzy)
  * - Kontrola okienek rejestracji
  * - Sprzątanie zasobów przy zakończeniu
@@ -14,8 +13,6 @@
 #include "sor_common.hpp"
 #include <termios.h>
 #include <sys/select.h>
-#include <stdarg.h>
-#include <getopt.h>
 
 // ============================================================================
 // ZMIENNE GLOBALNE
@@ -32,7 +29,7 @@ static int g_max_time = 0;        // Maks czas symulacji w sekundach (0 = bez li
 static int g_max_patients = 0;    // Maks liczba pacjentów (0 = bez limitu)
 
 // Lista PIDów procesów potomnych do sprzątania
-static pid_t g_child_pids[1000];
+static pid_t g_child_pids[5000];
 static int g_child_count = 0;
 static pid_t g_generator_pid = -1;  // PID generatora (osobne traktowanie przy zamykaniu)
 
@@ -62,9 +59,9 @@ void setRawTerminal();
  * @brief Wyświetla sposób użycia programu i kończy z błędem
  */
 void printUsage(const char* prog) {
-    fprintf(stderr, "Użycie: %s [-t sekundy] [-p maks_pacjentów]\n", prog);
+    fprintf(stderr, "Użycie: %s [-t sekundy] [-p maks_procesów]\n", prog);
     fprintf(stderr, "  -t <s>  Czas trwania symulacji w sekundach (domyślnie: bez limitu)\n");
-    fprintf(stderr, "  -p <n>  Maks jednoczesnych procesów pacjentów (domyślnie: bez limitu)\n");
+    fprintf(stderr, "  -p <n>  Maks jednoczesnych procesów łącznie (domyślnie: bez limitu)\n");
     exit(EXIT_FAILURE);
 }
 
@@ -124,9 +121,8 @@ int main(int argc, char* argv[]) {
     g_state->shutdown = 0;
     g_state->max_patients = g_max_patients;
     
-    // Ustaw ścieżkę do logu
-    snprintf(g_state->log_file, sizeof(g_state->log_file), 
-             "/home/areczek/sor-linux-sim/sor_log.txt");
+    // Ustaw ścieżkę do logu (w katalogu roboczym, obok binarek)
+    snprintf(g_state->log_file, sizeof(g_state->log_file), "sor_log.txt");
     
     // Wyczyść plik logu
     FILE* f = fopen(g_state->log_file, "w");
@@ -147,6 +143,8 @@ int main(int argc, char* argv[]) {
     // Fork + exec dla generatora pacjentów (osobny program)
     pid_t gen_pid = fork();
     if (gen_pid == 0) {
+        // Gdy dyrektor umrze, kernel wyśle SIGTERM do generatora
+        prctl(PR_SET_PDEATHSIG, SIGTERM);
         execl("./generator", "generator", nullptr);
         SOR_FATAL("execl generator");
         exit(EXIT_FAILURE);
@@ -275,8 +273,6 @@ void initIPC() {
     unsigned short sem_values[SEM_COUNT] = {0};
     sem_values[SEM_POCZEKALNIA] = N;           // N wolnych miejsc
     sem_values[SEM_REG_QUEUE_MUTEX] = 1;       // Mutex wolny
-    sem_values[SEM_REG_WINDOW_1] = 1;          // Okienko 1 wolne
-    sem_values[SEM_REG_WINDOW_2] = 0;          // Okienko 2 zamknięte
     // Semafory specjalistów - każdy zaczyna jako wolny (1)
     sem_values[SEM_SPECIALIST_KARDIOLOG] = 1;
     sem_values[SEM_SPECIALIST_NEUROLOG] = 1;
@@ -316,6 +312,8 @@ void initIPC() {
     }
     
     // --- KOLEJKI SPECJALISTÓW (osobna per specjalista) ---
+    // Slot 0 (DOCTOR_POZ) nie ma kolejki specjalisty — wyzeruj jawnie
+    g_state->specialist_msgids[DOCTOR_POZ] = -1;
     for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
         DoctorType dtype = (DoctorType)i;
         key_t spec_key = getSpecialistQueueKey(dtype);
@@ -393,6 +391,9 @@ void startRegistration() {
     pid_t pid = fork();
     
     if (pid == 0) {
+        // Gdy dyrektor umrze, kernel wyśle SIGTERM do tego procesu
+        prctl(PR_SET_PDEATHSIG, SIGTERM);
+        
         // Proces potomny - uruchom program rejestracji
         execl("./rejestracja", "rejestracja", nullptr);
         
@@ -424,6 +425,9 @@ void startDoctors() {
         pid_t pid = fork();
         
         if (pid == 0) {
+            // Gdy dyrektor umrze, kernel wyśle SIGTERM do tego procesu
+            prctl(PR_SET_PDEATHSIG, SIGTERM);
+            
             // Proces potomny - uruchom program lekarza
             char type_str[16];
             snprintf(type_str, sizeof(type_str), "%d", i);
