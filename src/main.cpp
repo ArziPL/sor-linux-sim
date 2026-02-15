@@ -455,6 +455,12 @@ void startRegistration() {
  */
 void startDoctors() {
     for (int i = 0; i < DOCTOR_COUNT; i++) {
+        // Pomiń wyłączonych lekarzy
+        if (!DOCTOR_ENABLED[i]) {
+            g_state->doctor_pids[i] = 0;
+            logMessage(g_state, g_semid, "[Dyrektor] Lekarz %s WYŁĄCZONY — pomijam", getDoctorName((DoctorType)i));
+            continue;
+        }
         pid_t pid = fork();
         
         if (pid == 0) {

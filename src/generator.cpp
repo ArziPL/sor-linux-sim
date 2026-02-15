@@ -29,11 +29,24 @@ static void genSigHandler(int sig) {
     g_gen_shutdown = 1;
 }
 
+/**
+ * @brief Handler SIGCHLD — natychmiastowe zbieranie zakończonych pacjentów (zero zombie)
+ */
+static void sigchldHandler(int sig) {
+    (void)sig;
+    // Zbierz wszystkie zakończone dzieci w handlerze
+    while (waitpid(-1, nullptr, WNOHANG) > 0) {}
+}
+
 // ============================================================================
 // MAIN
 // ============================================================================
 
 int main(int argc, char* argv[]) {
+    // Opóźnienie startowe
+    if constexpr (STARTUP_DELAY_GENERATOR_MS > 0)
+        msleep(STARTUP_DELAY_GENERATOR_MS);
+
     // Parsowanie opcjonalnych argumentów: generator [min_ms] [max_ms]
     int gen_min_ms = PATIENT_GEN_MIN_MS;
     int gen_max_ms = PATIENT_GEN_MAX_MS;
@@ -55,6 +68,13 @@ int main(int argc, char* argv[]) {
     sa.sa_flags = 0;
     sigaction(SIGTERM, &sa, nullptr);
     sigaction(SIGINT, &sa, nullptr);
+
+    // SIGCHLD — natychmiastowe zbieranie zombie (zero zombie policy)
+    struct sigaction sa_chld{};
+    sa_chld.sa_handler = sigchldHandler;
+    sigemptyset(&sa_chld.sa_mask);
+    sa_chld.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    sigaction(SIGCHLD, &sa_chld, nullptr);
 
     // Podłącz pamięć dzieloną
     key_t shm_key = getIPCKey(SHM_KEY_ID);
@@ -80,6 +100,60 @@ int main(int argc, char* argv[]) {
 
     int patient_id = 0;
 
+    // ===== PRE-GENERACJA: spawnuj PREGEN_COUNT pacjentów back-to-back =====
+    if constexpr (PREGEN_MODE == PREGEN_ONLY || PREGEN_MODE == PREGEN_THEN_NORMAL) {
+        logMessage(state, semid, "[Generator] Pre-generacja: %d pacjentów back-to-back", PREGEN_COUNT);
+        for (int pg = 0; pg < PREGEN_COUNT && !state->shutdown && !g_gen_shutdown; pg++) {
+            patient_id++;
+            int age = randomAge();
+            int is_vip = randomVIP() ? 1 : 0;
+
+            if (age < 18) {
+                logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d, z opiekunem)",
+                          patient_id, age);
+            } else {
+                logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d)%s",
+                          patient_id, age, is_vip ? " [VIP]" : "");
+            }
+
+            semWait(semid, SEM_SHM_MUTEX);
+            state->total_patients = patient_id;
+            state->active_patient_count++;
+            semSignal(semid, SEM_SHM_MUTEX);
+
+            pid_t pid = fork();
+            if (pid == 0) {
+                prctl(PR_SET_PDEATHSIG, SIGTERM);
+                char id_str[16], age_str[16], vip_str[16];
+                snprintf(id_str, sizeof(id_str), "%d", patient_id);
+                snprintf(age_str, sizeof(age_str), "%d", age);
+                snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
+                execl("./pacjent", "pacjent", id_str, age_str, vip_str, nullptr);
+                SOR_FATAL("execl pacjent id=%d", patient_id);
+                exit(EXIT_FAILURE);
+            } else if (pid > 0) {
+                if (g_patient_count < 1000) g_patient_pids[g_patient_count++] = pid;
+                usleep(1000);  // 1ms — stabilizuje kolejność FIFO w logu
+            } else {
+                SOR_WARN("fork pacjenta %d", patient_id);
+                semWait(semid, SEM_SHM_MUTEX);
+                if (state->active_patient_count > 0) state->active_patient_count--;
+                semSignal(semid, SEM_SHM_MUTEX);
+            }
+        }
+        logMessage(state, semid, "[Generator] Pre-generacja zakończona (%d pacjentów)", PREGEN_COUNT);
+    }
+
+    // Jeśli tryb PREGEN_ONLY — kończymy generowanie, przejdź do cleanup
+    if constexpr (PREGEN_MODE == PREGEN_ONLY) {
+        // Czekaj aż shutdown (dyrektor zamknie) lub wszyscy pacjenci skończą
+        while (!state->shutdown && !g_gen_shutdown) {
+            usleep(500000);  // 500ms polling
+        }
+        goto gen_cleanup;
+    }
+
+    // ===== NORMALNA GENERACJA =====
     while (!state->shutdown && !g_gen_shutdown) {
         // Losowy czas do następnego pacjenta
         randomSleep(gen_min_ms, gen_max_ms);
@@ -151,13 +225,12 @@ int main(int argc, char* argv[]) {
             semSignal(semid, SEM_SHM_MUTEX);
         }
 
-        // Zbierz zakończone procesy pacjentów (unikamy zombie)
-        int status;
-        while (waitpid(-1, &status, WNOHANG) > 0) {}
+        // Zombie zbierane automatycznie przez handler SIGCHLD
     }
 
+gen_cleanup:
     // ==== CZYSTE ZAMKNIĘCIE ====
-    logMessage(state, semid, "[Generator] Zamykanie — wyślij SIGTERM do %d pacjentów", g_patient_count);
+    logMessage(state, semid, "[Generator] Zamykanie", g_patient_count);
 
     // Wyślij SIGTERM do wszystkich pacjentów (obudzi ich z sleep/msgrcv)
     for (int i = 0; i < g_patient_count; i++) {

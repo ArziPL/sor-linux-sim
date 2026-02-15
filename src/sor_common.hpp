@@ -46,19 +46,83 @@ constexpr int SEM_KEY_ID = 'E';          // Klucz semaforów
 constexpr int MSG_KEY_ID = 'M';          // Klucz kolejki komunikatów
 
 // // Czasy operacji w milisekundach
-constexpr int PATIENT_GEN_MIN_MS = 500;  // Min czas między generowaniem pacjentów
-constexpr int PATIENT_GEN_MAX_MS = 1000; // Max czas między generowaniem pacjentów
-constexpr int REGISTRATION_MIN_MS = 250; // Min czas rejestracji
-constexpr int REGISTRATION_MAX_MS = 500; // Max czas rejestracji
-constexpr int TRIAGE_MIN_MS = 1000;       // Min czas triażu
-constexpr int TRIAGE_MAX_MS = 2000;      // Max czas triażu
-constexpr int TREATMENT_MIN_MS = 2000;   // Min czas leczenia u specjalisty
-constexpr int TREATMENT_MAX_MS = 3000;   // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 250; // Min czas przerwy lekarza
-constexpr int DOCTOR_BREAK_MAX_MS = 500; // Max czas przerwy lekarza
+constexpr int PATIENT_GEN_MIN_MS = 0;  // Min czas między generowaniem pacjentów
+constexpr int PATIENT_GEN_MAX_MS = 0; // Max czas między generowaniem pacjentów
+constexpr int REGISTRATION_MIN_MS = 0; // Min czas rejestracji
+constexpr int REGISTRATION_MAX_MS = 0; // Max czas rejestracji
+constexpr int TRIAGE_MIN_MS = 0;       // Min czas triażu
+constexpr int TRIAGE_MAX_MS = 0;      // Max czas triażu
+constexpr int TREATMENT_MIN_MS = 0;   // Min czas leczenia u specjalisty
+constexpr int TREATMENT_MAX_MS = 0;   // Max czas leczenia u specjalisty
+constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MAX_MS = 0; // Max czas przerwy lekarza
 
 // Stałe procesy: dyrektor + generator + rejestracja + DOCTOR_COUNT lekarzy
 constexpr int FIXED_PROCESS_COUNT = 3 + 7;  // = 10
+
+// ============================================================================
+// PANEL KONFIGURACYJNY — TRYBY I PRAWDOPODOBIEŃSTWA
+// ============================================================================
+
+// --- Triaż (POZ): prawdopodobieństwa kolorów [suma MUSI = 100] ---
+constexpr int TRIAGE_RED_PCT    = 100;   // % czerwony (natychmiastowa pomoc)
+constexpr int TRIAGE_YELLOW_PCT = 0;   // % żółty (pilny)
+constexpr int TRIAGE_GREEN_PCT  = 0;   // % zielony (stabilny)
+constexpr int TRIAGE_HOME_PCT   = 0;    // % odesłany do domu z triażu
+static_assert(TRIAGE_RED_PCT + TRIAGE_YELLOW_PCT + TRIAGE_GREEN_PCT + TRIAGE_HOME_PCT == 100,
+              "Suma procentow triazu musi wynosic 100");
+
+// --- Przypisanie specjalisty (dorośli): procenty [suma MUSI = 100] ---
+// Dzieci (<18 lat) ZAWSZE trafiają do pediatry, te % dotyczą tylko dorosłych.
+// Ustaw 0% = żaden dorosły pacjent nie trafi do tego specjalisty.
+constexpr int SPEC_KARDIOLOG_PCT  = 0;  // % dorosłych → kardiolog
+constexpr int SPEC_NEUROLOG_PCT   = 0;  // % dorosłych → neurolog
+constexpr int SPEC_OKULISTA_PCT   = 0;  // % dorosłych → okulista
+constexpr int SPEC_LARYNGOLOG_PCT = 0;  // % dorosłych → laryngolog
+constexpr int SPEC_CHIRURG_PCT    = 100;  // % dorosłych → chirurg
+static_assert(SPEC_KARDIOLOG_PCT + SPEC_NEUROLOG_PCT + SPEC_OKULISTA_PCT +
+              SPEC_LARYNGOLOG_PCT + SPEC_CHIRURG_PCT == 100,
+              "Suma procentow specjalistow musi wynosic 100");
+
+// --- Włączanie/wyłączanie lekarzy (false = nie zostanie uruchomiony) ---
+// POZ (indeks 0) powinien być ZAWSZE true!
+constexpr bool DOCTOR_ENABLED[] = {
+    true,   // [0] POZ (triaż) — ZAWSZE włączony
+    false,   // [1] kardiolog
+    false,   // [2] neurolog
+    false,   // [3] okulista
+    false,   // [4] laryngolog
+    true,   // [5] false
+    false,   // [6] pediatra
+};
+
+// --- Tryb dzieci ---
+enum ChildrenMode { CHILDREN_NORMAL, CHILDREN_ONLY, NO_CHILDREN };
+constexpr ChildrenMode CHILDREN_MODE = NO_CHILDREN;
+// CHILDREN_NORMAL  — losowy wiek 1-90 (20% dzieci, 80% dorośli)
+// CHILDREN_ONLY    — tylko dzieci (wiek 1-17)
+// NO_CHILDREN      — tylko dorośli (wiek 18-90)
+
+// --- Tryb VIP ---
+enum VipMode { VIP_NORMAL, VIP_ONLY, NO_VIP };
+constexpr VipMode VIP_MODE = NO_VIP;
+// VIP_NORMAL — 10% szans na VIP
+// VIP_ONLY   — każdy pacjent jest VIP
+// NO_VIP     — żaden pacjent nie jest VIP
+
+// --- Pre-generacja pacjentów ---
+enum PregenMode { NORMAL_GEN, PREGEN_ONLY, PREGEN_THEN_NORMAL };
+constexpr PregenMode PREGEN_MODE = PREGEN_ONLY;
+constexpr int PREGEN_COUNT = 5000;
+// NORMAL_GEN         — ignoruje PREGEN_COUNT, normalna generacja z sleep(min,max)
+// PREGEN_ONLY        — generuje PREGEN_COUNT pacjentów back-to-back, potem KOŃCZY
+// PREGEN_THEN_NORMAL — generuje PREGEN_COUNT back-to-back, potem normalna generacja
+
+// --- Opóźnienia startowe procesów [ms] (0 = brak opóźnienia) ---
+constexpr int STARTUP_DELAY_GENERATOR_MS   = 0;  // Generator pacjentów
+constexpr int STARTUP_DELAY_REJESTRACJA_MS = 0;  // Rejestracja (okienka)
+constexpr int STARTUP_DELAY_POZ_MS         = 30000;  // Lekarz POZ (triaż)
+constexpr int STARTUP_DELAY_SPECIALIST_MS  = 0;  // Lekarze specjaliści
 
 // ============================================================================
 // TYPY ENUMERACYJNE
@@ -464,40 +528,50 @@ inline int randomInt(int min, int max) {
 }
 
 /**
- * @brief Usypia wątek na losowy czas z zakresu [minMs, maxMs] milisekund
+ * @brief Usypia wątek na podaną liczbę milisekund
  */
-inline void randomSleep(int minMs, int maxMs) {
-    int ms = randomInt(minMs, maxMs);
+inline void msleep(int ms) {
     usleep(ms * 1000);
 }
 
 /**
- * @brief Losuje kolor triażu według prawdopodobieństw z wymagań
- * 10% czerwony, 35% żółty, 50% zielony, 5% odesłany
+ * @brief Usypia wątek na losowy czas z zakresu [minMs, maxMs] milisekund
  */
-inline TriageColor randomTriageColor() {
-    int r = randomInt(1, 100);
-    if (r <= 10) return COLOR_RED;       // 10%
-    if (r <= 45) return COLOR_YELLOW;    // 35%
-    if (r <= 95) return COLOR_GREEN;     // 50%
-    return COLOR_SENT_HOME;              // 5%
+inline void randomSleep(int minMs, int maxMs) {
+    msleep(randomInt(minMs, maxMs));
 }
 
 /**
- * @brief Losuje specjalistę dla pacjenta (poza POZ)
- * Dla dzieci (<18 lat) zawsze pediatra
+ * @brief Losuje kolor triażu według konfigurowalnych prawdopodobieństw
+ * Używa stałych TRIAGE_*_PCT z panelu konfiguracyjnego
+ */
+inline TriageColor randomTriageColor() {
+    int r = randomInt(1, 100);
+    if (r <= TRIAGE_RED_PCT) return COLOR_RED;
+    if (r <= TRIAGE_RED_PCT + TRIAGE_YELLOW_PCT) return COLOR_YELLOW;
+    if (r <= TRIAGE_RED_PCT + TRIAGE_YELLOW_PCT + TRIAGE_GREEN_PCT) return COLOR_GREEN;
+    return COLOR_SENT_HOME;
+}
+
+/**
+ * @brief Losuje specjalistę dla pacjenta według konfigurowalnych procentów
+ * Dzieci (<18 lat) zawsze → pediatra. Dorośli → losowanie wg SPEC_*_PCT.
  */
 inline DoctorType randomSpecialist(int age) {
     if (age < 18) {
         return DOCTOR_PEDIATRA;
     }
-    // Losowy specjalista (bez POZ i pediatry dla dorosłych)
-    int r = randomInt(0, 4);
-    DoctorType specialists[] = {
-        DOCTOR_KARDIOLOG, DOCTOR_NEUROLOG, DOCTOR_OKULISTA,
-        DOCTOR_LARYNGOLOG, DOCTOR_CHIRURG
-    };
-    return specialists[r];
+    int r = randomInt(1, 100);
+    int cumulative = 0;
+    cumulative += SPEC_KARDIOLOG_PCT;
+    if (r <= cumulative) return DOCTOR_KARDIOLOG;
+    cumulative += SPEC_NEUROLOG_PCT;
+    if (r <= cumulative) return DOCTOR_NEUROLOG;
+    cumulative += SPEC_OKULISTA_PCT;
+    if (r <= cumulative) return DOCTOR_OKULISTA;
+    cumulative += SPEC_LARYNGOLOG_PCT;
+    if (r <= cumulative) return DOCTOR_LARYNGOLOG;
+    return DOCTOR_CHIRURG;
 }
 
 /**
@@ -512,23 +586,37 @@ inline int randomOutcome() {
 }
 
 /**
- * @brief Losuje wiek pacjenta (1-90 lat, z większą szansą na dorosłych)
+ * @brief Losuje wiek pacjenta — zachowanie zależy od CHILDREN_MODE
+ * CHILDREN_NORMAL: 20% dzieci (1-17), 80% dorośli (18-90)
+ * CHILDREN_ONLY:   tylko dzieci (1-17)
+ * NO_CHILDREN:     tylko dorośli (18-90)
  */
 inline int randomAge() {
-    int r = randomInt(1, 100);
-    if (r <= 20) {
-        // 20% - dzieci (1-17 lat)
+    if constexpr (CHILDREN_MODE == CHILDREN_ONLY) {
         return randomInt(1, 17);
+    } else if constexpr (CHILDREN_MODE == NO_CHILDREN) {
+        return randomInt(18, 90);
+    } else {
+        int r = randomInt(1, 100);
+        if (r <= 20) return randomInt(1, 17);  // 20% dzieci
+        return randomInt(18, 90);              // 80% dorośli
     }
-    // 80% - dorośli (18-90 lat)
-    return randomInt(18, 90);
 }
 
 /**
- * @brief Losuje czy pacjent jest VIP (10% szans)
+ * @brief Losuje czy pacjent jest VIP — zachowanie zależy od VIP_MODE
+ * VIP_NORMAL: 10% szans
+ * VIP_ONLY:   zawsze VIP
+ * NO_VIP:     nigdy VIP
  */
 inline bool randomVIP() {
-    return randomInt(1, 100) <= 10;
+    if constexpr (VIP_MODE == VIP_ONLY) {
+        return true;
+    } else if constexpr (VIP_MODE == NO_VIP) {
+        return false;
+    } else {
+        return randomInt(1, 100) <= 10;
+    }
 }
 
 // ============================================================================

@@ -46,6 +46,10 @@ void processPatient(int window_id, SORMessage& msg);
 // ============================================================================
 
 int main() {
+    // Opóźnienie startowe
+    if constexpr (STARTUP_DELAY_REJESTRACJA_MS > 0)
+        msleep(STARTUP_DELAY_REJESTRACJA_MS);
+
     // Inicjalizacja IPC
     initIPC();
     

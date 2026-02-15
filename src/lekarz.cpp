@@ -55,6 +55,15 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Nieprawidłowy typ lekarza: %d\n", g_doctor_type);
         return EXIT_FAILURE;
     }
+
+    // Opóźnienie startowe (POZ osobno od specjalistów)
+    if (g_doctor_type == DOCTOR_POZ) {
+        if constexpr (STARTUP_DELAY_POZ_MS > 0)
+            msleep(STARTUP_DELAY_POZ_MS);
+    } else {
+        if constexpr (STARTUP_DELAY_SPECIALIST_MS > 0)
+            msleep(STARTUP_DELAY_SPECIALIST_MS);
+    }
     
     // Inicjalizacja IPC
     initIPC();
