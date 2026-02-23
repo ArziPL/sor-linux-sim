@@ -257,20 +257,22 @@ void enterWaitingRoom(PatientData* data) {
             }
         }
         
-        // Spin-wait: czekaj aż gate_log_next == mój bilet (ścisłe FIFO logowania)
-        while (true) {
-            semWait(data->semid, SEM_SHM_MUTEX);
-            if (data->state->gate_log_next == data->gate_ticket1) {
-                data->state->patients_in_sor += 2;
-                int count = data->state->patients_in_sor;
-                logMessage(data->state, data->semid, "Pacjent %d [Opiekun] wchodzi do budynku (%d/%d)",
-                          data->id, count, N);
-                data->state->gate_log_next += 2;  // dziecko = 2 bilety
-                semSignal(data->semid, SEM_SHM_MUTEX);
-                break;
+        // Czekaj na swoją kolej w kolejce porządkującej (FIFO, blokujące — zero CPU)
+        {
+            GateToken order_token;
+            while (msgrcv(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE,
+                          data->gate_ticket1, 0) == -1) {
+                if (errno != EINTR) return;
             }
+            semWait(data->semid, SEM_SHM_MUTEX);
+            data->state->patients_in_sor += 2;
+            int count = data->state->patients_in_sor;
+            logMessage(data->state, data->semid, "Pacjent %d [Opiekun] wchodzi do budynku (%d/%d)",
+                      data->id, count, N);
             semSignal(data->semid, SEM_SHM_MUTEX);
-            sched_yield();
+            // Wyślij token do następnego pacjenta
+            order_token.mtype = data->gate_ticket1 + 2;  // dziecko = 2 bilety
+            msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0);
         }
     } else {
         // Czekaj na swój bilet (przydzielony przez generator)
@@ -283,20 +285,22 @@ void enterWaitingRoom(PatientData* data) {
             }
         }
         
-        // Spin-wait: czekaj aż gate_log_next == mój bilet (ścisłe FIFO logowania)
-        while (true) {
-            semWait(data->semid, SEM_SHM_MUTEX);
-            if (data->state->gate_log_next == data->gate_ticket1) {
-                data->state->patients_in_sor++;
-                int count = data->state->patients_in_sor;
-                logMessage(data->state, data->semid, "Pacjent %d wchodzi do budynku (%d/%d)",
-                          data->id, count, N);
-                data->state->gate_log_next += 1;
-                semSignal(data->semid, SEM_SHM_MUTEX);
-                break;
+        // Czekaj na swoją kolej w kolejce porządkującej (FIFO, blokujące — zero CPU)
+        {
+            GateToken order_token;
+            while (msgrcv(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE,
+                          data->gate_ticket1, 0) == -1) {
+                if (errno != EINTR) return;
             }
+            semWait(data->semid, SEM_SHM_MUTEX);
+            data->state->patients_in_sor++;
+            int count = data->state->patients_in_sor;
+            logMessage(data->state, data->semid, "Pacjent %d wchodzi do budynku (%d/%d)",
+                      data->id, count, N);
             semSignal(data->semid, SEM_SHM_MUTEX);
-            sched_yield();
+            // Wyślij token do następnego pacjenta
+            order_token.mtype = data->gate_ticket1 + 1;
+            msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0);
         }
     }
 }
@@ -315,29 +319,30 @@ void doRegistration(PatientData* data) {
     msg.age = data->age;
     msg.is_vip = data->is_vip ? 1 : 0;
     
-    // Spin-wait: czekaj aż reg_send_next == mój bilet (ścisłe FIFO)
+    // Czekaj na swoją kolej w kolejce porządkującej rejestracji (FIFO, blokujące — zero CPU)
     int step = data->is_child ? 2 : 1;
-    while (true) {
-        semWait(data->semid, SEM_SHM_MUTEX);
-        if (data->state->reg_send_next == data->gate_ticket1) {
-            // Log pod mutexem — gwarantuje kolejność
-            if (data->is_child) {
-                logMessage(data->state, data->semid, "Pacjent %d [Opiekun] dołącza do kolejki rejestracji",
-                          data->id);
-            } else {
-                logMessage(data->state, data->semid, "Pacjent %d dołącza do kolejki rejestracji%s",
-                          data->id, data->is_vip ? " [VIP]" : "");
-            }
-            data->state->reg_queue_count++;
-            msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
-            data->state->reg_send_next += step;
-            semSignal(data->semid, SEM_SHM_MUTEX);
-            // Powiadom kontroler kolejki o zmianie
-            semSignal(data->semid, SEM_REG_QUEUE_CHANGED);
-            break;
+    {
+        GateToken order_token;
+        while (msgrcv(data->state->order_reg_msgid, &order_token, GATE_TOKEN_SIZE,
+                      data->gate_ticket1, 0) == -1) {
+            if (errno != EINTR) return;
         }
+        semWait(data->semid, SEM_SHM_MUTEX);
+        if (data->is_child) {
+            logMessage(data->state, data->semid, "Pacjent %d [Opiekun] dołącza do kolejki rejestracji",
+                      data->id);
+        } else {
+            logMessage(data->state, data->semid, "Pacjent %d dołącza do kolejki rejestracji%s",
+                      data->id, data->is_vip ? " [VIP]" : "");
+        }
+        data->state->reg_queue_count++;
+        msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
         semSignal(data->semid, SEM_SHM_MUTEX);
-        sched_yield();
+        // Powiadom kontroler kolejki o zmianie
+        semSignal(data->semid, SEM_REG_QUEUE_CHANGED);
+        // Wyślij token do następnego pacjenta
+        order_token.mtype = data->gate_ticket1 + step;
+        msgsnd(data->state->order_reg_msgid, &order_token, GATE_TOKEN_SIZE, 0);
     }
     
     // Czekaj na odpowiedź od rejestracji (blokująco)
@@ -371,18 +376,18 @@ void doTriage(PatientData* data) {
     msg.age = data->age;
     msg.is_vip = data->is_vip ? 1 : 0;
     
-    // Spin-wait: czekaj aż triage_send_next == mój bilet (ścisłe FIFO)
+    // Czekaj na swoją kolej w kolejce porządkującej triażu (FIFO, blokujące — zero CPU)
     int step = data->is_child ? 2 : 1;
-    while (true) {
-        semWait(data->semid, SEM_SHM_MUTEX);
-        if (data->state->triage_send_next == data->gate_ticket1) {
-            msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
-            data->state->triage_send_next += step;
-            semSignal(data->semid, SEM_SHM_MUTEX);
-            break;
+    {
+        GateToken order_token;
+        while (msgrcv(data->state->order_triage_msgid, &order_token, GATE_TOKEN_SIZE,
+                      data->gate_ticket1, 0) == -1) {
+            if (errno != EINTR) return;
         }
-        semSignal(data->semid, SEM_SHM_MUTEX);
-        sched_yield();
+        msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
+        // Wyślij token do następnego pacjenta
+        order_token.mtype = data->gate_ticket1 + step;
+        msgsnd(data->state->order_triage_msgid, &order_token, GATE_TOKEN_SIZE, 0);
     }
     
     // Czekaj na odpowiedź od POZ (MSG_TRIAGE_RESPONSE)
@@ -446,38 +451,44 @@ void exitSOR(PatientData* data) {
 
     int step = data->is_child ? 2 : 1;
 
-    // Spin-wait: czekaj aż exit_log_next == mój bilet (ścisłe FIFO wyjścia)
-    while (true) {
-        semWait(data->semid, SEM_SHM_MUTEX);
-        if (data->state->exit_log_next == data->gate_ticket1) {
-            // Log + dekrementacja + wysłanie tokenów — wszystko pod mutexem
-            if (data->is_child) {
-                logMessage(data->state, data->semid, "Pacjent %d [Dziecko] opuszcza SOR", data->id);
-                if (data->state->patients_in_sor >= 2)
-                    data->state->patients_in_sor -= 2;
-                else
-                    data->state->patients_in_sor = 0;
-            } else {
-                logMessage(data->state, data->semid, "Pacjent %d opuszcza SOR", data->id);
-                if (data->state->patients_in_sor > 0)
-                    data->state->patients_in_sor--;
+    // Czekaj na swoją kolej w kolejce porządkującej wyjścia (FIFO, blokujące — zero CPU)
+    GateToken order_token;
+    while (msgrcv(data->state->order_exit_msgid, &order_token, GATE_TOKEN_SIZE,
+                  data->gate_ticket1, 0) == -1) {
+        if (errno != EINTR) {
+            if (errno != EIDRM && errno != EINVAL) {
+                SOR_WARN("msgrcv order_exit pacjent %d (ticket %ld)", data->id, data->gate_ticket1);
             }
-            if (data->state->active_patient_count > 0) data->state->active_patient_count--;
-
-            // Wyślij tokeny gate (obudź następnych)
-            for (int i = 0; i < step; i++) {
-                long w = data->state->gate_now_serving++;
-                token.mtype = w;
-                msgsnd(gate, &token, GATE_TOKEN_SIZE, 0);
-            }
-
-            data->state->exit_log_next += step;
-            semSignal(data->semid, SEM_SHM_MUTEX);
-            break;
+            return;
         }
-        semSignal(data->semid, SEM_SHM_MUTEX);
-        sched_yield();
     }
+
+    semWait(data->semid, SEM_SHM_MUTEX);
+    // Log + dekrementacja + wysłanie tokenów — wszystko pod mutexem
+    if (data->is_child) {
+        logMessage(data->state, data->semid, "Pacjent %d [Dziecko] opuszcza SOR", data->id);
+        if (data->state->patients_in_sor >= 2)
+            data->state->patients_in_sor -= 2;
+        else
+            data->state->patients_in_sor = 0;
+    } else {
+        logMessage(data->state, data->semid, "Pacjent %d opuszcza SOR", data->id);
+        if (data->state->patients_in_sor > 0)
+            data->state->patients_in_sor--;
+    }
+    if (data->state->active_patient_count > 0) data->state->active_patient_count--;
+
+    // Wyślij tokeny gate (obudź następnych)
+    for (int i = 0; i < step; i++) {
+        long w = data->state->gate_now_serving++;
+        token.mtype = w;
+        msgsnd(gate, &token, GATE_TOKEN_SIZE, 0);
+    }
+    semSignal(data->semid, SEM_SHM_MUTEX);
+
+    // Wyślij token wyjścia do następnego pacjenta
+    order_token.mtype = data->gate_ticket1 + step;
+    msgsnd(data->state->order_exit_msgid, &order_token, GATE_TOKEN_SIZE, 0);
 }
 
 // ============================================================================

@@ -1,1 +1,1 @@
-/usr/bin/g++  -Wall -Wextra -g -g -Wl,--dependency-file=CMakeFiles/pacjent.dir/link.d CMakeFiles/pacjent.dir/src/pacjent.cpp.o -o pacjent
+/usr/bin/c++  -Wall -Wextra -g -Wl,--dependency-file=CMakeFiles/pacjent.dir/link.d CMakeFiles/pacjent.dir/src/pacjent.cpp.o -o pacjent

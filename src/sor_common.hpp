@@ -32,6 +32,7 @@
 #include <chrono>
 #include <string>
 #include <random>
+#include <vector>
 
 // ============================================================================
 // STAŁE KONFIGURACYJNE SYMULACJI
@@ -46,6 +47,10 @@ constexpr int SHM_KEY_ID = 'S';          // Klucz pamięci dzielonej
 constexpr int SEM_KEY_ID = 'E';          // Klucz semaforów
 constexpr int MSG_KEY_ID = 'M';          // Klucz kolejki komunikatów
 constexpr int MSG_GATE_KEY_ID = 'G';     // Klucz kolejki tokenów poczekalni (FIFO gate)
+constexpr int MSG_ORDER_GATE_LOG_KEY_ID = 'h';  // Kolejka FIFO kolejności logowania wejścia
+constexpr int MSG_ORDER_REG_KEY_ID = 'i';       // Kolejka FIFO kolejności rejestracji
+constexpr int MSG_ORDER_TRIAGE_KEY_ID = 'j';    // Kolejka FIFO kolejności triażu
+constexpr int MSG_ORDER_EXIT_KEY_ID = 'k';      // Kolejka FIFO kolejności wyjścia
 
 // // Czasy operacji w milisekundach
 constexpr int PATIENT_GEN_MIN_MS = 0;  // Min czas między generowaniem pacjentów
@@ -190,15 +195,13 @@ inline const char* getColorName(TriageColor color) {
 
 /**
  * Semafory używane w symulacji:
- * - SEM_POCZEKALNIA: (NIEUŻYWANY — zastąpiony kolejką tokenów MSG_GATE)
- * - SEM_REG_QUEUE: mutex dla kolejki rejestracji
+ * - SEM_REG_QUEUE_MUTEX: mutex dla kolejki rejestracji
  * - SEM_SPECIALIST_*: semafory poszczególnych specjalistów
  * - SEM_SHM_MUTEX: mutex dla dostępu do pamięci dzielonej
  * - SEM_LOG_MUTEX: mutex dla logowania
  */
 enum SemIndex {
-    SEM_POCZEKALNIA = 0,     // NIEUŻYWANY (zastąpiony kolejką tokenów FIFO)
-    SEM_REG_QUEUE_MUTEX,     // Mutex kolejki rejestracji
+    SEM_REG_QUEUE_MUTEX = 0, // Mutex kolejki rejestracji
     SEM_SPECIALIST_KARDIOLOG,
     SEM_SPECIALIST_NEUROLOG,
     SEM_SPECIALIST_OKULISTA,
@@ -337,10 +340,12 @@ struct SharedState {
     // Ticket system — gwarantuje ścisłe FIFO wejścia do poczekalni
     int gate_next_ticket;            // Następny bilet do wydania (rosnący)
     int gate_now_serving;            // Następny mtype do wysłania gdy ktoś wychodzi
-    int gate_log_next;               // Następny bilet uprawniony do logowania wejścia
-    int reg_send_next;               // Następny bilet uprawniony do wysłania do rejestracji
-    int triage_send_next;            // Następny bilet uprawniony do wysłania do triażu
-    int exit_log_next;               // Następny bilet uprawniony do logowania wyjścia
+    
+    // Kolejki FIFO porządkujące (blokujące zamiast busy-wait spin-loopów)
+    int order_gate_log_msgid;        // Kolejka FIFO kolejności logowania wejścia
+    int order_reg_msgid;             // Kolejka FIFO kolejności rejestracji
+    int order_triage_msgid;          // Kolejka FIFO kolejności triażu
+    int order_exit_msgid;            // Kolejka FIFO kolejności wyjścia
 
     // Limit jednoczesnych procesów (łącznie ze stałymi; 0 = bez limitu)
     int max_patients;
@@ -412,6 +417,13 @@ inline void sorError(SorErrorLevel level, const char* file, int line,
     }
     
     fprintf(stderr, "\n");
+    
+    // Użycie perror() dla błędów krytycznych (wymaganie projektowe 4.1c)
+    if (level == ERR_FATAL && saved_errno != 0) {
+        errno = saved_errno;
+        perror("  perror szczegóły");
+    }
+    
     fflush(stderr);
     
     if (level == ERR_FATAL) {
@@ -506,6 +518,12 @@ inline double getElapsedTime(SharedState* state) {
 /**
  * @brief Loguje wiadomość do pliku z timestampem
  * Format: [XXX.XXs] wiadomość
+ * 
+ * Plik logu otwierany jest raz per proces (lazy init) przy użyciu niskopoziomowego
+ * open(O_WRONLY|O_APPEND|O_CREAT) zamiast fopen/fclose — eliminuje overhead
+ * wielokrotnego otwierania/zamykania pliku przy dużej liczbie logów.
+ * Zapis odbywa się przez write() (niskopoziomowe I/O, wymaganie projektowe 5.2a).
+ * 
  * @param state Wskaźnik do stanu współdzielonego
  * @param semid ID semaforów (do blokady mutex)
  * @param format Format printf
@@ -516,30 +534,34 @@ inline void logMessage(SharedState* state, int semid, const char* format, ...) {
     // Blokada mutex logowania
     semWait(semid, SEM_LOG_MUTEX);
     
-    double elapsed = getElapsedTime(state);
-    
-    // Otwieramy plik w trybie dopisywania
-    FILE* logFile = fopen(state->log_file, "a");
-    if (logFile) {
-        fprintf(logFile, "[%7.2fs] ", elapsed);
-        
-        va_list args;
-        va_start(args, format);
-        vfprintf(logFile, format, args);
-        va_end(args);
-        
-        fprintf(logFile, "\n");
-        fclose(logFile);
+    // Lazy-open: plik logu otwierany raz per proces (open() — niskopoziomowe I/O)
+    static int log_fd = -1;
+    if (log_fd == -1) {
+        log_fd = open(state->log_file, O_WRONLY | O_APPEND | O_CREAT, 0644);
     }
     
-    // Wyświetlamy też na stdout
-    printf("[%7.2fs] ", elapsed);
-    va_list args2;
-    va_start(args2, format);
-    vprintf(format, args2);
-    va_end(args2);
-    printf("\n");
-    fflush(stdout);
+    double elapsed = getElapsedTime(state);
+    
+    // Formatuj wiadomość do bufora
+    char buf[1024];
+    int len = snprintf(buf, sizeof(buf), "[%7.2fs] ", elapsed);
+    
+    va_list args;
+    va_start(args, format);
+    len += vsnprintf(buf + len, sizeof(buf) - len, format, args);
+    va_end(args);
+    
+    if (len < (int)sizeof(buf) - 1) {
+        buf[len++] = '\n';
+    }
+    
+    // Zapis do pliku logu (write() — niskopoziomowe I/O)
+    if (log_fd != -1) {
+        write(log_fd, buf, len);
+    }
+    
+    // Zapis na stdout
+    write(STDOUT_FILENO, buf, len);
     
     // Odblokowanie mutex
     semSignal(semid, SEM_LOG_MUTEX);
@@ -673,6 +695,14 @@ inline key_t getIPCKey(int id) {
 inline key_t getGateQueueKey() {
     return getIPCKey(MSG_GATE_KEY_ID);
 }
+
+/**
+ * @brief Klucze IPC kolejek porządkujących (FIFO blokujące zamiast busy-wait)
+ */
+inline key_t getOrderGateLogKey() { return getIPCKey(MSG_ORDER_GATE_LOG_KEY_ID); }
+inline key_t getOrderRegKey()     { return getIPCKey(MSG_ORDER_REG_KEY_ID); }
+inline key_t getOrderTriageKey()  { return getIPCKey(MSG_ORDER_TRIAGE_KEY_ID); }
+inline key_t getOrderExitKey()    { return getIPCKey(MSG_ORDER_EXIT_KEY_ID); }
 
 /**
  * @brief Klucze IPC kolejek specjalistów

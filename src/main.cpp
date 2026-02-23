@@ -30,9 +30,8 @@ static int g_max_patients = 0;    // Maks liczba pacjentów (0 = bez limitu)
 static int g_gen_min_ms = 0;      // Min czas generowania pacjenta (0 = domyślny z sor_common.hpp)
 static int g_gen_max_ms = 0;      // Max czas generowania pacjenta (0 = domyślny)
 
-// Lista PIDów procesów potomnych do sprzątania
-static pid_t g_child_pids[5000];
-static int g_child_count = 0;
+// Lista PIDów procesów potomnych do sprzątania (dynamiczna)
+static std::vector<pid_t> g_child_pids;
 static pid_t g_generator_pid = -1;  // PID generatora (osobne traktowanie przy zamykaniu)
 
 // Oryginalne ustawienia terminala
@@ -182,7 +181,7 @@ int main(int argc, char* argv[]) {
         SOR_FATAL("execl generator");
         exit(EXIT_FAILURE);
     } else if (gen_pid > 0) {
-        g_child_pids[g_child_count++] = gen_pid;
+        g_child_pids.push_back(gen_pid);
         g_generator_pid = gen_pid;
     }
     
@@ -220,7 +219,7 @@ int main(int argc, char* argv[]) {
         }
         
         // Wyzeruj PID generatora w tablicy, żebyśmy go nie ruszali ponownie
-        for (int i = 0; i < g_child_count; i++) {
+        for (size_t i = 0; i < g_child_pids.size(); i++) {
             if (g_child_pids[i] == g_generator_pid) {
                 g_child_pids[i] = 0;
                 break;
@@ -229,7 +228,7 @@ int main(int argc, char* argv[]) {
     }
     
     // --- Zamknij pozostałe procesy (lekarze, rejestracja) ---
-    for (int i = 0; i < g_child_count; i++) {
+    for (size_t i = 0; i < g_child_pids.size(); i++) {
         if (g_child_pids[i] > 0) {
             kill(g_child_pids[i], SIGTERM);
         }
@@ -239,7 +238,7 @@ int main(int argc, char* argv[]) {
     usleep(500000);
     
     // Zabij pozostałe procesy i zbierz zombie (blokujący wait)
-    for (int i = 0; i < g_child_count; i++) {
+    for (size_t i = 0; i < g_child_pids.size(); i++) {
         if (g_child_pids[i] > 0) {
             kill(g_child_pids[i], SIGKILL);
             int status;
@@ -304,7 +303,6 @@ void initIPC() {
     
     // Inicjalizacja wartości semaforów
     unsigned short sem_values[SEM_COUNT] = {0};
-    sem_values[SEM_POCZEKALNIA] = 0;           // NIEUŻYWANY (zastąpiony gate queue)
     sem_values[SEM_REG_QUEUE_MUTEX] = 1;       // Mutex wolny
     // Semafory specjalistów - każdy zaczyna jako wolny (1)
     sem_values[SEM_SPECIALIST_KARDIOLOG] = 1;
@@ -352,10 +350,28 @@ void initIPC() {
     }
     g_state->gate_next_ticket = 1;       // Pierwszy pacjent dostanie bilet 1
     g_state->gate_now_serving = N + 1;   // Po wyjściu pierwszego → wyśle mtype N+1
-    g_state->gate_log_next = 1;          // Pierwszy bilet uprawniony do logowania
-    g_state->reg_send_next = 1;          // Pierwszy bilet uprawniony do rejestracji
-    g_state->triage_send_next = 1;       // Pierwszy bilet uprawniony do triażu
-    g_state->exit_log_next = 1;          // Pierwszy bilet uprawniony do wyjścia
+
+    // --- KOLEJKI PORZĄDKUJĄCE (FIFO blokujące zamiast busy-wait) ---
+    // Każda kolejka startuje z jednym tokenem mtype=1 (pierwszy pacjent dostaje kolej)
+    auto createOrderQueue = [](key_t key, const char* name) -> int {
+        int old_id = msgget(key, 0);
+        if (old_id != -1) msgctl(old_id, IPC_RMID, nullptr);
+        int qid = msgget(key, IPC_CREAT | IPC_EXCL | 0600);
+        if (qid == -1) {
+            SOR_FATAL("msgget — nie można utworzyć kolejki porządkującej %s", name);
+        }
+        GateToken seed;
+        seed.mtype = 1;
+        seed.data[0] = 0;
+        if (msgsnd(qid, &seed, GATE_TOKEN_SIZE, 0) == -1) {
+            SOR_FATAL("msgsnd seed kolejki %s", name);
+        }
+        return qid;
+    };
+    g_state->order_gate_log_msgid = createOrderQueue(getOrderGateLogKey(), "gate_log");
+    g_state->order_reg_msgid      = createOrderQueue(getOrderRegKey(),     "reg");
+    g_state->order_triage_msgid   = createOrderQueue(getOrderTriageKey(),  "triage");
+    g_state->order_exit_msgid     = createOrderQueue(getOrderExitKey(),    "exit");
 
     // --- KOLEJKA KOMUNIKATÓW ---
     key_t msg_key = getIPCKey(MSG_KEY_ID);
@@ -395,7 +411,7 @@ void initIPC() {
         g_state->specialist_msgids[dtype] = spec_msgid;
     }
     
-    printf("IPC zainicjalizowane: SHM=%d, SEM=%d, MSG=%d + 6 kolejek specjalistów\n", g_shmid, g_semid, g_msgid);
+    printf("IPC zainicjalizowane: SHM=%d, SEM=%d, MSG=%d + 6 kolejek specjalistów + 4 kolejki porządkujące\n", g_shmid, g_semid, g_msgid);
 }
 
 /**
@@ -447,6 +463,15 @@ void cleanupIPC() {
         }
     }
     
+    // Usuń kolejki porządkujące (FIFO ordering)
+    {
+        key_t keys[] = { getOrderGateLogKey(), getOrderRegKey(), getOrderTriageKey(), getOrderExitKey() };
+        for (auto k : keys) {
+            int qid = msgget(k, 0);
+            if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
+        }
+    }
+    
     printf("Zasoby IPC usunięte\n");
 }
 
@@ -474,7 +499,7 @@ void startRegistration() {
     } else if (pid > 0) {
         // Proces rodzica - zapisz PID rejestracji
         g_state->registration_pid = pid;
-        g_child_pids[g_child_count++] = pid;
+        g_child_pids.push_back(pid);
         
     } else {
         // Błąd fork
@@ -518,7 +543,7 @@ void startDoctors() {
         } else if (pid > 0) {
             // Proces rodzica - zapisz PID lekarza
             g_state->doctor_pids[i] = pid;
-            g_child_pids[g_child_count++] = pid;
+            g_child_pids.push_back(pid);
             
         } else {
             // Błąd fork
@@ -621,7 +646,7 @@ void handleKeyboard() {
                     }
                     
                     // Wyślij SIGTERM do wszystkich procesów potomnych
-                    for (int i = 0; i < g_child_count; i++) {
+                    for (size_t i = 0; i < g_child_pids.size(); i++) {
                         if (g_child_pids[i] > 0) {
                             kill(g_child_pids[i], SIGUSR2);
                         }

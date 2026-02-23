@@ -76,15 +76,15 @@ CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o: CMakeFiles/rejestracja.dir/fla
 CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o: /home/areczek/sor-linux-sim/src/rejestracja.cpp
 CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o: CMakeFiles/rejestracja.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o -MF CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o.d -o CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o -c /home/areczek/sor-linux-sim/src/rejestracja.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o -MF CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o.d -o CMakeFiles/rejestracja.dir/src/rejestracja.cpp.o -c /home/areczek/sor-linux-sim/src/rejestracja.cpp
 
 CMakeFiles/rejestracja.dir/src/rejestracja.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rejestracja.dir/src/rejestracja.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/rejestracja.cpp > CMakeFiles/rejestracja.dir/src/rejestracja.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/rejestracja.cpp > CMakeFiles/rejestracja.dir/src/rejestracja.cpp.i
 
 CMakeFiles/rejestracja.dir/src/rejestracja.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rejestracja.dir/src/rejestracja.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/rejestracja.cpp -o CMakeFiles/rejestracja.dir/src/rejestracja.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/rejestracja.cpp -o CMakeFiles/rejestracja.dir/src/rejestracja.cpp.s
 
 # Object files for target rejestracja
 rejestracja_OBJECTS = \

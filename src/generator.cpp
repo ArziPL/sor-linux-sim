@@ -16,9 +16,8 @@
 
 static volatile sig_atomic_t g_gen_shutdown = 0;
 
-// Tablica PIDów pacjentów-dzieci
-static pid_t g_patient_pids[1000];
-static int g_patient_count = 0;
+// Dynamiczna lista PIDów pacjentów (vector zamiast statycznej tablicy)
+static std::vector<pid_t> g_patient_pids;
 
 // ============================================================================
 // HANDLER SYGNAŁU
@@ -141,7 +140,7 @@ int main(int argc, char* argv[]) {
                 SOR_FATAL("execl pacjent id=%d", patient_id);
                 exit(EXIT_FAILURE);
             } else if (pid > 0) {
-                if (g_patient_count < 1000) g_patient_pids[g_patient_count++] = pid;
+                g_patient_pids.push_back(pid);
             } else {
                 SOR_WARN("fork pacjenta %d", patient_id);
                 semWait(semid, SEM_SHM_MUTEX);
@@ -229,10 +228,8 @@ int main(int argc, char* argv[]) {
             exit(EXIT_FAILURE);
 
         } else if (pid > 0) {
-            // Zapisz PID pacjenta do tablicy
-            if (g_patient_count < 1000) {
-                g_patient_pids[g_patient_count++] = pid;
-            }
+            // Zapisz PID pacjenta
+            g_patient_pids.push_back(pid);
         } else {
             SOR_WARN("fork pacjenta %d", patient_id);
             // Cofnij licznik bo fork się nie udał
@@ -246,10 +243,10 @@ int main(int argc, char* argv[]) {
 
 gen_cleanup:
     // ==== CZYSTE ZAMKNIĘCIE ====
-    logMessage(state, semid, "[Generator] Zamykanie", g_patient_count);
+    logMessage(state, semid, "[Generator] Zamykanie (%d pacjentów)", (int)g_patient_pids.size());
 
     // Wyślij SIGTERM do wszystkich pacjentów (obudzi ich z sleep/msgrcv)
-    for (int i = 0; i < g_patient_count; i++) {
+    for (size_t i = 0; i < g_patient_pids.size(); i++) {
         if (g_patient_pids[i] > 0) {
             kill(g_patient_pids[i], SIGTERM);
         }
@@ -265,7 +262,7 @@ gen_cleanup:
     }
 
     // Dobij pozostałe (safety net)
-    for (int i = 0; i < g_patient_count; i++) {
+    for (size_t i = 0; i < g_patient_pids.size(); i++) {
         if (g_patient_pids[i] > 0) {
             kill(g_patient_pids[i], SIGKILL);  // ESRCH jeśli już nie żyje — OK
         }

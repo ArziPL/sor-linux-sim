@@ -143,6 +143,15 @@ int main() {
             int spec_msgid = msgget(spec_key, 0);
             if (spec_msgid != -1) msgctl(spec_msgid, IPC_RMID, nullptr);
         }
+        
+        // Kolejki porządkujące (FIFO ordering)
+        {
+            key_t keys[] = { getOrderGateLogKey(), getOrderRegKey(), getOrderTriageKey(), getOrderExitKey() };
+            for (auto k : keys) {
+                int qid = msgget(k, 0);
+                if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
+            }
+        }
     }
     
     return 0;
