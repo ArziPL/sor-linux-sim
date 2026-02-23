@@ -119,21 +119,29 @@ int main(int argc, char* argv[]) {
             semWait(semid, SEM_SHM_MUTEX);
             state->total_patients = patient_id;
             state->active_patient_count++;
+            // Przydziel bilety PRZED forkiem (gwarantuje FIFO)
+            long ticket1 = state->gate_next_ticket++;
+            long ticket2 = (age < 18) ? state->gate_next_ticket++ : 0;
             semSignal(semid, SEM_SHM_MUTEX);
 
             pid_t pid = fork();
             if (pid == 0) {
                 prctl(PR_SET_PDEATHSIG, SIGTERM);
-                char id_str[16], age_str[16], vip_str[16];
+                char id_str[16], age_str[16], vip_str[16], t1_str[16], t2_str[16];
                 snprintf(id_str, sizeof(id_str), "%d", patient_id);
                 snprintf(age_str, sizeof(age_str), "%d", age);
                 snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
-                execl("./pacjent", "pacjent", id_str, age_str, vip_str, nullptr);
+                snprintf(t1_str, sizeof(t1_str), "%ld", ticket1);
+                if (age < 18) {
+                    snprintf(t2_str, sizeof(t2_str), "%ld", ticket2);
+                    execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, t2_str, nullptr);
+                } else {
+                    execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, nullptr);
+                }
                 SOR_FATAL("execl pacjent id=%d", patient_id);
                 exit(EXIT_FAILURE);
             } else if (pid > 0) {
                 if (g_patient_count < 1000) g_patient_pids[g_patient_count++] = pid;
-                usleep(1000);  // 1ms — stabilizuje kolejność FIFO w logu
             } else {
                 SOR_WARN("fork pacjenta %d", patient_id);
                 semWait(semid, SEM_SHM_MUTEX);
@@ -192,6 +200,9 @@ int main(int argc, char* argv[]) {
         semWait(semid, SEM_SHM_MUTEX);
         state->total_patients = patient_id;
         state->active_patient_count++;
+        // Przydziel bilety PRZED forkiem (gwarantuje FIFO)
+        long ticket1 = state->gate_next_ticket++;
+        long ticket2 = (age < 18) ? state->gate_next_ticket++ : 0;
         semSignal(semid, SEM_SHM_MUTEX);
 
         // Fork dla nowego pacjenta
@@ -202,12 +213,17 @@ int main(int argc, char* argv[]) {
             prctl(PR_SET_PDEATHSIG, SIGTERM);
             
             // Proces pacjenta
-            char id_str[16], age_str[16], vip_str[16];
+            char id_str[16], age_str[16], vip_str[16], t1_str[16], t2_str[16];
             snprintf(id_str, sizeof(id_str), "%d", patient_id);
             snprintf(age_str, sizeof(age_str), "%d", age);
             snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
-
-            execl("./pacjent", "pacjent", id_str, age_str, vip_str, nullptr);
+            snprintf(t1_str, sizeof(t1_str), "%ld", ticket1);
+            if (age < 18) {
+                snprintf(t2_str, sizeof(t2_str), "%ld", ticket2);
+                execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, t2_str, nullptr);
+            } else {
+                execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, nullptr);
+            }
 
             SOR_FATAL("execl pacjent id=%d", patient_id);
             exit(EXIT_FAILURE);

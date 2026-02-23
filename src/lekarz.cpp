@@ -254,10 +254,30 @@ void runPOZ() {
                           msg.patient_id, getColorName(color), getDoctorName(specialist));
             }
             
-            // Wyślij odpowiedź do pacjenta - idzie do specjalisty
-            // Pacjent sam wyśle się do kolejki specjalisty
+            // POZ wstawia pacjenta do kolejki specjalisty (gwarantuje FIFO)
+            if (msg.age < 18) {
+                logMessage(g_state, g_semid,
+                          "Pacjent %d [Dziecko] czeka na lekarza: %s (kolor: %s)",
+                          msg.patient_id, getDoctorName(specialist), getColorName(color));
+            } else {
+                logMessage(g_state, g_semid,
+                          "Pacjent %d czeka na lekarza: %s (kolor: %s)",
+                          msg.patient_id, getDoctorName(specialist), getColorName(color));
+            }
+
+            // Wyślij do dedykowanej kolejki specjalisty
+            msg.mtype = colorToMtype(color);  // RED=1, YELLOW=2, GREEN=3
+            int spec_msgid = g_state->specialist_msgids[specialist];
+            if (msgsnd(spec_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
+                if (errno != EINTR && errno != EIDRM) {
+                    SOR_WARN("POZ msgsnd specjalista %s pacjent %d",
+                             getDoctorName(specialist), msg.patient_id);
+                }
+            }
+
+            // Wyślij odpowiedź do pacjenta — pacjent czeka na wynik specjalisty
             msg.mtype = MSG_TRIAGE_RESPONSE + msg.patient_id;
-            
+
             if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
                 if (errno != EINTR && errno != EIDRM) {
                     SOR_WARN("POZ msgsnd triaż pacjent %d", msg.patient_id);

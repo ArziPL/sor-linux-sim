@@ -1,0 +1,5 @@
+1. Dyrektor jako główny proces?
+2. Refactor
+3. Sprawdzić symulacje bazową
+4. Testy
+5. Poduczyć się kod

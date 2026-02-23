@@ -304,7 +304,7 @@ void initIPC() {
     
     // Inicjalizacja wartości semaforów
     unsigned short sem_values[SEM_COUNT] = {0};
-    sem_values[SEM_POCZEKALNIA] = N;           // N wolnych miejsc
+    sem_values[SEM_POCZEKALNIA] = 0;           // NIEUŻYWANY (zastąpiony gate queue)
     sem_values[SEM_REG_QUEUE_MUTEX] = 1;       // Mutex wolny
     // Semafory specjalistów - każdy zaczyna jako wolny (1)
     sem_values[SEM_SPECIALIST_KARDIOLOG] = 1;
@@ -329,6 +329,34 @@ void initIPC() {
         SOR_FATAL("semctl SETALL — nie można ustawić wartości semaforów");
     }
     
+    // --- KOLEJKA TOKENÓW POCZEKALNI (FIFO gate) ---
+    key_t gate_key = getGateQueueKey();
+    int old_gate = msgget(gate_key, 0);
+    if (old_gate != -1) {
+        msgctl(old_gate, IPC_RMID, nullptr);
+    }
+    int gate_msgid = msgget(gate_key, IPC_CREAT | IPC_EXCL | 0600);
+    if (gate_msgid == -1) {
+        SOR_FATAL("msgget — nie można utworzyć kolejki tokenów poczekalni");
+    }
+    g_state->gate_msgid = gate_msgid;
+
+    // Wrzuć N tokenów z unikalnymi mtype = 1, 2, ..., N (ticket system)
+    GateToken token;
+    token.data[0] = 0;
+    for (int i = 1; i <= N; i++) {
+        token.mtype = i;
+        if (msgsnd(gate_msgid, &token, GATE_TOKEN_SIZE, 0) == -1) {
+            SOR_FATAL("msgsnd gate token %d", i);
+        }
+    }
+    g_state->gate_next_ticket = 1;       // Pierwszy pacjent dostanie bilet 1
+    g_state->gate_now_serving = N + 1;   // Po wyjściu pierwszego → wyśle mtype N+1
+    g_state->gate_log_next = 1;          // Pierwszy bilet uprawniony do logowania
+    g_state->reg_send_next = 1;          // Pierwszy bilet uprawniony do rejestracji
+    g_state->triage_send_next = 1;       // Pierwszy bilet uprawniony do triażu
+    g_state->exit_log_next = 1;          // Pierwszy bilet uprawniony do wyjścia
+
     // --- KOLEJKA KOMUNIKATÓW ---
     key_t msg_key = getIPCKey(MSG_KEY_ID);
     
@@ -401,6 +429,15 @@ void cleanupIPC() {
         g_msgid = -1;
     }
     
+    // Usuń kolejkę tokenów poczekalni
+    {
+        key_t gate_key = getGateQueueKey();
+        int gid = msgget(gate_key, 0);
+        if (gid != -1) {
+            msgctl(gid, IPC_RMID, nullptr);
+        }
+    }
+
     // Usuń kolejki specjalistów
     for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
         key_t spec_key = getSpecialistQueueKey((DoctorType)i);

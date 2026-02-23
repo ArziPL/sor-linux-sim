@@ -19,6 +19,7 @@
 #include <cstdarg>
 #include <unistd.h>
 #include <signal.h>
+#include <sched.h>
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -44,6 +45,7 @@ constexpr int K_CLOSE = N / 3;           // Próg zamknięcia drugiego okienka (
 constexpr int SHM_KEY_ID = 'S';          // Klucz pamięci dzielonej
 constexpr int SEM_KEY_ID = 'E';          // Klucz semaforów
 constexpr int MSG_KEY_ID = 'M';          // Klucz kolejki komunikatów
+constexpr int MSG_GATE_KEY_ID = 'G';     // Klucz kolejki tokenów poczekalni (FIFO gate)
 
 // // Czasy operacji w milisekundach
 constexpr int PATIENT_GEN_MIN_MS = 0;  // Min czas między generowaniem pacjentów
@@ -95,6 +97,14 @@ constexpr bool DOCTOR_ENABLED[] = {
     true,   // [5] false
     false,   // [6] pediatra
 };
+
+// --- Wynik leczenia u specjalisty: prawdopodobieństwa [suma MUSI = 1000] ---
+// Podajemy w PROMILACH (‰) żeby obsłużyć ułamki procentów (np. 14,5% = 145‰)
+constexpr int OUTCOME_HOME_PM   = 1000;  // ‰ wypisany do domu        (85.0%)
+constexpr int OUTCOME_WARD_PM   = 0;  // ‰ skierowany na oddział   (14.5%)
+constexpr int OUTCOME_OTHER_PM  = 0;    // ‰ skierowany do innej     ( 0.5%)
+static_assert(OUTCOME_HOME_PM + OUTCOME_WARD_PM + OUTCOME_OTHER_PM == 1000,
+              "Suma promili wynikow leczenia musi wynosic 1000");
 
 // --- Tryb dzieci ---
 enum ChildrenMode { CHILDREN_NORMAL, CHILDREN_ONLY, NO_CHILDREN };
@@ -180,14 +190,14 @@ inline const char* getColorName(TriageColor color) {
 
 /**
  * Semafory używane w symulacji:
- * - SEM_POCZEKALNIA: kontroluje wejście do poczekalni (inicjalizacja: N)
+ * - SEM_POCZEKALNIA: (NIEUŻYWANY — zastąpiony kolejką tokenów MSG_GATE)
  * - SEM_REG_QUEUE: mutex dla kolejki rejestracji
  * - SEM_SPECIALIST_*: semafory poszczególnych specjalistów
  * - SEM_SHM_MUTEX: mutex dla dostępu do pamięci dzielonej
  * - SEM_LOG_MUTEX: mutex dla logowania
  */
 enum SemIndex {
-    SEM_POCZEKALNIA = 0,     // Licznik wolnych miejsc w poczekalni
+    SEM_POCZEKALNIA = 0,     // NIEUŻYWANY (zastąpiony kolejką tokenów FIFO)
     SEM_REG_QUEUE_MUTEX,     // Mutex kolejki rejestracji
     SEM_SPECIALIST_KARDIOLOG,
     SEM_SPECIALIST_NEUROLOG,
@@ -219,6 +229,16 @@ inline int getSpecialistSemIndex(DoctorType type) {
 // ============================================================================
 // STRUKTURY KOMUNIKATÓW (KOLEJKA KOMUNIKATÓW)
 // ============================================================================
+
+/**
+ * @brief Token poczekalni (kolejka FIFO zamiast semafora)
+ * Jeden token = jedno wolne miejsce w poczekalni
+ */
+struct GateToken {
+    long mtype;   // Zawsze 1
+    char data[1]; // Minimalny payload
+};
+constexpr size_t GATE_TOKEN_SIZE = sizeof(GateToken) - sizeof(long);
 
 /**
  * @brief Typy wiadomości w kolejce komunikatów
@@ -311,6 +331,17 @@ struct SharedState {
     // ID kolejek komunikatów specjalistów (indeks = DoctorType; slot [0]=POZ nieużywany=-1)
     int specialist_msgids[DOCTOR_COUNT];
     
+    // ID kolejki tokenów poczekalni (FIFO gate)
+    int gate_msgid;
+
+    // Ticket system — gwarantuje ścisłe FIFO wejścia do poczekalni
+    int gate_next_ticket;            // Następny bilet do wydania (rosnący)
+    int gate_now_serving;            // Następny mtype do wysłania gdy ktoś wychodzi
+    int gate_log_next;               // Następny bilet uprawniony do logowania wejścia
+    int reg_send_next;               // Następny bilet uprawniony do wysłania do rejestracji
+    int triage_send_next;            // Następny bilet uprawniony do wysłania do triażu
+    int exit_log_next;               // Następny bilet uprawniony do logowania wyjścia
+
     // Limit jednoczesnych procesów (łącznie ze stałymi; 0 = bez limitu)
     int max_patients;
     
@@ -575,14 +606,14 @@ inline DoctorType randomSpecialist(int age) {
 }
 
 /**
- * @brief Losuje wynik leczenia według prawdopodobieństw
- * 85% do domu, 14.5% oddział, 0.5% inna placówka
+ * @brief Losuje wynik leczenia według konfigurowalnych prawdopodobieństw
+ * Używa stałych OUTCOME_*_PCT z panelu konfiguracyjnego
  */
 inline int randomOutcome() {
     int r = randomInt(1, 1000);
-    if (r <= 850) return 0;      // 85% do domu
-    if (r <= 995) return 1;      // 14.5% oddział
-    return 2;                     // 0.5% inna placówka
+    if (r <= OUTCOME_HOME_PM) return 0;                            // do domu
+    if (r <= OUTCOME_HOME_PM + OUTCOME_WARD_PM) return 1;         // oddział
+    return 2;                                                       // inna placówka
 }
 
 /**
@@ -634,6 +665,13 @@ inline key_t getIPCKey(int id) {
         key = 0x50520000 + id;
     }
     return key;
+}
+
+/**
+ * @brief Klucz IPC kolejki tokenów poczekalni
+ */
+inline key_t getGateQueueKey() {
+    return getIPCKey(MSG_GATE_KEY_ID);
 }
 
 /**
