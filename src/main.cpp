@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
                 g_max_patients = atoi(optarg);
                 if (g_max_patients <= FIXED_PROCESS_COUNT) {
                     fprintf(stderr, "Błąd: limit procesów musi być > %d (stałe procesy: dyrektor+generator+rejestracja+%d lekarzy)\n",
-                            FIXED_PROCESS_COUNT, DOCTOR_COUNT);
+                            FIXED_PROCESS_COUNT, ENABLED_DOCTOR_COUNT);
                     fprintf(stderr, "Podano: '%s', minimalnie: %d\n", optarg, FIXED_PROCESS_COUNT + 1);
                     printUsage(argv[0]);
                 }
@@ -246,8 +246,7 @@ int main(int argc, char* argv[]) {
         }
     }
     
-    // Sprzątanie IPC
-    cleanupIPC();
+    // Sprzątanie IPC (realizowane przez atexit(cleanupIPC) zarejestrowany w setupSignals)
     
     printf("\n=== Symulacja zakończona ===\n");
     return 0;
@@ -303,7 +302,6 @@ void initIPC() {
     
     // Inicjalizacja wartości semaforów
     unsigned short sem_values[SEM_COUNT] = {0};
-    sem_values[SEM_REG_QUEUE_MUTEX] = 1;       // Mutex wolny
     // Semafory specjalistów - każdy zaczyna jako wolny (1)
     sem_values[SEM_SPECIALIST_KARDIOLOG] = 1;
     sem_values[SEM_SPECIALIST_NEUROLOG] = 1;

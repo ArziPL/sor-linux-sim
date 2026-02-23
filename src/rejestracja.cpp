@@ -144,6 +144,13 @@ int main() {
             if (spec_msgid != -1) msgctl(spec_msgid, IPC_RMID, nullptr);
         }
         
+        // Kolejka tokenów poczekalni (gate)
+        {
+            key_t gate_key = getGateQueueKey();
+            int gid = msgget(gate_key, 0);
+            if (gid != -1) msgctl(gid, IPC_RMID, nullptr);
+        }
+        
         // Kolejki porządkujące (FIFO ordering)
         {
             key_t keys[] = { getOrderGateLogKey(), getOrderRegKey(), getOrderTriageKey(), getOrderExitKey() };

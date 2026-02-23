@@ -256,7 +256,7 @@ gen_cleanup:
     for (int attempt = 0; attempt < 30; attempt++) {
         int status;
         pid_t ret = waitpid(-1, &status, WNOHANG);
-        if (ret <= 0 && errno == ECHILD) break;  // brak dzieci
+        if (ret == -1 && errno == ECHILD) break;  // brak dzieci
         if (ret > 0) continue;  // zebraliśmy jedno — sprawdź kolejne od razu
         usleep(100000);  // 100ms
     }

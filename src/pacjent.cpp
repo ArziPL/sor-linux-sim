@@ -272,7 +272,10 @@ void enterWaitingRoom(PatientData* data) {
             semSignal(data->semid, SEM_SHM_MUTEX);
             // Wyślij token do następnego pacjenta
             order_token.mtype = data->gate_ticket1 + 2;  // dziecko = 2 bilety
-            msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0);
+            if (msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0) == -1) {
+                if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                    SOR_WARN("pacjent %d: msgsnd order_gate_log", data->id);
+            }
         }
     } else {
         // Czekaj na swój bilet (przydzielony przez generator)
@@ -300,7 +303,10 @@ void enterWaitingRoom(PatientData* data) {
             semSignal(data->semid, SEM_SHM_MUTEX);
             // Wyślij token do następnego pacjenta
             order_token.mtype = data->gate_ticket1 + 1;
-            msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0);
+            if (msgsnd(data->state->order_gate_log_msgid, &order_token, GATE_TOKEN_SIZE, 0) == -1) {
+                if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                    SOR_WARN("pacjent %d: msgsnd order_gate_log", data->id);
+            }
         }
     }
 }
@@ -336,13 +342,20 @@ void doRegistration(PatientData* data) {
                       data->id, data->is_vip ? " [VIP]" : "");
         }
         data->state->reg_queue_count++;
-        msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
         semSignal(data->semid, SEM_SHM_MUTEX);
+        // msgsnd poza mutexem — unika blokady SHM gdy kolejka pełna
+        if (msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
+            if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                SOR_WARN("pacjent %d: msgsnd do kolejki rejestracji", data->id);
+        }
         // Powiadom kontroler kolejki o zmianie
         semSignal(data->semid, SEM_REG_QUEUE_CHANGED);
         // Wyślij token do następnego pacjenta
         order_token.mtype = data->gate_ticket1 + step;
-        msgsnd(data->state->order_reg_msgid, &order_token, GATE_TOKEN_SIZE, 0);
+        if (msgsnd(data->state->order_reg_msgid, &order_token, GATE_TOKEN_SIZE, 0) == -1) {
+            if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                SOR_WARN("pacjent %d: msgsnd order_reg", data->id);
+        }
     }
     
     // Czekaj na odpowiedź od rejestracji (blokująco)
@@ -384,10 +397,16 @@ void doTriage(PatientData* data) {
                       data->gate_ticket1, 0) == -1) {
             if (errno != EINTR) return;
         }
-        msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0);
+        if (msgsnd(data->msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
+            if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                SOR_WARN("pacjent %d: msgsnd do triażu", data->id);
+        }
         // Wyślij token do następnego pacjenta
         order_token.mtype = data->gate_ticket1 + step;
-        msgsnd(data->state->order_triage_msgid, &order_token, GATE_TOKEN_SIZE, 0);
+        if (msgsnd(data->state->order_triage_msgid, &order_token, GATE_TOKEN_SIZE, 0) == -1) {
+            if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                SOR_WARN("pacjent %d: msgsnd order_triage", data->id);
+        }
     }
     
     // Czekaj na odpowiedź od POZ (MSG_TRIAGE_RESPONSE)
@@ -482,13 +501,19 @@ void exitSOR(PatientData* data) {
     for (int i = 0; i < step; i++) {
         long w = data->state->gate_now_serving++;
         token.mtype = w;
-        msgsnd(gate, &token, GATE_TOKEN_SIZE, 0);
+        if (msgsnd(gate, &token, GATE_TOKEN_SIZE, 0) == -1) {
+            if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+                SOR_WARN("pacjent %d: msgsnd gate token (mtype %ld)", data->id, w);
+        }
     }
     semSignal(data->semid, SEM_SHM_MUTEX);
 
     // Wyślij token wyjścia do następnego pacjenta
     order_token.mtype = data->gate_ticket1 + step;
-    msgsnd(data->state->order_exit_msgid, &order_token, GATE_TOKEN_SIZE, 0);
+    if (msgsnd(data->state->order_exit_msgid, &order_token, GATE_TOKEN_SIZE, 0) == -1) {
+        if (errno != EINTR && errno != EIDRM && errno != EINVAL)
+            SOR_WARN("pacjent %d: msgsnd order_exit", data->id);
+    }
 }
 
 // ============================================================================
