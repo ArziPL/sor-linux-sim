@@ -16,11 +16,10 @@
 
 static volatile sig_atomic_t g_gen_shutdown = 0;
 
-// Dynamiczna lista PIDów pacjentów (vector zamiast statycznej tablicy)
 static std::vector<pid_t> g_patient_pids;
 
 // ============================================================================
-// HANDLER SYGNAŁU
+// HANDLERY SYGNAŁÓW
 // ============================================================================
 
 static void genSigHandler(int sig) {
@@ -33,8 +32,95 @@ static void genSigHandler(int sig) {
  */
 static void sigchldHandler(int sig) {
     (void)sig;
-    // Zbierz wszystkie zakończone dzieci w handlerze
     while (waitpid(-1, nullptr, WNOHANG) > 0) {}
+}
+
+// ============================================================================
+// SPAWN PACJENTA — wspólna logika dla pre-generacji i normalnej generacji
+// ============================================================================
+
+/**
+ * @brief Loguje pojawienie się pacjenta, przydziela bilety FIFO, fork+execl pacjent.
+ * @return PID dziecka (>0) lub -1 jeśli fork się nie powiódł.
+ */
+static pid_t spawnPatient(SharedState* state, int semid, int patient_id, int age, int is_vip) {
+    // Loguj pojawienie się
+    if (age < 18) {
+        logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d, z opiekunem)",
+                  patient_id, age);
+    } else {
+        logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d)%s",
+                  patient_id, age, is_vip ? " [VIP]" : "");
+    }
+
+    // Zaktualizuj stan i przydziel bilety FIFO pod mutexem
+    semWait(semid, SEM_SHM_MUTEX);
+    state->total_patients = patient_id;
+    state->active_patient_count++;
+    long ticket1 = state->gate_next_ticket++;
+    long ticket2 = (age < 18) ? state->gate_next_ticket++ : 0;
+    semSignal(semid, SEM_SHM_MUTEX);
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+        // Dziecko — gdy generator umrze, kernel wyśle SIGTERM
+        prctl(PR_SET_PDEATHSIG, SIGTERM);
+
+        char id_str[16], age_str[16], vip_str[16], t1_str[16], t2_str[16];
+        snprintf(id_str, sizeof(id_str), "%d", patient_id);
+        snprintf(age_str, sizeof(age_str), "%d", age);
+        snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
+        snprintf(t1_str, sizeof(t1_str), "%ld", ticket1);
+
+        if (age < 18) {
+            snprintf(t2_str, sizeof(t2_str), "%ld", ticket2);
+            execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, t2_str, nullptr);
+        } else {
+            execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, nullptr);
+        }
+        // execl nie wraca jeśli się powiodło — tu dotrzemy tylko przy błędzie
+        SOR_FATAL("execl pacjent id=%d", patient_id);
+
+    } else if (pid > 0) {
+        g_patient_pids.push_back(pid);
+    } else {
+        SOR_WARN("fork pacjenta %d", patient_id);
+        semWait(semid, SEM_SHM_MUTEX);
+        if (state->active_patient_count > 0) state->active_patient_count--;
+        semSignal(semid, SEM_SHM_MUTEX);
+    }
+
+    return pid;
+}
+
+// ============================================================================
+// CLEANUP — czyste zamknięcie z zebraniem procesów potomnych
+// ============================================================================
+
+static void cleanupChildren(SharedState* state, int semid) {
+    logMessage(state, semid, "[Generator] Zamykanie (%d pacjentów)", (int)g_patient_pids.size());
+
+    // Wyślij SIGTERM do wszystkich pacjentów
+    for (pid_t pid : g_patient_pids) {
+        if (pid > 0) kill(pid, SIGTERM);
+    }
+
+    // Czekaj na dzieci (maks ~3s)
+    for (int attempt = 0; attempt < 30; attempt++) {
+        pid_t ret = waitpid(-1, nullptr, WNOHANG);
+        if (ret == -1 && errno == ECHILD) break;  // brak dzieci — gotowe
+        if (ret > 0) { attempt--; continue; }     // zebraliśmy jedno — nie trać iteracji
+        usleep(100000);  // 100ms sleep, potem sprawdź ponownie
+    }
+
+    // Dobij pozostałe (safety net)
+    for (pid_t pid : g_patient_pids) {
+        if (pid > 0) kill(pid, SIGKILL);
+    }
+    while (waitpid(-1, nullptr, WNOHANG) > 0) {}
+
+    logMessage(state, semid, "[Generator] Generator zakończony czysto");
 }
 
 // ============================================================================
@@ -42,7 +128,6 @@ static void sigchldHandler(int sig) {
 // ============================================================================
 
 int main(int argc, char* argv[]) {
-    // Opóźnienie startowe
     if constexpr (STARTUP_DELAY_GENERATOR_MS > 0)
         msleep(STARTUP_DELAY_GENERATOR_MS);
 
@@ -68,7 +153,7 @@ int main(int argc, char* argv[]) {
     sigaction(SIGTERM, &sa, nullptr);
     sigaction(SIGINT, &sa, nullptr);
 
-    // SIGCHLD — natychmiastowe zbieranie zombie (zero zombie policy)
+    // SIGCHLD — natychmiastowe zbieranie zombie
     struct sigaction sa_chld{};
     sa_chld.sa_handler = sigchldHandler;
     sigemptyset(&sa_chld.sa_mask);
@@ -78,24 +163,17 @@ int main(int argc, char* argv[]) {
     // Podłącz pamięć dzieloną
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
-    if (shmid == -1) {
-        SOR_FATAL("Generator: shmget");
-    }
+    if (shmid == -1) SOR_FATAL("Generator: shmget");
 
     SharedState* state = (SharedState*)shmat(shmid, nullptr, 0);
-    if (state == (void*)-1) {
-        SOR_FATAL("Generator: shmat");
-    }
+    if (state == (void*)-1) SOR_FATAL("Generator: shmat");
 
     // Podłącz semafory
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     int semid = semget(sem_key, SEM_COUNT, 0);
-    if (semid == -1) {
-        SOR_FATAL("Generator: semget");
-    }
+    if (semid == -1) SOR_FATAL("Generator: semget");
 
-    logMessage(state, semid, "[Generator] Generator pacjentów startuje (PID %d, interwał %d-%d ms)",
-               getpid(), gen_min_ms, gen_max_ms);
+    logMessage(state, semid, "[Generator] Generator pacjentów startuje (PID %d)", getpid());
 
     int patient_id = 0;
 
@@ -104,172 +182,41 @@ int main(int argc, char* argv[]) {
         logMessage(state, semid, "[Generator] Pre-generacja: %d pacjentów back-to-back", PREGEN_COUNT);
         for (int pg = 0; pg < PREGEN_COUNT && !state->shutdown && !g_gen_shutdown; pg++) {
             patient_id++;
-            int age = randomAge();
-            int is_vip = randomVIP() ? 1 : 0;
-
-            if (age < 18) {
-                logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d, z opiekunem)",
-                          patient_id, age);
-            } else {
-                logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d)%s",
-                          patient_id, age, is_vip ? " [VIP]" : "");
-            }
-
-            semWait(semid, SEM_SHM_MUTEX);
-            state->total_patients = patient_id;
-            state->active_patient_count++;
-            // Przydziel bilety PRZED forkiem (gwarantuje FIFO)
-            long ticket1 = state->gate_next_ticket++;
-            long ticket2 = (age < 18) ? state->gate_next_ticket++ : 0;
-            semSignal(semid, SEM_SHM_MUTEX);
-
-            pid_t pid = fork();
-            if (pid == 0) {
-                prctl(PR_SET_PDEATHSIG, SIGTERM);
-                char id_str[16], age_str[16], vip_str[16], t1_str[16], t2_str[16];
-                snprintf(id_str, sizeof(id_str), "%d", patient_id);
-                snprintf(age_str, sizeof(age_str), "%d", age);
-                snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
-                snprintf(t1_str, sizeof(t1_str), "%ld", ticket1);
-                if (age < 18) {
-                    snprintf(t2_str, sizeof(t2_str), "%ld", ticket2);
-                    execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, t2_str, nullptr);
-                } else {
-                    execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, nullptr);
-                }
-                SOR_FATAL("execl pacjent id=%d", patient_id);
-                exit(EXIT_FAILURE);
-            } else if (pid > 0) {
-                g_patient_pids.push_back(pid);
-            } else {
-                SOR_WARN("fork pacjenta %d", patient_id);
-                semWait(semid, SEM_SHM_MUTEX);
-                if (state->active_patient_count > 0) state->active_patient_count--;
-                semSignal(semid, SEM_SHM_MUTEX);
-            }
+            spawnPatient(state, semid, patient_id, randomAge(), randomVIP() ? 1 : 0);
         }
         logMessage(state, semid, "[Generator] Pre-generacja zakończona (%d pacjentów)", PREGEN_COUNT);
     }
 
-    // Jeśli tryb PREGEN_ONLY — kończymy generowanie, przejdź do cleanup
-    if constexpr (PREGEN_MODE == PREGEN_ONLY) {
-        // Czekaj aż shutdown (dyrektor zamknie) lub wszyscy pacjenci skończą
+    // ===== NORMALNA GENERACJA (pominięta w trybie PREGEN_ONLY) =====
+    if constexpr (PREGEN_MODE != PREGEN_ONLY) {
         while (!state->shutdown && !g_gen_shutdown) {
-            usleep(500000);  // 500ms polling
-        }
-        goto gen_cleanup;
-    }
-
-    // ===== NORMALNA GENERACJA =====
-    while (!state->shutdown && !g_gen_shutdown) {
-        // Losowy czas do następnego pacjenta
-        randomSleep(gen_min_ms, gen_max_ms);
-
-        if (state->shutdown || g_gen_shutdown) break;
-
-        // Czekaj jeśli osiągnięto limit jednoczesnych procesów pacjentów
-        // max_patients to całkowity limit, odejmujemy stałe procesy
-        int patient_limit = state->max_patients - FIXED_PROCESS_COUNT;
-        if (state->max_patients > 0 && patient_limit > 0) {
-            while (!state->shutdown && !g_gen_shutdown) {
-                semWait(semid, SEM_SHM_MUTEX);
-                int active = state->active_patient_count;
-                semSignal(semid, SEM_SHM_MUTEX);
-
-                if (active < patient_limit) break;
-                usleep(100000);  // 100ms polling
-            }
+            randomSleep(gen_min_ms, gen_max_ms);
             if (state->shutdown || g_gen_shutdown) break;
-        }
 
-        patient_id++;
-        int age = randomAge();
-        int is_vip = randomVIP() ? 1 : 0;
-
-        // Loguj pojawienie się pacjenta
-        if (age < 18) {
-            logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d, z opiekunem)",
-                      patient_id, age);
-        } else {
-            logMessage(state, semid, "Pacjent %d pojawia się przed SOR (wiek %d)%s",
-                      patient_id, age, is_vip ? " [VIP]" : "");
-        }
-
-        // Zapamiętaj ile pacjentów + inkrementuj licznik aktywnych PRZED forkiem
-        semWait(semid, SEM_SHM_MUTEX);
-        state->total_patients = patient_id;
-        state->active_patient_count++;
-        // Przydziel bilety PRZED forkiem (gwarantuje FIFO)
-        long ticket1 = state->gate_next_ticket++;
-        long ticket2 = (age < 18) ? state->gate_next_ticket++ : 0;
-        semSignal(semid, SEM_SHM_MUTEX);
-
-        // Fork dla nowego pacjenta
-        pid_t pid = fork();
-
-        if (pid == 0) {
-            // Gdy generator umrze, kernel wyśle SIGTERM do pacjenta
-            prctl(PR_SET_PDEATHSIG, SIGTERM);
-            
-            // Proces pacjenta
-            char id_str[16], age_str[16], vip_str[16], t1_str[16], t2_str[16];
-            snprintf(id_str, sizeof(id_str), "%d", patient_id);
-            snprintf(age_str, sizeof(age_str), "%d", age);
-            snprintf(vip_str, sizeof(vip_str), "%d", is_vip);
-            snprintf(t1_str, sizeof(t1_str), "%ld", ticket1);
-            if (age < 18) {
-                snprintf(t2_str, sizeof(t2_str), "%ld", ticket2);
-                execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, t2_str, nullptr);
-            } else {
-                execl("./pacjent", "pacjent", id_str, age_str, vip_str, t1_str, nullptr);
+            // Czekaj jeśli osiągnięto limit jednoczesnych procesów pacjentów
+            int patient_limit = state->max_patients - FIXED_PROCESS_COUNT;
+            if (state->max_patients > 0 && patient_limit > 0) {
+                while (!state->shutdown && !g_gen_shutdown) {
+                    semWait(semid, SEM_SHM_MUTEX);
+                    int active = state->active_patient_count;
+                    semSignal(semid, SEM_SHM_MUTEX);
+                    if (active < patient_limit) break;
+                    usleep(100000);
+                }
+                if (state->shutdown || g_gen_shutdown) break;
             }
 
-            SOR_FATAL("execl pacjent id=%d", patient_id);
-            exit(EXIT_FAILURE);
-
-        } else if (pid > 0) {
-            // Zapisz PID pacjenta
-            g_patient_pids.push_back(pid);
-        } else {
-            SOR_WARN("fork pacjenta %d", patient_id);
-            // Cofnij licznik bo fork się nie udał
-            semWait(semid, SEM_SHM_MUTEX);
-            if (state->active_patient_count > 0) state->active_patient_count--;
-            semSignal(semid, SEM_SHM_MUTEX);
+            patient_id++;
+            spawnPatient(state, semid, patient_id, randomAge(), randomVIP() ? 1 : 0);
         }
-
-        // Zombie zbierane automatycznie przez handler SIGCHLD
+    } else {
+        // PREGEN_ONLY — czekaj aż dyrektor wyśle shutdown
+        while (!state->shutdown && !g_gen_shutdown)
+            usleep(500000);
     }
 
-gen_cleanup:
     // ==== CZYSTE ZAMKNIĘCIE ====
-    logMessage(state, semid, "[Generator] Zamykanie (%d pacjentów)", (int)g_patient_pids.size());
-
-    // Wyślij SIGTERM do wszystkich pacjentów (obudzi ich z sleep/msgrcv)
-    for (size_t i = 0; i < g_patient_pids.size(); i++) {
-        if (g_patient_pids[i] > 0) {
-            kill(g_patient_pids[i], SIGTERM);
-        }
-    }
-
-    // Czekaj na dzieci (maks ~3s = 30 × 100ms)
-    for (int attempt = 0; attempt < 30; attempt++) {
-        int status;
-        pid_t ret = waitpid(-1, &status, WNOHANG);
-        if (ret == -1 && errno == ECHILD) break;  // brak dzieci
-        if (ret > 0) continue;  // zebraliśmy jedno — sprawdź kolejne od razu
-        usleep(100000);  // 100ms
-    }
-
-    // Dobij pozostałe (safety net)
-    for (size_t i = 0; i < g_patient_pids.size(); i++) {
-        if (g_patient_pids[i] > 0) {
-            kill(g_patient_pids[i], SIGKILL);  // ESRCH jeśli już nie żyje — OK
-        }
-    }
-    while (waitpid(-1, nullptr, WNOHANG) > 0) {}  // zbierz ostatnie zombie
-
-    logMessage(state, semid, "[Generator] Generator zakończony czysto");
+    cleanupChildren(state, semid);
     shmdt(state);
     return 0;
 }

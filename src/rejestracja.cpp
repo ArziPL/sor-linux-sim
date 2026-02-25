@@ -1,14 +1,12 @@
 /**
  * @file rejestracja.cpp
- * @brief Proces rejestracji SOR - jedno okienko = jeden wątek
+ * @brief Proces rejestracji SOR — jedno okienko = jeden wątek
  * 
- * Proces zawiera dwa wątki:
- * - Wątek okienka 1: zawsze aktywny
- * - Wątek okienka 2: uruchamiany gdy kolejka >= K_OPEN, zatrzymywany gdy < K_CLOSE
+ * Wątek okienka 1: zawsze aktywny
+ * Wątek okienka 2: uruchamiany gdy kolejka >= K_OPEN, zatrzymywany gdy < K_CLOSE
+ * Wątek kontrolera: monitoruje długość kolejki i steruje okienkiem 2
  * 
- * Obsługa kolejek:
- * - Pacjenci VIP są obsługiwani priorytetowo (osobna kolejka)
- * - Pacjenci zwykli czekają w kolejce FIFO
+ * VIP obsługiwane priorytetowo (ujemny mtype w msgrcv).
  */
 
 #include "sor_common.hpp"
@@ -17,212 +15,63 @@
 // ZMIENNE GLOBALNE
 // ============================================================================
 
-static SharedState* g_state = nullptr;     // Pamięć dzielona
-static int g_semid = -1;                   // ID semaforów
-static int g_msgid = -1;                   // ID kolejki komunikatów
+static SharedState* g_state = nullptr;
+static int g_semid = -1;
+static int g_msgid = -1;
 
-static volatile sig_atomic_t g_shutdown = 0;  // Flaga zakończenia
+static volatile sig_atomic_t g_shutdown = 0;
 
 // Kontrola wątku okienka 2
-static pthread_t g_window2_thread;            // Uchwyt wątku okienka 2
+static pthread_t g_window2_thread;
 static pthread_mutex_t g_window2_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t g_window2_cond = PTHREAD_COND_INITIALIZER;
-static volatile bool g_window2_active = false;    // Czy okienko 2 aktywne
-static volatile bool g_window2_should_run = false; // Czy okienko 2 ma działać
+static volatile bool g_window2_active = false;
+static volatile bool g_window2_should_run = false;
 
 // ============================================================================
-// DEKLARACJE FUNKCJI
+// HELPERY
 // ============================================================================
 
-void initIPC();
-void signalHandler(int sig);
-void setupSignals();
-void* windowThread(void* arg);
-void* queueControllerThread(void* arg);
-void processPatient(int window_id, SORMessage& msg);
-
-// ============================================================================
-// FUNKCJA GŁÓWNA
-// ============================================================================
-
-int main() {
-    // Opóźnienie startowe
-    if constexpr (STARTUP_DELAY_REJESTRACJA_MS > 0)
-        msleep(STARTUP_DELAY_REJESTRACJA_MS);
-
-    // Inicjalizacja IPC
-    initIPC();
-    
-    // Ustaw handlery sygnałów
-    setupSignals();
-    
-    // Loguj start
-    logMessage(g_state, g_semid, "Okienko rejestracji 1 rozpoczyna pracę");
-    
-    // Utwórz wątek kontrolera kolejki (decyduje o otwarciu/zamknięciu okienka 2)
-    pthread_t controller_thread;
-    if (pthread_create(&controller_thread, nullptr, queueControllerThread, nullptr) != 0) {
-        SOR_FATAL("pthread_create kontroler kolejki");
-    }
-    
-    // Utwórz wątek okienka 2 (początkowo nieaktywny, czeka na sygnał)
-    int window2_id = 2;
-    if (pthread_create(&g_window2_thread, nullptr, windowThread, (void*)(intptr_t)window2_id) != 0) {
-        SOR_FATAL("pthread_create okienko 2");
-    }
-    
-    // Wątek główny = okienko 1
-    int window1_id = 1;
-    
-    while (!g_shutdown && !g_state->shutdown) {
-        SORMessage msg;
-        
-        // Blokujące odbieranie z priorytetem VIP:
-        // Ujemny mtype oznacza: odbierz wiadomość z mtype <= |wartość|,
-        // najniższy mtype pierwszy. VIP (mtype=1) przed zwykłym (mtype=2).
-        ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
-                             -MSG_PATIENT_TO_REGISTRATION, 0);
-        
-        if (ret == -1) {
-            if (errno == EINTR) continue;
-            if (errno == EIDRM || errno == EINVAL) break;
-            SOR_WARN("rejestracja okienko 1: msgrcv");
-            continue;
-        }
-        
-        // Mamy pacjenta do obsługi
-        processPatient(window1_id, msg);
-    }
-    
-    // Zakończenie - poczekaj na wątki
-    g_shutdown = 1;
-    
-    // Obudź wątek okienka 2 jeśli czeka na cond lub blokuje na msgrcv
-    pthread_mutex_lock(&g_window2_mutex);
-    g_window2_should_run = false;
-    pthread_cond_signal(&g_window2_cond);
-    pthread_mutex_unlock(&g_window2_mutex);
-    pthread_kill(g_window2_thread, SIGUSR1);  // Przerwij msgrcv (EINTR)
-    
-    // Obudź kontroler kolejki — blokuje na semWait(SEM_REG_QUEUE_CHANGED)
-    semSignal(g_semid, SEM_REG_QUEUE_CHANGED);
-    
-    pthread_join(g_window2_thread, nullptr);
-    pthread_join(controller_thread, nullptr);
-    
-    logMessage(g_state, g_semid, "Rejestracja kończy pracę");
-    
-    // Jeśli dyrektor nie żyje (kill -9), posprzątaj IPC jako ostatni żywy proces
-    pid_t director_pid = g_state->director_pid;
-    bool director_dead = (director_pid <= 0 || kill(director_pid, 0) == -1);
-    
-    // Odłącz pamięć dzieloną
-    if (g_state) {
-        shmdt(g_state);
-        g_state = nullptr;
-    }
-    
-    if (director_dead) {
-        // Dyrektor nie posprzątał — robimy to za niego
-        fprintf(stderr, "[Rejestracja] Dyrektor martwy — sprzątam IPC\n");
-        
-        key_t shm_key = getIPCKey(SHM_KEY_ID);
-        int shmid = shmget(shm_key, sizeof(SharedState), 0);
-        if (shmid != -1) shmctl(shmid, IPC_RMID, nullptr);
-        
-        key_t sem_key = getIPCKey(SEM_KEY_ID);
-        int semid = semget(sem_key, SEM_COUNT, 0);
-        if (semid != -1) semctl(semid, 0, IPC_RMID);
-        
-        key_t msg_key = getIPCKey(MSG_KEY_ID);
-        int msgid = msgget(msg_key, 0);
-        if (msgid != -1) msgctl(msgid, IPC_RMID, nullptr);
-        
-        for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++) {
-            key_t spec_key = getSpecialistQueueKey((DoctorType)i);
-            int spec_msgid = msgget(spec_key, 0);
-            if (spec_msgid != -1) msgctl(spec_msgid, IPC_RMID, nullptr);
-        }
-        
-        // Kolejka tokenów poczekalni (gate)
-        {
-            key_t gate_key = getGateQueueKey();
-            int gid = msgget(gate_key, 0);
-            if (gid != -1) msgctl(gid, IPC_RMID, nullptr);
-        }
-        
-        // Kolejki porządkujące (FIFO ordering)
-        {
-            key_t keys[] = { getOrderGateLogKey(), getOrderTriageKey(), getOrderExitKey() };
-            for (auto k : keys) {
-                int qid = msgget(k, 0);
-                if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
-            }
-        }
-    }
-    
-    return 0;
-}
+static inline bool shouldStop() { return g_shutdown || g_state->shutdown; }
 
 // ============================================================================
 // INICJALIZACJA IPC
 // ============================================================================
 
-/**
- * @brief Podłącza się do istniejących zasobów IPC
- */
-void initIPC() {
-    // Podłącz pamięć dzieloną
+static void initIPC() {
     key_t shm_key = getIPCKey(SHM_KEY_ID);
     int shmid = shmget(shm_key, sizeof(SharedState), 0);
-    if (shmid == -1) {
-        SOR_FATAL("rejestracja: shmget");
-    }
-    
+    if (shmid == -1) SOR_FATAL("rejestracja: shmget");
+
     g_state = (SharedState*)shmat(shmid, nullptr, 0);
-    if (g_state == (void*)-1) {
-        SOR_FATAL("rejestracja: shmat");
-    }
-    
-    // Podłącz semafory
+    if (g_state == (void*)-1) SOR_FATAL("rejestracja: shmat");
+
     key_t sem_key = getIPCKey(SEM_KEY_ID);
     g_semid = semget(sem_key, SEM_COUNT, 0);
-    if (g_semid == -1) {
-        SOR_FATAL("rejestracja: semget");
-    }
-    
-    // Podłącz kolejkę komunikatów
+    if (g_semid == -1) SOR_FATAL("rejestracja: semget");
+
     key_t msg_key = getIPCKey(MSG_KEY_ID);
     g_msgid = msgget(msg_key, 0);
-    if (g_msgid == -1) {
-        SOR_FATAL("rejestracja: msgget");
-    }
+    if (g_msgid == -1) SOR_FATAL("rejestracja: msgget");
 }
 
 // ============================================================================
 // OBSŁUGA SYGNAŁÓW
 // ============================================================================
 
-/**
- * @brief Handler sygnałów
- */
-void signalHandler(int sig) {
-    if (sig == SIGUSR2 || sig == SIGTERM || sig == SIGINT) {
+static void signalHandler(int sig) {
+    // SIGUSR1 — tylko przerywa msgrcv (EINTR) bez ustawiania shutdown
+    if (sig == SIGUSR2 || sig == SIGTERM || sig == SIGINT)
         g_shutdown = 1;
-    }
 }
 
-/**
- * @brief Konfiguruje handlery sygnałów
- */
-void setupSignals() {
-    struct sigaction sa;
-    memset(&sa, 0, sizeof(sa));
+static void setupSignals() {
+    struct sigaction sa{};
     sa.sa_handler = signalHandler;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
-    
-    sigaction(SIGUSR1, &sa, nullptr);  // Do budzenia wątku okienka 2 (EINTR)
+
+    sigaction(SIGUSR1, &sa, nullptr);  // Budzenie wątku okienka 2 (EINTR)
     sigaction(SIGUSR2, &sa, nullptr);
     sigaction(SIGTERM, &sa, nullptr);
     sigaction(SIGINT, &sa, nullptr);
@@ -232,44 +81,32 @@ void setupSignals() {
 // OBSŁUGA PACJENTA
 // ============================================================================
 
-/**
- * @brief Obsługuje pacjenta przy okienku rejestracji
- * @param window_id Numer okienka (1 lub 2)
- * @param msg Wiadomość od pacjenta
- */
-void processPatient(int window_id, SORMessage& msg) {
+static void processPatient(int window_id, SORMessage& msg) {
     logMessage(g_state, g_semid, "Pacjent %d podchodzi do okienka rejestracji %d%s",
               msg.patient_id, window_id, msg.is_vip ? " [VIP]" : "");
-    
-    // Zmniejsz licznik kolejki
+
     semWait(g_semid, SEM_SHM_MUTEX);
-    if (g_state->reg_queue_count > 0) {
-        g_state->reg_queue_count--;
-    }
+    if (g_state->reg_queue_count > 0) g_state->reg_queue_count--;
     semSignal(g_semid, SEM_SHM_MUTEX);
-    
-    // Powiadom kontroler kolejki o zmianie
+
     semSignal(g_semid, SEM_REG_QUEUE_CHANGED);
-    
-    // Symulacja czasu rejestracji
+
     randomSleep(REGISTRATION_MIN_MS, REGISTRATION_MAX_MS);
-    
+
     // Przydziel bilet triażowy (pod mutexem — gwarantuje FIFO)
     semWait(g_semid, SEM_SHM_MUTEX);
     int triage_ticket = g_state->triage_next_ticket++;
     semSignal(g_semid, SEM_SHM_MUTEX);
-    
-    // Wyślij odpowiedź do pacjenta
+
     SORMessage response = msg;
     response.mtype = MSG_REGISTRATION_RESPONSE + msg.patient_id;
     response.triage_ticket = triage_ticket;
-    
+
     if (msgsnd(g_msgid, &response, sizeof(SORMessage) - sizeof(long), 0) == -1) {
-        if (errno != EINTR && errno != EIDRM) {
+        if (errno != EINTR && errno != EIDRM)
             SOR_WARN("rejestracja: msgsnd odpowiedź pacjent %d", msg.patient_id);
-        }
     }
-    
+
     logMessage(g_state, g_semid, "Pacjent %d przekazany do triażu, czeka na lekarza POZ",
               msg.patient_id);
 }
@@ -278,56 +115,42 @@ void processPatient(int window_id, SORMessage& msg) {
 // WĄTEK OKIENKA 2
 // ============================================================================
 
-/**
- * @brief Wątek okienka rejestracji (używany dla okienka 2)
- * Czeka na sygnał aktywacji, potem obsługuje pacjentów dopóki jest aktywny
- */
-void* windowThread(void* arg) {
+static void* windowThread(void* arg) {
     int window_id = (int)(intptr_t)arg;
-    
-    while (!g_shutdown && !g_state->shutdown) {
+
+    while (!shouldStop()) {
         // Czekaj na aktywację
         pthread_mutex_lock(&g_window2_mutex);
-        while (!g_window2_should_run && !g_shutdown && !g_state->shutdown) {
+        while (!g_window2_should_run && !shouldStop())
             pthread_cond_wait(&g_window2_cond, &g_window2_mutex);
-        }
-        
-        if (g_shutdown || g_state->shutdown) {
-            pthread_mutex_unlock(&g_window2_mutex);
-            break;
-        }
-        
+
+        if (shouldStop()) { pthread_mutex_unlock(&g_window2_mutex); break; }
+
         g_window2_active = true;
         pthread_mutex_unlock(&g_window2_mutex);
-        
+
         logMessage(g_state, g_semid, "Okienko rejestracji %d rozpoczyna pracę", window_id);
-        
+
         // Obsługuj pacjentów dopóki okienko jest aktywne
-        while (g_window2_should_run && !g_shutdown && !g_state->shutdown) {
+        while (g_window2_should_run && !shouldStop()) {
             SORMessage msg;
-            
-            // Blokujące odbieranie z priorytetem VIP (ujemny mtype)
-            ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 
+            ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long),
                                  -MSG_PATIENT_TO_REGISTRATION, 0);
-            
             if (ret == -1) {
                 if (errno == EINTR) continue;
                 if (errno == EIDRM || errno == EINVAL) break;
-                SOR_WARN("rejestracja okienko 2: msgrcv");
+                SOR_WARN("rejestracja okienko %d: msgrcv", window_id);
                 continue;
             }
-            
-            // Obsłuż pacjenta
             processPatient(window_id, msg);
         }
-        
+
         pthread_mutex_lock(&g_window2_mutex);
         g_window2_active = false;
         pthread_mutex_unlock(&g_window2_mutex);
-        
+
         logMessage(g_state, g_semid, "Okienko rejestracji %d kończy pracę", window_id);
     }
-    
     return nullptr;
 }
 
@@ -335,67 +158,147 @@ void* windowThread(void* arg) {
 // KONTROLER KOLEJKI
 // ============================================================================
 
-/**
- * @brief Wątek kontrolera kolejki - decyduje o otwarciu/zamknięciu okienka 2
- * Monitoruje długość kolejki i aktywuje/deaktywuje okienko 2
- */
-void* queueControllerThread(void* arg) {
-    (void)arg;
-    
-    logMessage(g_state, g_semid, "[RegCtrl] Kontroler rejestracji startuje (K_OPEN=%d, K_CLOSE=%d)", 
+static void* queueControllerThread(void*) {
+    logMessage(g_state, g_semid, "[RegCtrl] Kontroler rejestracji startuje (K_OPEN=%d, K_CLOSE=%d)",
               K_OPEN, K_CLOSE);
-    
-    while (!g_shutdown && !g_state->shutdown) {
+
+    while (!shouldStop()) {
         // Blokujące czekanie na zmianę kolejki (zero CPU w idle)
         semWait(g_semid, SEM_REG_QUEUE_CHANGED);
-        
-        if (g_shutdown || g_state->shutdown) break;
-        
-        // Sprawdź długość kolejki
+        if (shouldStop()) break;
+
         semWait(g_semid, SEM_SHM_MUTEX);
         int queue_count = g_state->reg_queue_count;
         bool window2_open = g_state->reg_window_2_open;
         semSignal(g_semid, SEM_SHM_MUTEX);
-        
-        // Decyzja o otwarciu okienka 2
+
         if (!window2_open && queue_count >= K_OPEN) {
             // Otwórz okienko 2
             semWait(g_semid, SEM_SHM_MUTEX);
             g_state->reg_window_2_open = 1;
             semSignal(g_semid, SEM_SHM_MUTEX);
-            
-            logMessage(g_state, g_semid, "[RegCtrl] Otwieram okienko 2 (kolejka: %d >= %d)", 
+
+            logMessage(g_state, g_semid, "[RegCtrl] Otwieram okienko 2 (kolejka: %d >= %d)",
                       queue_count, K_OPEN);
-            
-            // Aktywuj wątek okienka 2
+
             pthread_mutex_lock(&g_window2_mutex);
             g_window2_should_run = true;
             pthread_cond_signal(&g_window2_cond);
             pthread_mutex_unlock(&g_window2_mutex);
-        }
-        // Decyzja o zamknięciu okienka 2
-        else if (window2_open && queue_count < K_CLOSE) {
+
+        } else if (window2_open && queue_count < K_CLOSE) {
             // Zamknij okienko 2
             semWait(g_semid, SEM_SHM_MUTEX);
             g_state->reg_window_2_open = 0;
             semSignal(g_semid, SEM_SHM_MUTEX);
-            
-            logMessage(g_state, g_semid, "[RegCtrl] Zamykam okienko 2 (kolejka: %d < %d)", 
+
+            logMessage(g_state, g_semid, "[RegCtrl] Zamykam okienko 2 (kolejka: %d < %d)",
                       queue_count, K_CLOSE);
-            
-            // Deaktywuj wątek okienka 2
+
             pthread_mutex_lock(&g_window2_mutex);
             g_window2_should_run = false;
             pthread_mutex_unlock(&g_window2_mutex);
-            
+
             // Powtarzaj SIGUSR1 aż wątek potwierdzi wyjście z pętli msgrcv
-            // (jednorazowy sygnał mógłby trafić poza msgrcv i zostać zignorowany)
-            while (g_window2_active && !g_shutdown && !g_state->shutdown) {
+            while (g_window2_active && !shouldStop()) {
                 pthread_kill(g_window2_thread, SIGUSR1);
-                usleep(50000);  // 50ms
+                usleep(50000);
             }
         }
     }
-    
     return nullptr;
+}
+
+// ============================================================================
+// EMERGENCY IPC CLEANUP — gdy dyrektor nie posprzątał (kill -9)
+// ============================================================================
+
+static void emergencyIPCCleanup() {
+    pid_t director_pid = g_state->director_pid;
+    shmdt(g_state);
+
+    if (director_pid > 0 && kill(director_pid, 0) == 0)
+        return;  // Dyrektor żyje — on posprząta
+
+    fprintf(stderr, "[Rejestracja] Dyrektor martwy — sprzątam IPC\n");
+
+    auto removeQueue = [](key_t k) {
+        int qid = msgget(k, 0);
+        if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
+    };
+
+    // Pamięć dzielona + semafory
+    key_t shm_key = getIPCKey(SHM_KEY_ID);
+    int shmid = shmget(shm_key, sizeof(SharedState), 0);
+    if (shmid != -1) shmctl(shmid, IPC_RMID, nullptr);
+
+    key_t sem_key = getIPCKey(SEM_KEY_ID);
+    int semid = semget(sem_key, SEM_COUNT, 0);
+    if (semid != -1) semctl(semid, 0, IPC_RMID);
+
+    // Kolejki komunikatów
+    removeQueue(getIPCKey(MSG_KEY_ID));
+    removeQueue(getGateQueueKey());
+    removeQueue(getOrderGateLogKey());
+    removeQueue(getOrderTriageKey());
+    removeQueue(getOrderExitKey());
+
+    for (int i = DOCTOR_KARDIOLOG; i <= DOCTOR_PEDIATRA; i++)
+        removeQueue(getSpecialistQueueKey((DoctorType)i));
+}
+
+// ============================================================================
+// MAIN
+// ============================================================================
+
+int main() {
+    if constexpr (STARTUP_DELAY_REJESTRACJA_MS > 0)
+        msleep(STARTUP_DELAY_REJESTRACJA_MS);
+
+    initIPC();
+    setupSignals();
+
+    logMessage(g_state, g_semid, "Okienko rejestracji 1 rozpoczyna pracę");
+
+    // Kontroler kolejki (decyduje o otwarciu/zamknięciu okienka 2)
+    pthread_t controller_thread;
+    if (pthread_create(&controller_thread, nullptr, queueControllerThread, nullptr) != 0)
+        SOR_FATAL("pthread_create kontroler kolejki");
+
+    // Okienko 2 (początkowo nieaktywne, czeka na sygnał od kontrolera)
+    if (pthread_create(&g_window2_thread, nullptr, windowThread, (void*)(intptr_t)2) != 0)
+        SOR_FATAL("pthread_create okienko 2");
+
+    // Wątek główny = okienko 1
+    while (!shouldStop()) {
+        SORMessage msg;
+        ssize_t ret = msgrcv(g_msgid, &msg, sizeof(SORMessage) - sizeof(long),
+                             -MSG_PATIENT_TO_REGISTRATION, 0);
+        if (ret == -1) {
+            if (errno == EINTR) continue;
+            if (errno == EIDRM || errno == EINVAL) break;
+            SOR_WARN("rejestracja okienko 1: msgrcv");
+            continue;
+        }
+        processPatient(1, msg);
+    }
+
+    // Zakończenie — obudź wątki pomocnicze
+    g_shutdown = 1;
+
+    pthread_mutex_lock(&g_window2_mutex);
+    g_window2_should_run = false;
+    pthread_cond_signal(&g_window2_cond);
+    pthread_mutex_unlock(&g_window2_mutex);
+    pthread_kill(g_window2_thread, SIGUSR1);
+
+    semSignal(g_semid, SEM_REG_QUEUE_CHANGED);
+
+    pthread_join(g_window2_thread, nullptr);
+    pthread_join(controller_thread, nullptr);
+
+    logMessage(g_state, g_semid, "Rejestracja kończy pracę");
+
+    emergencyIPCCleanup();
+    return 0;
 }

@@ -37,9 +37,9 @@
 // STAŁE KONFIGURACYJNE SYMULACJI
 // ============================================================================
 
-constexpr int N = 1;                    // Pojemność poczekalni SOR
-constexpr int K_OPEN = N / 2;            // Próg otwarcia drugiego okienka (>=10 osób w kolejce)
-constexpr int K_CLOSE = N / 3;           // Próg zamknięcia drugiego okienka (<7 osób)
+constexpr int N = 3;                    // Pojemność poczekalni SOR
+constexpr int K_OPEN = 2;            // Próg otwarcia drugiego okienka
+constexpr int K_CLOSE = 1;           // Próg zamknięcia drugiego okienka
 
 // Klucze IPC - generowane na podstawie ścieżki i identyfikatorów
 constexpr int SHM_KEY_ID = 'S';          // Klucz pamięci dzielonej
@@ -52,16 +52,16 @@ constexpr int MSG_ORDER_TRIAGE_KEY_ID = 'j';    // Kolejka FIFO kolejności tria
 constexpr int MSG_ORDER_EXIT_KEY_ID = 'k';      // Kolejka FIFO kolejności wyjścia
 
 // Czasy operacji w milisekundach
-constexpr int PATIENT_GEN_MIN_MS = 0;   // Min czas między generowaniem pacjentów
-constexpr int PATIENT_GEN_MAX_MS = 0;   // Max czas między generowaniem pacjentów
-constexpr int REGISTRATION_MIN_MS = 0;  // Min czas rejestracji
-constexpr int REGISTRATION_MAX_MS = 0; // Max czas rejestracji
-constexpr int TRIAGE_MIN_MS = 5000;        // Min czas triażu
-constexpr int TRIAGE_MAX_MS = 5000;       // Max czas triażu
-constexpr int TREATMENT_MIN_MS = 10000;    // Min czas leczenia u specjalisty
-constexpr int TREATMENT_MAX_MS = 10000;    // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 5000; // Min czas przerwy lekarza
-constexpr int DOCTOR_BREAK_MAX_MS = 5000;// Max czas przerwy lekarza
+constexpr int PATIENT_GEN_MIN_MS = 300;   // Min czas między generowaniem pacjentów
+constexpr int PATIENT_GEN_MAX_MS = 300;   // Max czas między generowaniem pacjentów
+constexpr int REGISTRATION_MIN_MS = 400;  // Min czas rejestracji
+constexpr int REGISTRATION_MAX_MS = 400; // Max czas rejestracji
+constexpr int TRIAGE_MIN_MS = 0;        // Min czas triażu
+constexpr int TRIAGE_MAX_MS = 0;       // Max czas triażu
+constexpr int TREATMENT_MIN_MS = 0;    // Min czas leczenia u specjalisty
+constexpr int TREATMENT_MAX_MS = 0;    // Max czas leczenia u specjalisty
+constexpr int DOCTOR_BREAK_MIN_MS = 0; // Min czas przerwy lekarza
+constexpr int DOCTOR_BREAK_MAX_MS = 0;// Max czas przerwy lekarza
 
 // FIXED_PROCESS_COUNT — definiowany niżej (po DoctorType i DOCTOR_ENABLED)
 
@@ -81,10 +81,10 @@ static_assert(TRIAGE_RED_PM + TRIAGE_YELLOW_PM + TRIAGE_GREEN_PM + TRIAGE_HOME_P
 // Dzieci (<18 lat) ZAWSZE trafiają do pediatry, te ‰ dotyczą tylko dorosłych.
 // Ustaw 0 = żaden dorosły pacjent nie trafi do tego specjalisty.
 constexpr int SPEC_KARDIOLOG_PM   = 0;  // ‰ dorosłych → kardiolog (20%)
-constexpr int SPEC_NEUROLOG_PM    = 1000;  // ‰ dorosłych → neurolog (20%)
+constexpr int SPEC_NEUROLOG_PM    = 0;  // ‰ dorosłych → neurolog (20%)
 constexpr int SPEC_OKULISTA_PM    = 0;  // ‰ dorosłych → okulista (20%)
 constexpr int SPEC_LARYNGOLOG_PM  = 0;  // ‰ dorosłych → laryngolog (20%)
-constexpr int SPEC_CHIRURG_PM     = 0;  // ‰ dorosłych → chirurg (20%)
+constexpr int SPEC_CHIRURG_PM     = 1000;  // ‰ dorosłych → chirurg (20%)
 static_assert(SPEC_KARDIOLOG_PM + SPEC_NEUROLOG_PM + SPEC_OKULISTA_PM +
               SPEC_LARYNGOLOG_PM + SPEC_CHIRURG_PM == 1000,
               "Suma promili specjalistow musi wynosic 1000");
@@ -118,15 +118,15 @@ constexpr ChildrenMode CHILDREN_MODE = NO_CHILDREN;
 
 // --- Tryb VIP ---
 enum VipMode { VIP_NORMAL, VIP_ONLY, NO_VIP };
-constexpr VipMode VIP_MODE = NO_VIP;
+constexpr VipMode VIP_MODE = VIP_NORMAL;
 // VIP_NORMAL — 10% szans na VIP
 // VIP_ONLY   — każdy pacjent jest VIP
 // NO_VIP     — żaden pacjent nie jest VIP
 
 // --- Pre-generacja pacjentów ---
 enum PregenMode { NORMAL_GEN, PREGEN_ONLY, PREGEN_THEN_NORMAL };
-constexpr PregenMode PREGEN_MODE = PREGEN_ONLY;
-constexpr int PREGEN_COUNT = 1;
+constexpr PregenMode PREGEN_MODE = NORMAL_GEN;
+constexpr int PREGEN_COUNT = 50;
 // NORMAL_GEN         — ignoruje PREGEN_COUNT, normalna generacja z sleep(min,max)
 // PREGEN_ONLY        — generuje PREGEN_COUNT pacjentów back-to-back, potem KOŃCZY
 // PREGEN_THEN_NORMAL — generuje PREGEN_COUNT back-to-back, potem normalna generacja
@@ -141,9 +141,6 @@ constexpr int STARTUP_DELAY_SPECIALIST_MS  = 0;     // Lekarze specjaliści
 // TYPY ENUMERACYJNE
 // ============================================================================
 
-/**
- * @brief Typy lekarzy w SOR
- */
 enum DoctorType {
     DOCTOR_POZ = 0,      // Lekarz POZ (triaż)
     DOCTOR_KARDIOLOG,    // Kardiolog
@@ -155,9 +152,6 @@ enum DoctorType {
     DOCTOR_COUNT         // Liczba typów lekarzy
 };
 
-/**
- * @brief Nazwy lekarzy do wyświetlania
- */
 inline const char* getDoctorName(DoctorType type) {
     static const char* names[] = {
         "POZ (triaż)", "kardiolog", "neurolog", 
@@ -169,9 +163,6 @@ inline const char* getDoctorName(DoctorType type) {
 static_assert(sizeof(DOCTOR_ENABLED) / sizeof(DOCTOR_ENABLED[0]) == DOCTOR_COUNT,
               "Tablica DOCTOR_ENABLED musi mieć DOCTOR_COUNT elementów");
 
-/**
- * @brief Zlicza włączonych lekarzy (constexpr, czas kompilacji)
- */
 constexpr int countEnabledDoctors() {
     int c = 0;
     for (int i = 0; i < DOCTOR_COUNT; i++) {
@@ -184,9 +175,6 @@ constexpr int countEnabledDoctors() {
 constexpr int ENABLED_DOCTOR_COUNT = countEnabledDoctors();
 constexpr int FIXED_PROCESS_COUNT = 3 + ENABLED_DOCTOR_COUNT;
 
-/**
- * @brief Kolory triażu określające priorytet pacjenta
- */
 enum TriageColor {
     COLOR_NONE = 0,      // Brak przypisanego koloru
     COLOR_RED = 1,       // Czerwony - natychmiastowa pomoc
@@ -195,9 +183,6 @@ enum TriageColor {
     COLOR_SENT_HOME = 4  // Odesłany do domu z triażu
 };
 
-/**
- * @brief Nazwy kolorów triażu
- */
 inline const char* getColorName(TriageColor color) {
     static const char* names[] = {
         "brak", "czerwony", "żółty", "zielony", "odesłany"
@@ -209,13 +194,6 @@ inline const char* getColorName(TriageColor color) {
 // INDEKSY SEMAFORÓW W TABLICY
 // ============================================================================
 
-/**
- * Semafory używane w symulacji:
- * - SEM_REG_QUEUE_MUTEX: mutex dla kolejki rejestracji
- * - SEM_SPECIALIST_*: semafory poszczególnych specjalistów
- * - SEM_SHM_MUTEX: mutex dla dostępu do pamięci dzielonej
- * - SEM_LOG_MUTEX: mutex dla logowania
- */
 enum SemIndex {
     SEM_SPECIALIST_KARDIOLOG = 0,
     SEM_SPECIALIST_NEUROLOG,
@@ -229,38 +207,22 @@ enum SemIndex {
     SEM_COUNT                // Liczba semaforów
 };
 
-/**
- * @brief Zwraca indeks semafora dla danego specjalisty
- */
+/// DOCTOR_KARDIOLOG=1 → SEM_SPECIALIST_KARDIOLOG=0, itd.
 inline int getSpecialistSemIndex(DoctorType type) {
-    switch(type) {
-        case DOCTOR_KARDIOLOG: return SEM_SPECIALIST_KARDIOLOG;
-        case DOCTOR_NEUROLOG: return SEM_SPECIALIST_NEUROLOG;
-        case DOCTOR_OKULISTA: return SEM_SPECIALIST_OKULISTA;
-        case DOCTOR_LARYNGOLOG: return SEM_SPECIALIST_LARYNGOLOG;
-        case DOCTOR_CHIRURG: return SEM_SPECIALIST_CHIRURG;
-        case DOCTOR_PEDIATRA: return SEM_SPECIALIST_PEDIATRA;
-        default: return -1;
-    }
+    return (type >= DOCTOR_KARDIOLOG && type <= DOCTOR_PEDIATRA) ? (type - 1) : -1;
 }
 
 // ============================================================================
 // STRUKTURY KOMUNIKATÓW (KOLEJKA KOMUNIKATÓW)
 // ============================================================================
 
-/**
- * @brief Token poczekalni (kolejka FIFO zamiast semafora)
- * Jeden token = jedno wolne miejsce w poczekalni
- */
+/// Token poczekalni — jeden token = jedno wolne miejsce
 struct GateToken {
     long mtype;   // Numer biletu (ticket) — unikalne mtype per pacjent
     char data[1]; // Minimalny payload
 };
 constexpr size_t GATE_TOKEN_SIZE = sizeof(GateToken) - sizeof(long);
 
-/**
- * @brief Typy wiadomości w kolejce komunikatów
- */
 enum MessageType {
     MSG_PATIENT_TO_REGISTRATION_VIP = 1,  // VIP - niższy mtype = wyższy priorytet w msgrcv
     MSG_PATIENT_TO_REGISTRATION = 2,      // Pacjent zwykły
@@ -270,22 +232,11 @@ enum MessageType {
     MSG_SPECIALIST_RESPONSE = 30000,      // Odpowiedź specjalisty (bazowy + patient_id)
 };
 
-/**
- * @brief Mtype w kolejkach specjalistów — koduje priorytet koloru triażu
- * 
- * Każdy specjalista ma osobną kolejkę komunikatów.
- * W kolejce specjalisty mtype oznacza kolor triażu:
- *   COLOR_RED=1, COLOR_YELLOW=2, COLOR_GREEN=3
- * 
- * Blokujący msgrcv(-3, 0) automatycznie wybiera najniższy mtype (RED) pierwszy.
- */
+// Mtype w kolejkach specjalistów = kolor triażu; msgrcv(-3, 0) → RED first
 constexpr long SPECIALIST_MTYPE_RED    = 1;  // Czerwony — najwyższy priorytet
 constexpr long SPECIALIST_MTYPE_YELLOW = 2;  // Żółty
 constexpr long SPECIALIST_MTYPE_GREEN  = 3;  // Zielony — najniższy priorytet
 
-/**
- * @brief Konwertuje kolor triażu na mtype do kolejki specjalisty
- */
 inline long colorToMtype(TriageColor color) {
     switch (color) {
         case COLOR_RED:    return SPECIALIST_MTYPE_RED;
@@ -295,10 +246,6 @@ inline long colorToMtype(TriageColor color) {
     }
 }
 
-/**
- * @brief Struktura wiadomości w kolejce komunikatów
- * Używana do komunikacji między pacjentami a lekarzami
- */
 struct SORMessage {
     long mtype;              // Typ wiadomości (wymagane przez msgrcv/msgsnd)
     int patient_id;          // ID pacjenta
@@ -316,10 +263,6 @@ struct SORMessage {
 // STRUKTURA PAMIĘCI DZIELONEJ
 // ============================================================================
 
-/**
- * @brief Stan współdzielony symulacji SOR
- * Przechowuje wszystkie informacje o stanie kolejek, okienek i pracy lekarzy
- */
 struct SharedState {
     // Czas startu symulacji (do obliczania timestampów)
     time_t start_time_sec;
@@ -382,50 +325,26 @@ struct SharedState {
 // FUNKCJE POMOCNICZE - OBSŁUGA BŁĘDÓW (własna funkcja)
 // ============================================================================
 
-/**
- * @brief Poziomy błędów w symulacji SOR
- */
 enum SorErrorLevel {
     ERR_FATAL,    // Błąd krytyczny - kończy program
     ERR_WARNING,  // Ostrzeżenie - kontynuuje działanie
     ERR_INFO      // Informacja - bez errno
 };
 
-/**
- * @brief Centralna funkcja obsługi błędów symulacji SOR
- * 
- * Zapewnia jednolity format zgłaszania błędów w całym projekcie.
- * Automatycznie dołącza informacje o pliku, linii, funkcji i errno.
- * 
- * @param level   Poziom błędu (FATAL/WARNING/INFO)
- * @param file    Plik źródłowy (__FILE__)
- * @param line    Numer linii (__LINE__)
- * @param func    Nazwa funkcji (__func__)
- * @param format  Format printf wiadomości
- * 
- * ERR_FATAL:   wypisuje "[FATAL] plik:linia (func): msg: errno_desc" + exit(1)
- * ERR_WARNING: wypisuje "[WARN]  plik:linia (func): msg: errno_desc"
- * ERR_INFO:    wypisuje "[INFO]  plik:linia (func): msg" (bez errno)
- */
+/// Centralna obsługa błędów: [LEVEL] file:line (func): msg [+ errno]
 inline void sorError(SorErrorLevel level, const char* file, int line,
                      const char* func, const char* format, ...) {
     int saved_errno = errno;
     
-    const char* level_str;
-    switch (level) {
-        case ERR_FATAL:   level_str = "FATAL"; break;
-        case ERR_WARNING: level_str = "WARN";  break;
-        case ERR_INFO:    level_str = "INFO";  break;
-        default:          level_str = "???";   break;
-    }
+    static const char* LEVEL_NAMES[] = { "FATAL", "WARN", "INFO" };
+    const char* level_str = (level >= 0 && level <= ERR_INFO) ? LEVEL_NAMES[level] : "???";
     
-    // Wyodrębnij nazwę pliku (bez ścieżki)
-    const char* basename = file;
+    const char* fname = file;
     for (const char* p = file; *p; p++) {
-        if (*p == '/') basename = p + 1;
+        if (*p == '/') fname = p + 1;
     }
     
-    fprintf(stderr, "[%s] %s:%d (%s): ", level_str, basename, line, func);
+    fprintf(stderr, "[%s] %s:%d (%s): ", level_str, fname, line, func);
     
     va_list args;
     va_start(args, format);
@@ -452,13 +371,6 @@ inline void sorError(SorErrorLevel level, const char* file, int line,
     }
 }
 
-/**
- * @brief Makra do zgłaszania błędów - automatycznie wstawiają plik/linię/funkcję
- * 
- * SOR_FATAL("msg", ...) - błąd krytyczny, kończy program
- * SOR_WARN("msg", ...)  - ostrzeżenie, kontynuuje
- * SOR_INFO("msg", ...)  - informacja, bez errno
- */
 #define SOR_FATAL(fmt, ...) sorError(ERR_FATAL,   __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 #define SOR_WARN(fmt, ...)  sorError(ERR_WARNING,  __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
 #define SOR_INFO(fmt, ...)  sorError(ERR_INFO,     __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__)
@@ -467,14 +379,9 @@ inline void sorError(SorErrorLevel level, const char* file, int line,
 // FUNKCJE POMOCNICZE - SEMAFORY (System V)
 // ============================================================================
 
-/**
- * @brief Wykonuje operację P (wait/czekaj) na semaforze
- * Blokuje aż semafor > 0, potem dekrementuje
- * @param semid ID zestawu semaforów
- * @param sem_num Numer semafora w zestawie
- */
+/// Operacja P (wait) — blokuje aż semafor > 0, potem dekrementuje
 inline void semWait(int semid, int sem_num) {
-    struct sembuf op;
+    struct sembuf op{};
     op.sem_num = sem_num;
     op.sem_op = -1;          // Dekrementacja (czekanie)
     op.sem_flg = 0;          // Blokujące czekanie (bez IPC_NOWAIT!)
@@ -491,14 +398,9 @@ inline void semWait(int semid, int sem_num) {
     }
 }
 
-/**
- * @brief Wykonuje operację V (signal/sygnalizuj) na semaforze
- * Inkrementuje wartość semafora
- * @param semid ID zestawu semaforów
- * @param sem_num Numer semafora w zestawie
- */
+/// Operacja V (signal) — inkrementuje wartość semafora
 inline void semSignal(int semid, int sem_num) {
-    struct sembuf op;
+    struct sembuf op{};
     op.sem_num = sem_num;
     op.sem_op = 1;           // Inkrementacja (sygnalizacja)
     op.sem_flg = 0;
@@ -513,9 +415,6 @@ inline void semSignal(int semid, int sem_num) {
     }
 }
 
-/**
- * @brief Pobiera aktualną wartość semafora
- */
 inline int semGetValue(int semid, int sem_num) {
     return semctl(semid, sem_num, GETVAL);
 }
@@ -524,9 +423,6 @@ inline int semGetValue(int semid, int sem_num) {
 // FUNKCJE POMOCNICZE - LOGOWANIE
 // ============================================================================
 
-/**
- * @brief Pobiera czas od startu symulacji w sekundach
- */
 inline double getElapsedTime(SharedState* state) {
     struct timespec now;
     clock_gettime(CLOCK_MONOTONIC, &now);
@@ -536,19 +432,7 @@ inline double getElapsedTime(SharedState* state) {
     return elapsed;
 }
 
-/**
- * @brief Loguje wiadomość do pliku z timestampem
- * Format: [XXX.XXs] wiadomość
- * 
- * Plik logu otwierany jest raz per proces (lazy init) przy użyciu niskopoziomowego
- * open(O_WRONLY|O_APPEND|O_CREAT) zamiast fopen/fclose — eliminuje overhead
- * wielokrotnego otwierania/zamykania pliku przy dużej liczbie logów.
- * Zapis odbywa się przez write() (niskopoziomowe I/O, wymaganie projektowe 5.2a).
- * 
- * @param state Wskaźnik do stanu współdzielonego
- * @param semid ID semaforów (do blokady mutex)
- * @param format Format printf
- */
+/// Loguje [XXX.XXs] msg do pliku + stdout. Lazy-open per proces (write — wymaganie 5.2a).
 inline void logMessage(SharedState* state, int semid, const char* format, ...) {
     if (!state) return;
     
@@ -592,20 +476,13 @@ inline void logMessage(SharedState* state, int semid, const char* format, ...) {
 // FUNKCJE POMOCNICZE - LOSOWOŚĆ
 // ============================================================================
 
-/**
- * @brief Generuje losową liczbę całkowitą z zakresu [min, max]
- */
 inline int randomInt(int min, int max) {
     static thread_local std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<> dis(min, max);
     return dis(gen);
 }
 
-/**
- * @brief Usypia wątek na podaną liczbę milisekund (odporne na sygnały)
- * Używa nanosleep z restartem po EINTR — NIE jest busy-wait.
- * Po przerwaniu sygnałem kontynuuje spanie do pełnego czasu.
- */
+/// Usypia na ms milisekund (nanosleep + EINTR restart)
 inline void msleep(int ms) {
     struct timespec req;
     req.tv_sec  = ms / 1000;
@@ -615,17 +492,11 @@ inline void msleep(int ms) {
     }
 }
 
-/**
- * @brief Usypia wątek na losowy czas z zakresu [minMs, maxMs] milisekund
- */
 inline void randomSleep(int minMs, int maxMs) {
     msleep(randomInt(minMs, maxMs));
 }
 
-/**
- * @brief Losuje kolor triażu według konfigurowalnych prawdopodobieństw (promile)
- * Używa stałych TRIAGE_*_PM z panelu konfiguracyjnego
- */
+/// Losuje kolor triażu wg TRIAGE_*_PM
 inline TriageColor randomTriageColor() {
     int r = randomInt(1, 1000);
     if (r <= TRIAGE_RED_PM) return COLOR_RED;
@@ -634,10 +505,7 @@ inline TriageColor randomTriageColor() {
     return COLOR_SENT_HOME;
 }
 
-/**
- * @brief Losuje specjalistę dla pacjenta według konfigurowalnych promili
- * Dzieci (<18 lat) zawsze → pediatra. Dorośli → losowanie wg SPEC_*_PM.
- */
+/// Losuje specjalistę (dzieci → pediatra, dorośli → wg SPEC_*_PM)
 inline DoctorType randomSpecialist(int age) {
     if (age < 18) {
         return DOCTOR_PEDIATRA;
@@ -655,10 +523,7 @@ inline DoctorType randomSpecialist(int age) {
     return DOCTOR_CHIRURG;
 }
 
-/**
- * @brief Losuje wynik leczenia według konfigurowalnych prawdopodobieństw
- * Używa stałych OUTCOME_*_PCT z panelu konfiguracyjnego
- */
+/// Losuje wynik leczenia wg OUTCOME_*_PM
 inline int randomOutcome() {
     int r = randomInt(1, 1000);
     if (r <= OUTCOME_HOME_PM) return 0;                            // do domu
@@ -666,12 +531,7 @@ inline int randomOutcome() {
     return 2;                                                       // inna placówka
 }
 
-/**
- * @brief Losuje wiek pacjenta — zachowanie zależy od CHILDREN_MODE
- * CHILDREN_NORMAL: 20% dzieci (1-17), 80% dorośli (18-90)
- * CHILDREN_ONLY:   tylko dzieci (1-17)
- * NO_CHILDREN:     tylko dorośli (18-90)
- */
+/// Losuje wiek wg CHILDREN_MODE
 inline int randomAge() {
     if constexpr (CHILDREN_MODE == CHILDREN_ONLY) {
         return randomInt(1, 17);
@@ -684,12 +544,7 @@ inline int randomAge() {
     }
 }
 
-/**
- * @brief Losuje czy pacjent jest VIP — zachowanie zależy od VIP_MODE
- * VIP_NORMAL: 10% szans
- * VIP_ONLY:   zawsze VIP
- * NO_VIP:     nigdy VIP
- */
+/// Losuje VIP wg VIP_MODE
 inline bool randomVIP() {
     if constexpr (VIP_MODE == VIP_ONLY) {
         return true;
@@ -704,9 +559,6 @@ inline bool randomVIP() {
 // FUNKCJE POMOCNICZE - IPC KLUCZE
 // ============================================================================
 
-/**
- * @brief Generuje klucz IPC na podstawie identyfikatora
- */
 inline key_t getIPCKey(int id) {
     // Używamy /tmp jako ścieżki bazowej
     key_t key = ftok("/tmp", id);
@@ -717,26 +569,16 @@ inline key_t getIPCKey(int id) {
     return key;
 }
 
-/**
- * @brief Klucz IPC kolejki tokenów poczekalni
- */
 inline key_t getGateQueueKey() {
     return getIPCKey(MSG_GATE_KEY_ID);
 }
 
-/**
- * @brief Klucze IPC kolejek porządkujących (FIFO blokujące zamiast busy-wait)
- */
 inline key_t getOrderGateLogKey() { return getIPCKey(MSG_ORDER_GATE_LOG_KEY_ID); }
 inline key_t getOrderRegKey()     { return getIPCKey(MSG_ORDER_REG_KEY_ID); }
 inline key_t getOrderTriageKey()  { return getIPCKey(MSG_ORDER_TRIAGE_KEY_ID); }
 inline key_t getOrderExitKey()    { return getIPCKey(MSG_ORDER_EXIT_KEY_ID); }
 
-/**
- * @brief Klucze IPC kolejek specjalistów
- * Każdy specjalista dostaje osobną kolejkę z unikalnym kluczem
- * Klucze: 'a' + (doctor_type - 1), tj. kardiolog='a', neurolog='b', ..., pediatra='f'
- */
+/// Klucz IPC kolejki specjalisty: 'a' + (doctor_type - 1)
 inline key_t getSpecialistQueueKey(DoctorType doctor) {
     return getIPCKey('a' + (doctor - 1));
 }

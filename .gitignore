@@ -1,9 +1,21 @@
-./notes
-./build
-dyrektor
-generator
-lekarz
-pacjent
-rejestracja
+build/
+notes/
+
+# Binarki (gdyby ktoś budował poza build/)
+/dyrektor
+/generator
+/lekarz
+/pacjent
+/rejestracja
+
+# Logi i artefakty
 sor_log.txt
+*.o
+*.swp
+compile_commands.json
+
+# IDE
+.vscode/
+
+# Inne
 Projekty_SO_NST_2025-2026.pdf
