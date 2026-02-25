@@ -76,15 +76,15 @@ CMakeFiles/lekarz.dir/src/lekarz.cpp.o: CMakeFiles/lekarz.dir/flags.make
 CMakeFiles/lekarz.dir/src/lekarz.cpp.o: /home/areczek/sor-linux-sim/src/lekarz.cpp
 CMakeFiles/lekarz.dir/src/lekarz.cpp.o: CMakeFiles/lekarz.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/areczek/sor-linux-sim/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/lekarz.dir/src/lekarz.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lekarz.dir/src/lekarz.cpp.o -MF CMakeFiles/lekarz.dir/src/lekarz.cpp.o.d -o CMakeFiles/lekarz.dir/src/lekarz.cpp.o -c /home/areczek/sor-linux-sim/src/lekarz.cpp
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/lekarz.dir/src/lekarz.cpp.o -MF CMakeFiles/lekarz.dir/src/lekarz.cpp.o.d -o CMakeFiles/lekarz.dir/src/lekarz.cpp.o -c /home/areczek/sor-linux-sim/src/lekarz.cpp
 
 CMakeFiles/lekarz.dir/src/lekarz.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/lekarz.dir/src/lekarz.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/lekarz.cpp > CMakeFiles/lekarz.dir/src/lekarz.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/areczek/sor-linux-sim/src/lekarz.cpp > CMakeFiles/lekarz.dir/src/lekarz.cpp.i
 
 CMakeFiles/lekarz.dir/src/lekarz.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/lekarz.dir/src/lekarz.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/lekarz.cpp -o CMakeFiles/lekarz.dir/src/lekarz.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/areczek/sor-linux-sim/src/lekarz.cpp -o CMakeFiles/lekarz.dir/src/lekarz.cpp.s
 
 # Object files for target lekarz
 lekarz_OBJECTS = \

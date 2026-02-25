@@ -232,6 +232,11 @@ void runPOZ() {
             msg.assigned_doctor = DOCTOR_POZ;  // Oznacza: brak specjalisty
             msg.outcome = 0;  // Do domu
             
+            // Przydzieł bilet wyjścia (pacjent odesłany do domu z triażu)
+            semWait(g_semid, SEM_SHM_MUTEX);
+            msg.exit_ticket = g_state->exit_next_ticket++;
+            semSignal(g_semid, SEM_SHM_MUTEX);
+            
             if (msgsnd(g_msgid, &msg, sizeof(SORMessage) - sizeof(long), 0) == -1) {
                 if (errno != EINTR && errno != EIDRM) {
                     SOR_WARN("POZ msgsnd odpowiedź pacjent %d", msg.patient_id);
@@ -389,6 +394,11 @@ void runSpecialist() {
         } else {
             logMessage(g_state, g_semid, "Pacjent %d — %s", msg.patient_id, outcome_str);
         }
+        
+        // Przydzieł bilet wyjścia
+        semWait(g_semid, SEM_SHM_MUTEX);
+        msg.exit_ticket = g_state->exit_next_ticket++;
+        semSignal(g_semid, SEM_SHM_MUTEX);
         
         // Wyślij odpowiedź do pacjenta
         msg.mtype = MSG_SPECIALIST_RESPONSE + msg.patient_id;

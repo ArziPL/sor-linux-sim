@@ -37,7 +37,7 @@
 // STAŁE KONFIGURACYJNE SYMULACJI
 // ============================================================================
 
-constexpr int N = 20;                    // Pojemność poczekalni SOR
+constexpr int N = 1;                    // Pojemność poczekalni SOR
 constexpr int K_OPEN = N / 2;            // Próg otwarcia drugiego okienka (>=10 osób w kolejce)
 constexpr int K_CLOSE = N / 3;           // Próg zamknięcia drugiego okienka (<7 osób)
 
@@ -52,15 +52,15 @@ constexpr int MSG_ORDER_TRIAGE_KEY_ID = 'j';    // Kolejka FIFO kolejności tria
 constexpr int MSG_ORDER_EXIT_KEY_ID = 'k';      // Kolejka FIFO kolejności wyjścia
 
 // Czasy operacji w milisekundach
-constexpr int PATIENT_GEN_MIN_MS = 500;   // Min czas między generowaniem pacjentów
-constexpr int PATIENT_GEN_MAX_MS = 5000;   // Max czas między generowaniem pacjentów
-constexpr int REGISTRATION_MIN_MS = 500;  // Min czas rejestracji
-constexpr int REGISTRATION_MAX_MS = 2000; // Max czas rejestracji
-constexpr int TRIAGE_MIN_MS = 500;        // Min czas triażu
-constexpr int TRIAGE_MAX_MS = 3000;       // Max czas triażu
-constexpr int TREATMENT_MIN_MS = 2000;    // Min czas leczenia u specjalisty
-constexpr int TREATMENT_MAX_MS = 8000;    // Max czas leczenia u specjalisty
-constexpr int DOCTOR_BREAK_MIN_MS = 3000; // Min czas przerwy lekarza
+constexpr int PATIENT_GEN_MIN_MS = 0;   // Min czas między generowaniem pacjentów
+constexpr int PATIENT_GEN_MAX_MS = 0;   // Max czas między generowaniem pacjentów
+constexpr int REGISTRATION_MIN_MS = 0;  // Min czas rejestracji
+constexpr int REGISTRATION_MAX_MS = 0; // Max czas rejestracji
+constexpr int TRIAGE_MIN_MS = 5000;        // Min czas triażu
+constexpr int TRIAGE_MAX_MS = 5000;       // Max czas triażu
+constexpr int TREATMENT_MIN_MS = 10000;    // Min czas leczenia u specjalisty
+constexpr int TREATMENT_MAX_MS = 10000;    // Max czas leczenia u specjalisty
+constexpr int DOCTOR_BREAK_MIN_MS = 5000; // Min czas przerwy lekarza
 constexpr int DOCTOR_BREAK_MAX_MS = 5000;// Max czas przerwy lekarza
 
 // FIXED_PROCESS_COUNT — definiowany niżej (po DoctorType i DOCTOR_ENABLED)
@@ -70,21 +70,21 @@ constexpr int DOCTOR_BREAK_MAX_MS = 5000;// Max czas przerwy lekarza
 // ============================================================================
 
 // --- Triaż (POZ): prawdopodobieństwa kolorów w promilach [suma MUSI = 1000] ---
-constexpr int TRIAGE_RED_PM     = 100;   // ‰ czerwony (natychmiastowa pomoc) — 10%
-constexpr int TRIAGE_YELLOW_PM  = 350;   // ‰ żółty (pilny) — 35%
-constexpr int TRIAGE_GREEN_PM   = 500;   // ‰ zielony (stabilny) — 50%
-constexpr int TRIAGE_HOME_PM    = 50;    // ‰ odesłany do domu z triażu — 5%
+constexpr int TRIAGE_RED_PM     = 333;   // ‰ czerwony (natychmiastowa pomoc) — 10%
+constexpr int TRIAGE_YELLOW_PM  = 334;   // ‰ żółty (pilny) — 35%
+constexpr int TRIAGE_GREEN_PM   = 333;   // ‰ zielony (stabilny) — 50%
+constexpr int TRIAGE_HOME_PM    = 0;    // ‰ odesłany do domu z triażu — 5%
 static_assert(TRIAGE_RED_PM + TRIAGE_YELLOW_PM + TRIAGE_GREEN_PM + TRIAGE_HOME_PM == 1000,
               "Suma promili triazu musi wynosic 1000");
 
 // --- Przypisanie specjalisty (dorośli): promile [suma MUSI = 1000] ---
 // Dzieci (<18 lat) ZAWSZE trafiają do pediatry, te ‰ dotyczą tylko dorosłych.
 // Ustaw 0 = żaden dorosły pacjent nie trafi do tego specjalisty.
-constexpr int SPEC_KARDIOLOG_PM   = 200;  // ‰ dorosłych → kardiolog (20%)
-constexpr int SPEC_NEUROLOG_PM    = 200;  // ‰ dorosłych → neurolog (20%)
-constexpr int SPEC_OKULISTA_PM    = 200;  // ‰ dorosłych → okulista (15%)
-constexpr int SPEC_LARYNGOLOG_PM  = 200;  // ‰ dorosłych → laryngolog (15%)
-constexpr int SPEC_CHIRURG_PM     = 200;  // ‰ dorosłych → chirurg (30%)
+constexpr int SPEC_KARDIOLOG_PM   = 0;  // ‰ dorosłych → kardiolog (20%)
+constexpr int SPEC_NEUROLOG_PM    = 1000;  // ‰ dorosłych → neurolog (20%)
+constexpr int SPEC_OKULISTA_PM    = 0;  // ‰ dorosłych → okulista (20%)
+constexpr int SPEC_LARYNGOLOG_PM  = 0;  // ‰ dorosłych → laryngolog (20%)
+constexpr int SPEC_CHIRURG_PM     = 0;  // ‰ dorosłych → chirurg (20%)
 static_assert(SPEC_KARDIOLOG_PM + SPEC_NEUROLOG_PM + SPEC_OKULISTA_PM +
               SPEC_LARYNGOLOG_PM + SPEC_CHIRURG_PM == 1000,
               "Suma promili specjalistow musi wynosic 1000");
@@ -103,30 +103,30 @@ constexpr bool DOCTOR_ENABLED[] = {
 
 // --- Wynik leczenia u specjalisty: prawdopodobieństwa [suma MUSI = 1000] ---
 // Podajemy w PROMILACH (‰) żeby obsłużyć ułamki procentów (np. 14,5% = 145‰)
-constexpr int OUTCOME_HOME_PM   = 850;   // ‰ wypisany do domu (85.0%)
-constexpr int OUTCOME_WARD_PM   = 145;   // ‰ skierowany na oddział (14.5%)
-constexpr int OUTCOME_OTHER_PM  = 5;     // ‰ skierowany do innej placówki (0.5%)
+constexpr int OUTCOME_HOME_PM   = 0;   // ‰ wypisany do domu (85.0%)
+constexpr int OUTCOME_WARD_PM   = 1000;   // ‰ skierowany na oddział (14.5%)
+constexpr int OUTCOME_OTHER_PM  = 0;     // ‰ skierowany do innej placówki (0.5%)
 static_assert(OUTCOME_HOME_PM + OUTCOME_WARD_PM + OUTCOME_OTHER_PM == 1000,
               "Suma promili wynikow leczenia musi wynosic 1000");
 
 // --- Tryb dzieci ---
 enum ChildrenMode { CHILDREN_NORMAL, CHILDREN_ONLY, NO_CHILDREN };
-constexpr ChildrenMode CHILDREN_MODE = CHILDREN_NORMAL;
+constexpr ChildrenMode CHILDREN_MODE = NO_CHILDREN;
 // CHILDREN_NORMAL  — losowy wiek 1-90 (20% dzieci, 80% dorośli)
 // CHILDREN_ONLY    — tylko dzieci (wiek 1-17)
 // NO_CHILDREN      — tylko dorośli (wiek 18-90)
 
 // --- Tryb VIP ---
 enum VipMode { VIP_NORMAL, VIP_ONLY, NO_VIP };
-constexpr VipMode VIP_MODE = VIP_NORMAL;
+constexpr VipMode VIP_MODE = NO_VIP;
 // VIP_NORMAL — 10% szans na VIP
 // VIP_ONLY   — każdy pacjent jest VIP
 // NO_VIP     — żaden pacjent nie jest VIP
 
 // --- Pre-generacja pacjentów ---
 enum PregenMode { NORMAL_GEN, PREGEN_ONLY, PREGEN_THEN_NORMAL };
-constexpr PregenMode PREGEN_MODE = NORMAL_GEN;
-constexpr int PREGEN_COUNT = 0;
+constexpr PregenMode PREGEN_MODE = PREGEN_ONLY;
+constexpr int PREGEN_COUNT = 1;
 // NORMAL_GEN         — ignoruje PREGEN_COUNT, normalna generacja z sleep(min,max)
 // PREGEN_ONLY        — generuje PREGEN_COUNT pacjentów back-to-back, potem KOŃCZY
 // PREGEN_THEN_NORMAL — generuje PREGEN_COUNT back-to-back, potem normalna generacja
@@ -308,6 +308,8 @@ struct SORMessage {
     TriageColor color;       // Kolor triażu
     DoctorType assigned_doctor; // Przypisany lekarz specjalista
     int outcome;             // Wynik: 0=do domu, 1=oddział, 2=inna placówka
+    int triage_ticket;       // Bilet triażowy (przydzielony przez rejestrację)
+    int exit_ticket;         // Bilet wyjściowy (przydzielony przez lekarza)
 };
 
 // ============================================================================
@@ -355,6 +357,10 @@ struct SharedState {
     // Ticket system — gwarantuje ścisłe FIFO wejścia do poczekalni
     int gate_next_ticket;            // Następny bilet do wydania (rosnący)
     int gate_now_serving;            // Następny mtype do wysłania gdy ktoś wychodzi
+    
+    // Bilety porządkujące (FIFO triaż i wyjście)
+    int triage_next_ticket;          // Następny bilet triażowy (przydzielany przez rejestrację)
+    int exit_next_ticket;            // Następny bilet wyjściowy (przydzielany przez lekarza)
     
     // Kolejki FIFO porządkujące (blokujące zamiast busy-wait spin-loopów)
     int order_gate_log_msgid;        // Kolejka FIFO kolejności logowania wejścia
@@ -596,10 +602,17 @@ inline int randomInt(int min, int max) {
 }
 
 /**
- * @brief Usypia wątek na podaną liczbę milisekund
+ * @brief Usypia wątek na podaną liczbę milisekund (odporne na sygnały)
+ * Używa nanosleep z restartem po EINTR — NIE jest busy-wait.
+ * Po przerwaniu sygnałem kontynuuje spanie do pełnego czasu.
  */
 inline void msleep(int ms) {
-    usleep(ms * 1000);
+    struct timespec req;
+    req.tv_sec  = ms / 1000;
+    req.tv_nsec = (ms % 1000) * 1000000L;
+    while (nanosleep(&req, &req) == -1 && errno == EINTR) {
+        // nanosleep zapisuje pozostały czas w req — kontynuuj sen
+    }
 }
 
 /**

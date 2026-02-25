@@ -153,7 +153,7 @@ int main() {
         
         // Kolejki porządkujące (FIFO ordering)
         {
-            key_t keys[] = { getOrderGateLogKey(), getOrderRegKey(), getOrderTriageKey(), getOrderExitKey() };
+            key_t keys[] = { getOrderGateLogKey(), getOrderTriageKey(), getOrderExitKey() };
             for (auto k : keys) {
                 int qid = msgget(k, 0);
                 if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
@@ -254,9 +254,15 @@ void processPatient(int window_id, SORMessage& msg) {
     // Symulacja czasu rejestracji
     randomSleep(REGISTRATION_MIN_MS, REGISTRATION_MAX_MS);
     
+    // Przydziel bilet triażowy (pod mutexem — gwarantuje FIFO)
+    semWait(g_semid, SEM_SHM_MUTEX);
+    int triage_ticket = g_state->triage_next_ticket++;
+    semSignal(g_semid, SEM_SHM_MUTEX);
+    
     // Wyślij odpowiedź do pacjenta
     SORMessage response = msg;
     response.mtype = MSG_REGISTRATION_RESPONSE + msg.patient_id;
+    response.triage_ticket = triage_ticket;
     
     if (msgsnd(g_msgid, &response, sizeof(SORMessage) - sizeof(long), 0) == -1) {
         if (errno != EINTR && errno != EIDRM) {

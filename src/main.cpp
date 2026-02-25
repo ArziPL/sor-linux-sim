@@ -348,6 +348,8 @@ void initIPC() {
     }
     g_state->gate_next_ticket = 1;       // Pierwszy pacjent dostanie bilet 1
     g_state->gate_now_serving = N + 1;   // Po wyjściu pierwszego → wyśle mtype N+1
+    g_state->triage_next_ticket = 1;     // Pierwszy bilet triażowy
+    g_state->exit_next_ticket = 1;       // Pierwszy bilet wyjściowy
 
     // --- KOLEJKI PORZĄDKUJĄCE (FIFO blokujące zamiast busy-wait) ---
     // Każda kolejka startuje z jednym tokenem mtype=1 (pierwszy pacjent dostaje kolej)
@@ -367,9 +369,8 @@ void initIPC() {
         return qid;
     };
     g_state->order_gate_log_msgid = createOrderQueue(getOrderGateLogKey(), "gate_log");
-    g_state->order_reg_msgid      = createOrderQueue(getOrderRegKey(),     "reg");
-    g_state->order_triage_msgid   = createOrderQueue(getOrderTriageKey(),  "triage");
-    g_state->order_exit_msgid     = createOrderQueue(getOrderExitKey(),    "exit");
+    g_state->order_triage_msgid = createOrderQueue(getOrderTriageKey(), "triage");
+    g_state->order_exit_msgid = createOrderQueue(getOrderExitKey(), "exit");
 
     // --- KOLEJKA KOMUNIKATÓW ---
     key_t msg_key = getIPCKey(MSG_KEY_ID);
@@ -463,7 +464,7 @@ void cleanupIPC() {
     
     // Usuń kolejki porządkujące (FIFO ordering)
     {
-        key_t keys[] = { getOrderGateLogKey(), getOrderRegKey(), getOrderTriageKey(), getOrderExitKey() };
+        key_t keys[] = { getOrderGateLogKey(), getOrderTriageKey(), getOrderExitKey() };
         for (auto k : keys) {
             int qid = msgget(k, 0);
             if (qid != -1) msgctl(qid, IPC_RMID, nullptr);
