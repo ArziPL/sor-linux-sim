@@ -1,7 +1,0 @@
-ipcs -q -m -s
-ps -o pid,ppid,stat,cmd --forest -C dyrektor,lekarz,pacjent,rejestracja,generator | grep Z
-ps -C dyrektor,lekarz,pacjent,rejestracja,generator --no-headers | wc -l
-
-ipcs -m -s -q & ps -o pid,ppid,stat,cmd,pgid --forest -C dyrektor,lekarz,pacjent,rejestracja,generator | grep Z
-
-cd /home/areczek/sor-linux-sim && rm -rf build && mkdir build && cd build && cmake .. && make -j4
