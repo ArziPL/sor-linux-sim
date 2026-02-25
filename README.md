@@ -38,18 +38,3 @@ Projekt realizuje symulacje Szpitalnego Oddziału Ratunkowego opierającego swoj
 ### W trakcie działania
 Klawisz: `1-6` - dyrektor wysyła odpowiedniego doktora na oddział (doktor nie bierze przez ten czas udziału w symulacji)  
 Klawisz: `7 / q` - ewakuacja SOR, graceful zamknięcie programu
-
-### Testy
-###### Test 01 — Start i sprzątanie (test_01_startup_cleanup.sh)
-Uruchamia ./dyrektor -t 5, czeka 2s, sprawdza czy procesy SOR żyją (≥10) i czy IPC (shm, sem, msg) istnieją. Po zakończeniu sprawdza czy wszystkie procesy zniknęły i IPC posprzątane  
-###### Test 02 - Limit procesów (test_02_process_limit.sh)
-Uruchamia z -p 20 -t 10 -g 50 100 (szybkie generowanie, limit 20 procesów). Co sekundę liczy procesy przez 14s. Sprawdza czy limit nigdy nie został przekroczony i czy pacjenci w ogóle się pojawili  
-###### Test 03 - Stress test + zakleszczenia (test_03_stress_no_deadlock.sh)
-Uruchamia z -g 10 20 (ekstremalnie szybkie generowanie) na 12s. Monitoruje 10s czy system działa. Po upływie czasu sprawdza czy dyrektor sam się zakończył (nie zakleszczyło się) i czy posprzątał procesy + IPC.
-###### Test 04 - Zabicie potomnych (test_04_kill_children.sh)
-Uruchamia z -t 12, czeka 3s, potem kill -9 na 2 lekarzy + rejestrację. Sprawdza czy dyrektor przeżył mimo utraty dzieci, czy sam się potem zakończył, i czy procesy + IPC zostały posprzątane.
-###### Wszystkie testy (run_tests.sh)
-Skrypt uruchamiający wszystkie 4 testy integracyjne po kolei. Przed startem buduje projekt (`cmake` + `make`). Między testami sprząta ewentualne pozostałe procesy SOR i zasoby IPC. Na końcu wypisuje podsumowanie: ile testów przeszło, ile nie, z kolorowym oznaczeniem (✓/✗). Użycie: `bash tests/run_tests.sh`
-
-
-
